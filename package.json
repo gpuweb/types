@@ -1,6 +1,6 @@
 {
   "name": "@webgpu/types",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "",
   "license": "Apache-2.0"
 }
