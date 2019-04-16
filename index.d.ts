@@ -1,3 +1,7 @@
+// https://github.com/gpuweb/gpuweb/blob/9d7622bf366be74e0599122d8c4d0fd1128ae484/design/sketch.webidl
+// plus #249 (pre-land) with #241 applied only to that part
+// plus #261 (pre-land, not quite the same)
+
 export {};
 
 declare global {
@@ -344,10 +348,21 @@ export interface GPUFenceDescriptor {
   signalQueue?: GPUQueue;
 }
 
-export interface GPUInputStateDescriptor {
-  attributes?: GPUVertexAttributeDescriptor[];
-  indexFormat?: GPUIndexFormat;
-  inputs?: GPUVertexInputDescriptor[];
+export interface GPUVertexAttributeDescriptor {
+  offset?: number;
+  format: GPUVertexFormat;
+  shaderLocation: number;
+}
+
+export interface GPUVertexBufferDescriptor {
+  stride: number;
+  stepMode?: GPUInputStepMode;
+  attributeSet: GPUVertexAttributeDescriptor[];
+}
+
+export interface GPUVertexInputDescriptor {
+  indexFormat: GPUIndexFormat;
+  vertexBuffers: GPUVertexAttributeDescriptor[];
 }
 
 export interface GPULimits {
@@ -410,7 +425,7 @@ export interface GPURenderPipelineDescriptor extends GPUPipelineDescriptorBase {
   blendStates?: GPUBlendStateDescriptor[];
   depthStencilState?: GPUDepthStencilStateDescriptor;
   fragmentStage?: GPUPipelineStageDescriptor;
-  inputState?: GPUInputStateDescriptor;
+  vertexInput: GPUVertexInputDescriptor;
   primitiveTopology?: GPUPrimitiveTopology;
   rasterizationState?: GPURasterizationStateDescriptor;
   sampleCount?: number;
@@ -475,19 +490,6 @@ export interface GPUTextureViewDescriptor {
   format?: GPUTextureFormat;
   arrayLayerCount?: number;
   mipLevelCount?: number;
-}
-
-export interface GPUVertexAttributeDescriptor {
-  format?: GPUVertexFormat;
-  inputSlot?: number;
-  offset?: number;
-  shaderLocation?: number;
-}
-
-export interface GPUVertexInputDescriptor {
-  inputSlot?: number;
-  stepMode?: GPUInputStepMode;
-  stride?: number;
 }
 
 export interface GPUAdapter {
