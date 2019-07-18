@@ -365,7 +365,7 @@ export interface GPUVertexBufferDescriptor {
 
 export interface GPUVertexInputDescriptor {
   indexFormat?: GPUIndexFormat;
-  vertexBuffers: GPUVertexAttributeDescriptor[];
+  vertexBuffers: GPUVertexBufferDescriptor[];
 }
 
 export interface GPULimits {
