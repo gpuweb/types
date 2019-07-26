@@ -1,4 +1,4 @@
-// https://github.com/gpuweb/gpuweb/blob/15694320af276c23badc79668ac111fe970cf094/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/72b88fd01c8dd7d17a03f5669e6b14fd0c9ce6b6/spec/index.bs
 // except #280 setSubData (TODO)
 
 export {};
@@ -109,7 +109,8 @@ export type GPUStencilOperation =
   | "increment-wrap"
   | "decrement-wrap";
 export type GPUStoreOp =
-  | "store";
+  | "store"
+  | "clear";
 export type GPUTextureDimension =
   | "1d"
   | "2d"
