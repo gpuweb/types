@@ -1,4 +1,4 @@
-// https://github.com/gpuweb/gpuweb/blob/e0516e6bf994c23915462da3b5f434d7b85f72c5/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/15694320af276c23badc79668ac111fe970cf094/spec/index.bs
 // except #280 setSubData (TODO)
 
 export {};
@@ -92,7 +92,6 @@ export type GPUInputStepMode =
   | "vertex"
   | "instance";
 export type GPULoadOp =
-  | "clear"
   | "load";
 export type GPUPrimitiveTopology =
   | "point-list"
@@ -398,21 +397,18 @@ export interface GPURenderPassColorAttachmentDescriptor {
   attachment: GPUTextureView;
   resolveTarget?: GPUTextureView | null;
 
-  loadOp: GPULoadOp;
+  loadValue: GPULoadOp | GPUColor;
   storeOp: GPUStoreOp;
-  clearColor?: GPUColor;
 }
 
 export interface GPURenderPassDepthStencilAttachmentDescriptor {
   attachment: GPUTextureView;
 
-  depthLoadOp: GPULoadOp;
+  depthLoadValue: GPULoadOp | number;
   depthStoreOp: GPUStoreOp;
-  clearDepth: number;
 
-  stencilLoadOp: GPULoadOp;
+  stencilLoadValue: GPULoadOp | number;
   stencilStoreOp: GPUStoreOp;
-  clearStencil?: number;
 }
 
 export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
