@@ -158,7 +158,6 @@ export type GPUTextureFormat =
   | "rgba32sint"
   | "rgba32float"
   | "depth32float"
-  | "depth32float-stencil8"
   | "depth24plus"
   | "depth24plus-stencil8";
 export type GPUTextureViewDimension =
@@ -200,6 +199,11 @@ export type GPUVertexFormat =
   | "int3"
   | "int4";
 
+export type GPUTextureAspect =
+  | "all"
+  | "stencil-only"
+  | "depth-only";
+
 export type GPUBufferUsageFlags = number;
 export enum GPUBufferUsage {
   NONE      = 0x0000,
@@ -229,13 +233,6 @@ export enum GPUShaderStage {
   VERTEX   = 0x1,
   FRAGMENT = 0x2,
   COMPUTE  = 0x4,
-}
-
-export type GPUTextureAspectFlags = number;
-export enum GPUTextureAspect {
-  COLOR = 1,
-  DEPTH = 2,
-  STENCIL = 4,
 }
 
 export type GPUTextureUsageFlags = number;
@@ -474,7 +471,7 @@ export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
 }
 
 export interface GPUTextureViewDescriptor extends GPUObjectDescriptorBase {
-  aspect: GPUTextureAspectFlags;
+  aspect: GPUTextureAspect;
   baseArrayLayer?: number;
   baseMipLevel?: number;
   dimension: GPUTextureViewDimension;
