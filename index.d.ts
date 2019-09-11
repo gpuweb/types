@@ -1,4 +1,4 @@
-// https://github.com/gpuweb/gpuweb/blob/767e515eba9306840ce3fdf57ef9d73ae5d24296/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/51d3fbcc96e73804f0ea51e7ff4347adcb51e96f/spec/index.bs
 // except #280 setSubData (TODO)
 
 export {};
@@ -339,7 +339,7 @@ declare global {
 
   export interface GPUVertexInputDescriptor {
     indexFormat?: GPUIndexFormat;
-    vertexBuffers: GPUVertexBufferDescriptor[];
+    vertexBuffers?: GPUVertexBufferDescriptor[];
   }
 
   export interface GPULimits {
@@ -373,7 +373,7 @@ declare global {
     resolveTarget?: GPUTextureView;
 
     loadValue: GPULoadOp | GPUColor;
-    storeOp: GPUStoreOp;
+    storeOp?: GPUStoreOp;
   }
 
   export interface GPURenderPassDepthStencilAttachmentDescriptor {
@@ -400,7 +400,7 @@ declare global {
     rasterizationState?: GPURasterizationStateDescriptor;
     colorStates: GPUColorStateDescriptor[];
     depthStencilState?: GPUDepthStencilStateDescriptor;
-    vertexInput: GPUVertexInputDescriptor;
+    vertexInput?: GPUVertexInputDescriptor;
 
     sampleCount?: number;
     sampleMask?: number;
@@ -603,7 +603,7 @@ declare global {
   export interface GPUPipelineLayout extends GPUObjectBase {}
 
   export interface GPUProgrammablePassEncoder extends GPUObjectBase {
-    setBindGroup(index: number, bindGroup: GPUBindGroup): void;
+    setBindGroup(index: number, bindGroup: GPUBindGroup, dynamicOffsets?: number[]): void;
 
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
