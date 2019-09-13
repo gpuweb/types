@@ -188,7 +188,8 @@ declare global {
     INDEX = 0x0010,
     VERTEX = 0x0020,
     UNIFORM = 0x0040,
-    STORAGE = 0x0080
+    STORAGE = 0x0080,
+    INDIRECT = 0x0100
   }
 
   export type GPUColorWriteFlags = number;
