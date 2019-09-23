@@ -237,7 +237,7 @@ declare global {
     textureDimension?: GPUTextureViewDimension;
     textureComponentType?: GPUTextureComponentType;
     multisampled?: boolean;
-    dynamic?: boolean;
+    hasDynamicOffset?: boolean;
   }
 
   export interface GPUBindGroupLayoutDescriptor
