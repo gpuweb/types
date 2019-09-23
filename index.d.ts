@@ -1,4 +1,4 @@
-// https://github.com/gpuweb/gpuweb/blob/51d3fbcc96e73804f0ea51e7ff4347adcb51e96f/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/0a2bb28a584aa1c6adabaec1f841ed29de400626/spec/index.bs
 // except #280 setSubData (TODO)
 
 export {};
@@ -237,7 +237,7 @@ declare global {
     textureDimension?: GPUTextureViewDimension;
     textureComponentType?: GPUTextureComponentType;
     multisampled?: boolean;
-    dynamic?: boolean;
+    hasDynamicOffset?: boolean;
   }
 
   export interface GPUBindGroupLayoutDescriptor
@@ -345,6 +345,13 @@ declare global {
 
   export interface GPULimits {
     maxBindGroups?: number;
+    maxDynamicUniformBuffersPerPipelineLayout?: number;
+    maxDynamicStorageBuffersPerPipelineLayout?: number;
+    maxSampledTexturesPerShaderStage?: number;
+    maxSamplersPerShaderStage?: number;
+    maxStorageBuffersPerPipelineLayout?: number;
+    maxStorageTexturesPerShaderStage?: number;
+    maxUniformBuffersPerShaderStage?: number;
   }
 
   export interface GPUPipelineDescriptorBase {
