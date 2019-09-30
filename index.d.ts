@@ -1,5 +1,6 @@
 // https://github.com/gpuweb/gpuweb/blob/0a2bb28a584aa1c6adabaec1f841ed29de400626/spec/index.bs
 // except #280 setSubData (TODO)
+// plus #449 stencilFront/stencilBack
 
 export {};
 
@@ -304,8 +305,8 @@ declare global {
     depthWriteEnabled?: boolean;
     depthCompare?: GPUCompareFunction;
 
-    stencilFront: GPUStencilStateFaceDescriptor;
-    stencilBack: GPUStencilStateFaceDescriptor;
+    stencilFront?: GPUStencilStateFaceDescriptor;
+    stencilBack?: GPUStencilStateFaceDescriptor;
 
     stencilReadMask?: number;
     stencilWriteMask?: number;
