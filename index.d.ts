@@ -678,7 +678,7 @@ declare global {
   export interface GPURenderBundle extends GPUObjectBase {}
 
   export interface GPURenderBundleEncoder extends GPURenderEncoderBase {
-    finish(descriptor?: GPURenderBundleDescriptor): void;
+    finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
 
   export interface GPURenderBundleEncoderDescriptor
