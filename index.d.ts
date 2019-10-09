@@ -629,11 +629,7 @@ declare global {
     setPipeline(pipeline: GPURenderPipeline): void;
 
     setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
-    setVertexBuffers(
-      startSlot: number,
-      buffers: GPUBuffer[],
-      offsets: number[]
-    ): void;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
 
     draw(
       vertexCount: number,
