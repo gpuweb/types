@@ -70,10 +70,10 @@ declare global {
     | "never"
     | "less"
     | "equal"
-    | "lessEqual"
+    | "less-equal"
     | "greater"
-    | "notEqual"
-    | "greaterEqual"
+    | "not-equal"
+    | "greater-equal"
     | "always";
   export type GPUCullMode = "none" | "front" | "back";
   export type GPUFilterMode = "nearest" | "linear";
