@@ -1,6 +1,5 @@
-// https://github.com/gpuweb/gpuweb/blob/0a2bb28a584aa1c6adabaec1f841ed29de400626/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/37812f5f39ae8c6dc85f6a12c0f65e9c9d6e2155
 // except #280 setSubData (TODO)
-// plus #449 stencilFront/stencilBack
 
 export {};
 
@@ -328,20 +327,20 @@ declare global {
   }
 
   export interface GPUVertexAttributeDescriptor {
-    offset?: number;
     format: GPUVertexFormat;
+    offset: number;
     shaderLocation: number;
   }
 
-  export interface GPUVertexBufferDescriptor {
-    stride: number;
+  export interface GPUVertexBufferLayoutDescriptor {
+    arrayStride: number;
     stepMode?: GPUInputStepMode;
-    attributeSet: GPUVertexAttributeDescriptor[];
+    attributes: GPUVertexAttributeDescriptor[];
   }
 
-  export interface GPUVertexInputDescriptor {
+  export interface GPUVertexStateDescriptor {
     indexFormat?: GPUIndexFormat;
-    vertexBuffers?: GPUVertexBufferDescriptor[];
+    vertexBuffers?: GPUVertexBufferLayoutDescriptor[];
   }
 
   export interface GPULimits {
@@ -350,7 +349,7 @@ declare global {
     maxDynamicStorageBuffersPerPipelineLayout?: number;
     maxSampledTexturesPerShaderStage?: number;
     maxSamplersPerShaderStage?: number;
-    maxStorageBuffersPerPipelineLayout?: number;
+    maxStorageBuffersPerShaderStage?: number;
     maxStorageTexturesPerShaderStage?: number;
     maxUniformBuffersPerShaderStage?: number;
   }
@@ -409,7 +408,7 @@ declare global {
     rasterizationState?: GPURasterizationStateDescriptor;
     colorStates: GPUColorStateDescriptor[];
     depthStencilState?: GPUDepthStencilStateDescriptor;
-    vertexInput?: GPUVertexInputDescriptor;
+    vertexState?: GPUVertexStateDescriptor;
 
     sampleCount?: number;
     sampleMask?: number;
@@ -612,7 +611,11 @@ declare global {
   export interface GPUPipelineLayout extends GPUObjectBase {}
 
   export interface GPUProgrammablePassEncoder extends GPUObjectBase {
-    setBindGroup(index: number, bindGroup: GPUBindGroup, dynamicOffsets?: number[]): void;
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsets?: number[]
+    ): void;
 
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
@@ -621,7 +624,7 @@ declare global {
 
   export interface GPUQueue extends GPUObjectBase {
     signal(fence: GPUFence, signalValue: number): void;
-    submit(buffers: GPUCommandBuffer[]): void;
+    submit(commandBuffers: GPUCommandBuffer[]): void;
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
   }
 
@@ -737,7 +740,11 @@ declare global {
   // TELEMETRY
   // ****************************************************************************
 
-  export interface GPUUncapturedErrorEvent extends Event {
+  export class GPUUncapturedErrorEvent extends Event {
+    constructor(
+      type: string,
+      gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
+    );
     readonly error: GPUError;
   }
 
