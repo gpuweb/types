@@ -1,5 +1,6 @@
 // https://github.com/gpuweb/gpuweb/blob/37812f5f39ae8c6dc85f6a12c0f65e9c9d6e2155
 // except #280 setSubData (TODO)
+// plus #489 GPUAdapter.limits
 
 export {};
 
@@ -359,6 +360,17 @@ declare global {
     maxUniformBuffersPerShaderStage?: number;
   }
 
+  export interface GPULimitsOut {
+    maxBindGroups: number;
+    maxDynamicUniformBuffersPerPipelineLayout: number;
+    maxDynamicStorageBuffersPerPipelineLayout: number;
+    maxSampledTexturesPerShaderStage: number;
+    maxSamplersPerShaderStage: number;
+    maxStorageBuffersPerShaderStage: number;
+    maxStorageTexturesPerShaderStage: number;
+    maxUniformBuffersPerShaderStage: number;
+  }
+
   export interface GPUPipelineDescriptorBase {
     label?: string;
     layout: GPUPipelineLayout;
@@ -472,8 +484,10 @@ declare global {
   }
 
   export class GPUAdapter {
-    readonly extensions: GPUExtensions;
     readonly name: string;
+    readonly extensions: GPUExtensions;
+    readonly limits: GPULimitsOut;
+
     requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
   }
 
@@ -596,7 +610,7 @@ declare global {
 
     readonly adapter: GPUAdapter;
     readonly extensions: GPUExtensions;
-    readonly limits: GPULimits;
+    readonly limits: GPULimitsOut;
 
     createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
     createBindGroupLayout(
