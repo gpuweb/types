@@ -4,6 +4,11 @@
 export {};
 
 declare global {
+  // Appends members to the `Navigator` interface defined globally.
+  export interface Navigator {
+    readonly gpu: GPU | undefined;
+  }
+
   export interface GPUColorDict {
     a: number;
     b: number;
@@ -466,17 +471,23 @@ declare global {
     mipLevelCount?: number;
   }
 
-  export interface GPUAdapter extends GPUObjectBase {
+  export class GPUAdapter {
     readonly extensions: GPUExtensions;
     readonly name: string;
     requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
   }
 
-  export interface GPUBindGroup extends GPUObjectBase {}
+  export class GPUBindGroup implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPUBindGroupLayout extends GPUObjectBase {}
+  export class GPUBindGroupLayout implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPUBuffer extends GPUObjectBase {
+  export class GPUBuffer implements GPUObjectBase {
+    label: string | undefined;
+
     //readonly mapping: ArrayBuffer | null;
     destroy(): void;
     unmap(): void;
@@ -492,11 +503,15 @@ declare global {
     ): void;
   }
 
-  export interface GPUCommandBuffer extends GPUObjectBase {}
+  export class GPUCommandBuffer implements GPUObjectBase {
+    label: string | undefined;
+  }
 
   export interface GPUCommandBufferDescriptor extends GPUObjectDescriptorBase {}
 
-  export interface GPUCommandEncoder extends GPUObjectBase {
+  export class GPUCommandEncoder implements GPUObjectBase {
+    label: string | undefined;
+
     beginComputePass(
       descriptor?: GPUComputePassDescriptor
     ): GPUComputePassEncoder;
@@ -537,7 +552,19 @@ declare global {
 
   export interface GPUComputePassDescriptor extends GPUObjectDescriptorBase {}
 
-  export interface GPUComputePassEncoder extends GPUProgrammablePassEncoder {
+  export class GPUComputePassEncoder implements GPUProgrammablePassEncoder {
+    label: string | undefined;
+
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsets?: number[]
+    ): void;
+
+    popDebugGroup(): void;
+    pushDebugGroup(groupLabel: string): void;
+    insertDebugMarker(markerLabel: string): void;
+
     setPipeline(pipeline: GPUComputePipeline): void;
     dispatch(x: number, y?: number, z?: number): void;
     dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
@@ -545,7 +572,9 @@ declare global {
     endPass(): void;
   }
 
-  export interface GPUComputePipeline extends GPUObjectBase {}
+  export class GPUComputePipeline implements GPUObjectBase {
+    label: string | undefined;
+  }
 
   export interface GPUObjectBase {
     label: string | undefined;
@@ -556,13 +585,15 @@ declare global {
   }
 
   // SwapChain / CanvasContext
-  export interface GPUCanvasContext {
+  export class GPUCanvasContext {
     configureSwapChain(descriptor: GPUSwapChainDescriptor): GPUSwapChain;
 
     getSwapChainPreferredFormat(device: GPUDevice): Promise<GPUTextureFormat>;
   }
 
-  export interface GPUDevice extends GPUObjectBase {
+  export class GPUDevice extends EventTarget implements GPUObjectBase {
+    label: string | undefined;
+
     readonly adapter: GPUAdapter;
     readonly extensions: GPUExtensions;
     readonly limits: GPULimits;
@@ -600,15 +631,22 @@ declare global {
 
     getQueue(): GPUQueue;
 
+    pushErrorScope(filter: GPUErrorFilter): void;
+    popErrorScope(): Promise<GPUError | null>;
+    onuncapturederror: Event | undefined;
     readonly lost: Promise<GPUDeviceLostInfo>;
   }
 
-  export interface GPUFence extends GPUObjectBase {
+  export class GPUFence implements GPUObjectBase {
+    label: string | undefined;
+
     getCompletedValue(): number;
     onCompletion(completionValue: number): Promise<void>;
   }
 
-  export interface GPUPipelineLayout extends GPUObjectBase {}
+  export class GPUPipelineLayout implements GPUObjectBase {
+    label: string | undefined;
+  }
 
   export interface GPUProgrammablePassEncoder extends GPUObjectBase {
     setBindGroup(
@@ -622,7 +660,9 @@ declare global {
     insertDebugMarker(markerLabel: string): void;
   }
 
-  export interface GPUQueue extends GPUObjectBase {
+  export class GPUQueue implements GPUObjectBase {
+    label: string | undefined;
+
     signal(fence: GPUFence, signalValue: number): void;
     submit(commandBuffers: GPUCommandBuffer[]): void;
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
@@ -655,7 +695,44 @@ declare global {
     ): void;
   }
 
-  export interface GPURenderPassEncoder extends GPURenderEncoderBase {
+  export class GPURenderPassEncoder implements GPURenderEncoderBase {
+    label: string | undefined;
+
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsets?: number[]
+    ): void;
+
+    popDebugGroup(): void;
+    pushDebugGroup(groupLabel: string): void;
+    insertDebugMarker(markerLabel: string): void;
+
+    setPipeline(pipeline: GPURenderPipeline): void;
+
+    setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
+
+    draw(
+      vertexCount: number,
+      instanceCount: number,
+      firstVertex: number,
+      firstInstance: number
+    ): void;
+    drawIndexed(
+      indexCount: number,
+      instanceCount: number,
+      firstIndex: number,
+      baseVertex: number,
+      firstInstance: number
+    ): void;
+
+    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+    drawIndexedIndirect(
+      indirectBuffer: GPUBuffer,
+      indirectOffset: number
+    ): void;
+
     setViewport(
       x: number,
       y: number,
@@ -675,9 +752,48 @@ declare global {
 
   export interface GPURenderBundleDescriptor extends GPUObjectDescriptorBase {}
 
-  export interface GPURenderBundle extends GPUObjectBase {}
+  export class GPURenderBundle implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPURenderBundleEncoder extends GPURenderEncoderBase {
+  export class GPURenderBundleEncoder implements GPURenderEncoderBase {
+    label: string | undefined;
+
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsets?: number[]
+    ): void;
+
+    popDebugGroup(): void;
+    pushDebugGroup(groupLabel: string): void;
+    insertDebugMarker(markerLabel: string): void;
+
+    setPipeline(pipeline: GPURenderPipeline): void;
+
+    setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
+
+    draw(
+      vertexCount: number,
+      instanceCount: number,
+      firstVertex: number,
+      firstInstance: number
+    ): void;
+    drawIndexed(
+      indexCount: number,
+      instanceCount: number,
+      firstIndex: number,
+      baseVertex: number,
+      firstInstance: number
+    ): void;
+
+    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+    drawIndexedIndirect(
+      indirectBuffer: GPUBuffer,
+      indirectOffset: number
+    ): void;
+
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
 
@@ -688,29 +804,41 @@ declare global {
     sampleCount?: number;
   }
 
-  export interface GPURenderPipeline extends GPUObjectBase {}
+  export class GPURenderPipeline implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPUSampler extends GPUObjectBase {}
+  export class GPUSampler implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPUShaderModule extends GPUObjectBase {}
+  export class GPUShaderModule implements GPUObjectBase {
+    label: string | undefined;
+  }
 
-  export interface GPUSwapChain extends GPUObjectBase {
+  export class GPUSwapChain implements GPUObjectBase {
+    label: string | undefined;
+
     getCurrentTexture(): GPUTexture;
   }
 
-  export interface GPUTexture extends GPUObjectBase {
+  export class GPUTexture implements GPUObjectBase {
+    label: string | undefined;
+
     createView(descriptor?: GPUTextureViewDescriptor): GPUTextureView;
     destroy(): void;
   }
 
-  export interface GPUTextureView extends GPUObjectBase {}
+  export class GPUTextureView implements GPUObjectBase {
+    label: string | undefined;
+  }
 
   export type GPUPowerPreference = "low-power" | "high-performance";
   export interface GPURequestAdapterOptions {
     powerPreference?: GPUPowerPreference;
   }
 
-  export interface GPU {
+  export class GPU {
     requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter>;
   }
 
@@ -731,11 +859,6 @@ declare global {
 
   export type GPUError = GPUOutOfMemoryError | GPUValidationError;
 
-  export interface GPUDevice {
-    pushErrorScope(filter: GPUErrorFilter): void;
-    popErrorScope(): Promise<GPUError | null>;
-  }
-
   // ****************************************************************************
   // TELEMETRY
   // ****************************************************************************
@@ -752,20 +875,7 @@ declare global {
     error: GPUError;
   }
 
-  export interface GPUDevice extends EventTarget {
-    onuncapturederror: Event | undefined;
-  }
-
-  export interface GPUDeviceLostInfo {
+  export class GPUDeviceLostInfo {
     readonly message: string;
-  }
-
-  export interface GPU {
-    // May reject with DOMException  // TODO: DOMException("OperationError")?
-    requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter>;
-  }
-
-  export interface Navigator {
-    readonly gpu: GPU | undefined;
   }
 }
