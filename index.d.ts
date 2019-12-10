@@ -1,5 +1,6 @@
 // https://github.com/gpuweb/gpuweb/blob/37812f5f39ae8c6dc85f6a12c0f65e9c9d6e2155
 // except #280 setSubData (TODO)
+// plus #488 Make copyImageBitmapToTexture a GPUQueue operation.
 // plus #489 GPUAdapter.limits
 
 export {};
@@ -552,11 +553,6 @@ declare global {
       destination: GPUTextureCopyView,
       copySize: GPUExtent3D
     ): void;
-    copyImageBitmapToTexture(
-      source: GPUImageBitmapCopyView,
-      destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
-    ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
 
     popDebugGroup(): void;
@@ -680,6 +676,11 @@ declare global {
     signal(fence: GPUFence, signalValue: number): void;
     submit(commandBuffers: GPUCommandBuffer[]): void;
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
+    copyImageBitmapToTexture(
+      source: GPUImageBitmapCopyView,
+      destination: GPUTextureCopyView,
+      copySize: GPUExtent3D
+    ): void;
   }
 
   export interface GPURenderEncoderBase extends GPUProgrammablePassEncoder {
