@@ -1,7 +1,6 @@
-// https://github.com/gpuweb/gpuweb/blob/37812f5f39ae8c6dc85f6a12c0f65e9c9d6e2155
-// except #280 setSubData (TODO)
-// plus #488 Make copyImageBitmapToTexture a GPUQueue operation.
-// plus #489 GPUAdapter.limits
+// https://github.com/gpuweb/gpuweb/blob/402b69138fbedf4a3c9c85cd1bf7e1cc27c1b34e/spec/index.bs
+// except #280 which removed setSubData
+// except #494 which reverted the addition of GPUAdapter.limits
 
 export {};
 
@@ -44,6 +43,8 @@ declare global {
     | GPUTextureView
     | GPUBufferBinding;
 
+  export type GPUExtensionName =
+    | "anisotropic-filtering";
   export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
   export type GPUBindingType =
     | "uniform-buffer"
@@ -186,46 +187,42 @@ declare global {
   export type GPUTextureAspect = "all" | "stencil-only" | "depth-only";
 
   export type GPUBufferUsageFlags = number;
-  export enum GPUBufferUsage {
-    NONE = 0x0000,
-    MAP_READ = 0x0001,
-    MAP_WRITE = 0x0002,
-    COPY_SRC = 0x0004,
-    COPY_DST = 0x0008,
-    INDEX = 0x0010,
-    VERTEX = 0x0020,
-    UNIFORM = 0x0040,
-    STORAGE = 0x0080,
-    INDIRECT = 0x0100
-  }
+  export const GPUBufferUsage: {
+    MAP_READ:  0x0001;
+    MAP_WRITE: 0x0002;
+    COPY_SRC:  0x0004;
+    COPY_DST:  0x0008;
+    INDEX:     0x0010;
+    VERTEX:    0x0020;
+    UNIFORM:   0x0040;
+    STORAGE:   0x0080;
+    INDIRECT:  0x0100;
+  };
 
   export type GPUColorWriteFlags = number;
-  export enum GPUColorWrite {
-    NONE = 0x0,
-    RED = 0x1,
-    GREEN = 0x2,
-    BLUE = 0x4,
-    ALPHA = 0x8,
-    ALL = 0xf
-  }
+  export const GPUColorWrite: {
+    RED:   0x1;
+    GREEN: 0x2;
+    BLUE:  0x4;
+    ALPHA: 0x8;
+    ALL:   0xf;
+  };
 
   export type GPUShaderStageFlags = number;
-  export enum GPUShaderStage {
-    NONE = 0x0,
-    VERTEX = 0x1,
-    FRAGMENT = 0x2,
-    COMPUTE = 0x4
-  }
+  export const GPUShaderStage: {
+    VERTEX:   0x1;
+    FRAGMENT: 0x2;
+    COMPUTE:  0x4;
+  };
 
   export type GPUTextureUsageFlags = number;
-  export enum GPUTextureUsage {
-    NONE = 0x00,
-    COPY_SRC = 0x01,
-    COPY_DST = 0x02,
-    SAMPLED = 0x04,
-    STORAGE = 0x08,
-    OUTPUT_ATTACHMENT = 0x10
-  }
+  export const GPUTextureUsage: {
+    COPY_SRC:          0x01;
+    COPY_DST:          0x02;
+    SAMPLED:           0x04;
+    STORAGE:           0x08;
+    OUTPUT_ATTACHMENT: 0x10;
+  };
 
   export interface GPUBindGroupBinding {
     binding: number;
@@ -319,12 +316,8 @@ declare global {
   }
 
   export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
-    extensions?: GPUExtensions;
+    extensions?: GPUExtensionName[];
     limits?: GPULimits;
-  }
-
-  export interface GPUExtensions {
-    anisotropicFiltering?: boolean;
   }
 
   export interface GPUFenceDescriptor extends GPUObjectDescriptorBase {
@@ -486,7 +479,7 @@ declare global {
 
   export class GPUAdapter {
     readonly name: string;
-    readonly extensions: GPUExtensions;
+    readonly extensions: GPUExtensionName[];
     readonly limits: GPULimitsOut;
 
     requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
@@ -605,7 +598,7 @@ declare global {
     label: string | undefined;
 
     readonly adapter: GPUAdapter;
-    readonly extensions: GPUExtensions;
+    readonly extensions: GPUExtensionName[];
     readonly limits: GPULimitsOut;
 
     createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
@@ -616,9 +609,6 @@ declare global {
     createBufferMapped(
       descriptor: GPUBufferDescriptor
     ): [GPUBuffer, ArrayBuffer];
-    createBufferMappedAsync(
-      descriptor: GPUBufferDescriptor
-    ): Promise<[GPUBuffer, ArrayBuffer]>;
     createComputePipeline(
       descriptor: GPUComputePipelineDescriptor
     ): GPUComputePipeline;
