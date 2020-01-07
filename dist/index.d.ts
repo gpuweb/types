@@ -478,6 +478,8 @@ declare global {
   }
 
   export class GPUAdapter {
+    // https://michalzalecki.com/nominal-typing-in-typescript/#approach-1-class-with-a-private-property
+    private __brand: void;
     readonly name: string;
     readonly extensions: GPUExtensionName[];
     readonly limits: GPULimitsOut;
@@ -486,14 +488,17 @@ declare global {
   }
 
   export class GPUBindGroup implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPUBindGroupLayout implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPUBuffer implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     //readonly mapping: ArrayBuffer | null;
@@ -512,12 +517,14 @@ declare global {
   }
 
   export class GPUCommandBuffer implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export interface GPUCommandBufferDescriptor extends GPUObjectDescriptorBase {}
 
   export class GPUCommandEncoder implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     beginComputePass(
@@ -556,6 +563,7 @@ declare global {
   export interface GPUComputePassDescriptor extends GPUObjectDescriptorBase {}
 
   export class GPUComputePassEncoder implements GPUProgrammablePassEncoder {
+    private __brand: void;
     label: string | undefined;
 
     setBindGroup(
@@ -576,6 +584,7 @@ declare global {
   }
 
   export class GPUComputePipeline implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
@@ -589,12 +598,14 @@ declare global {
 
   // SwapChain / CanvasContext
   export class GPUCanvasContext {
+    private __brand: void;
     configureSwapChain(descriptor: GPUSwapChainDescriptor): GPUSwapChain;
 
     getSwapChainPreferredFormat(device: GPUDevice): Promise<GPUTextureFormat>;
   }
 
   export class GPUDevice extends EventTarget implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     readonly adapter: GPUAdapter;
@@ -638,6 +649,7 @@ declare global {
   }
 
   export class GPUFence implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     getCompletedValue(): number;
@@ -645,6 +657,7 @@ declare global {
   }
 
   export class GPUPipelineLayout implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
@@ -661,6 +674,7 @@ declare global {
   }
 
   export class GPUQueue implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     signal(fence: GPUFence, signalValue: number): void;
@@ -701,6 +715,7 @@ declare global {
   }
 
   export class GPURenderPassEncoder implements GPURenderEncoderBase {
+    private __brand: void;
     label: string | undefined;
 
     setBindGroup(
@@ -758,10 +773,12 @@ declare global {
   export interface GPURenderBundleDescriptor extends GPUObjectDescriptorBase {}
 
   export class GPURenderBundle implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPURenderBundleEncoder implements GPURenderEncoderBase {
+    private __brand: void;
     label: string | undefined;
 
     setBindGroup(
@@ -810,24 +827,29 @@ declare global {
   }
 
   export class GPURenderPipeline implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPUSampler implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPUShaderModule implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
   export class GPUSwapChain implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     getCurrentTexture(): GPUTexture;
   }
 
   export class GPUTexture implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
 
     createView(descriptor?: GPUTextureViewDescriptor): GPUTextureView;
@@ -835,6 +857,7 @@ declare global {
   }
 
   export class GPUTextureView implements GPUObjectBase {
+    private __brand: void;
     label: string | undefined;
   }
 
@@ -844,6 +867,7 @@ declare global {
   }
 
   export class GPU {
+    private __brand: void;
     requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter>;
   }
 
@@ -854,10 +878,12 @@ declare global {
   export type GPUErrorFilter = "none" | "out-of-memory" | "validation";
 
   export class GPUOutOfMemoryError {
+    private __brand: void;
     constructor();
   }
 
   export class GPUValidationError {
+    private __brand: void;
     constructor(message: string);
     readonly message: string;
   }
@@ -869,6 +895,7 @@ declare global {
   // ****************************************************************************
 
   export class GPUUncapturedErrorEvent extends Event {
+    private __brand: void;
     constructor(
       type: string,
       gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
@@ -881,6 +908,7 @@ declare global {
   }
 
   export class GPUDeviceLostInfo {
+    private __brand: void;
     readonly message: string;
   }
 }
