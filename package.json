@@ -2,5 +2,15 @@
   "name": "@webgpu/types",
   "version": "0.0.19",
   "main": "",
-  "license": "Apache-2.0"
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "typescript": "^3.7.4"
+  }
 }
