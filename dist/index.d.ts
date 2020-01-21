@@ -246,7 +246,7 @@ declare global {
 
   export interface GPUBindGroupLayoutDescriptor
     extends GPUObjectDescriptorBase {
-    bindings?: GPUBindGroupLayoutBinding[];
+    bindings: GPUBindGroupLayoutBinding[];
   }
 
   export interface GPUBlendDescriptor {
