@@ -238,7 +238,7 @@ declare global {
     binding: number;
     visibility: GPUShaderStageFlags;
     type: GPUBindingType;
-    textureDimension?: GPUTextureViewDimension;
+    viewDimension?: GPUTextureViewDimension;
     textureComponentType?: GPUTextureComponentType;
     multisampled?: boolean;
     hasDynamicOffset?: boolean;
