@@ -1,6 +1,7 @@
 // https://github.com/gpuweb/gpuweb/blob/402b69138fbedf4a3c9c85cd1bf7e1cc27c1b34e/spec/index.bs
 // except #280 which removed setSubData
 // except #494 which reverted the addition of GPUAdapter.limits
+// plus #589 which renamed textureDimension to viewDimension
 
 export {};
 
