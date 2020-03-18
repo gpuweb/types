@@ -1,10 +1,10 @@
-// https://github.com/gpuweb/gpuweb/blob/402b69138fbedf4a3c9c85cd1bf7e1cc27c1b34e/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/0a48816412b5d08a5fb8b89005e019165a1a2c63/spec/index.bs
 
 // tslint:disable:variable-name
 
 // String enums
 export const enum ExtensionName {
-  AnisotropicFiltering = 'anisotropic-filtering',
+  TextureCompressionBC = 'texture-compression-bc',
 }
 export const enum AddressMode {
   ClampToEdge = 'clamp-to-edge',
@@ -16,8 +16,10 @@ export const enum BindingType {
   StorageBuffer = 'storage-buffer',
   ReadonlyStorageBuffer = 'readonly-storage-buffer',
   Sampler = 'sampler',
+  ComparisonSampler = 'comparison-sampler',
   SampledTexture = 'sampled-texture',
-  StorageTexture = 'storage-texture',
+  ReadonlyStorageTexture = 'readonly-storage-texture',
+  WriteonlyStorageTexture = 'writeonly-storage-texture',
 }
 export const enum BlendFactor {
   Zero = 'zero',

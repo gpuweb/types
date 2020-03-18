@@ -1,7 +1,7 @@
-// https://github.com/gpuweb/gpuweb/blob/402b69138fbedf4a3c9c85cd1bf7e1cc27c1b34e/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/0a48816412b5d08a5fb8b89005e019165a1a2c63/spec/index.bs
 // except #280 which removed setSubData
 // except #494 which reverted the addition of GPUAdapter.limits
-// plus #589 which renamed textureDimension to viewDimension
+// except #591 which removed Uint32Array from GPUShaderModuleDescriptor
 
 export {};
 
@@ -45,15 +45,17 @@ declare global {
     | GPUBufferBinding;
 
   export type GPUExtensionName =
-    | "anisotropic-filtering";
+    | "texture-compression-bc";
   export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
   export type GPUBindingType =
     | "uniform-buffer"
     | "storage-buffer"
     | "readonly-storage-buffer"
     | "sampler"
+    | "comparison-sampler"
     | "sampled-texture"
-    | "storage-texture";
+    | "readonly-storage-texture"
+    | "writeonly-storage-texture";
   export type GPUBlendFactor =
     | "zero"
     | "one"
@@ -225,17 +227,17 @@ declare global {
     OUTPUT_ATTACHMENT: 0x10;
   };
 
-  export interface GPUBindGroupBinding {
+  export interface GPUBindGroupEntry {
     binding: number;
     resource: GPUBindingResource;
   }
 
   export interface GPUBindGroupDescriptor extends GPUObjectDescriptorBase {
     layout: GPUBindGroupLayout;
-    bindings: GPUBindGroupBinding[];
+    entries: GPUBindGroupEntry[];
   }
 
-  export interface GPUBindGroupLayoutBinding {
+  export interface GPUBindGroupLayoutEntry {
     binding: number;
     visibility: GPUShaderStageFlags;
     type: GPUBindingType;
@@ -243,11 +245,12 @@ declare global {
     textureComponentType?: GPUTextureComponentType;
     multisampled?: boolean;
     hasDynamicOffset?: boolean;
+    storageTextureFormat?: GPUTextureFormat;
   }
 
   export interface GPUBindGroupLayoutDescriptor
     extends GPUObjectDescriptorBase {
-    bindings: GPUBindGroupLayoutBinding[];
+    entries: GPUBindGroupLayoutEntry[];
   }
 
   export interface GPUBlendDescriptor {
@@ -273,8 +276,8 @@ declare global {
   export interface GPUBufferCopyView {
     buffer: GPUBuffer;
     offset?: number;
-    rowPitch: number;
-    imageHeight: number;
+    bytesPerRow: number;
+    rowsPerImage?: number;
   }
 
   export interface GPUTextureCopyView {
@@ -460,7 +463,6 @@ declare global {
 
   export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
     size: GPUExtent3D;
-    arrayLayerCount?: number;
     mipLevelCount?: number;
     sampleCount?: number;
     dimension?: GPUTextureDimension;
@@ -691,8 +693,8 @@ declare global {
   export interface GPURenderEncoderBase extends GPUProgrammablePassEncoder {
     setPipeline(pipeline: GPURenderPipeline): void;
 
-    setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
-    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
+    setIndexBuffer(buffer: GPUBuffer, offset?: number, size?: number): void;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number, size?: number): void;
 
     draw(
       vertexCount: number,
