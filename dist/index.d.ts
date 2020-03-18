@@ -234,7 +234,7 @@ declare global {
 
   export interface GPUBindGroupDescriptor extends GPUObjectDescriptorBase {
     layout: GPUBindGroupLayout;
-    entries: GPUBindGroupEntry[];
+    entries: Iterable<GPUBindGroupEntry>;
   }
 
   export interface GPUBindGroupLayoutEntry {
@@ -250,7 +250,7 @@ declare global {
 
   export interface GPUBindGroupLayoutDescriptor
     extends GPUObjectDescriptorBase {
-    entries: GPUBindGroupLayoutEntry[];
+    entries: Iterable<GPUBindGroupLayoutEntry>;
   }
 
   export interface GPUBlendDescriptor {
@@ -320,7 +320,7 @@ declare global {
   }
 
   export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
-    extensions?: GPUExtensionName[];
+    extensions?: Iterable<GPUExtensionName>;
     limits?: GPULimits;
   }
 
@@ -339,12 +339,12 @@ declare global {
   export interface GPUVertexBufferLayoutDescriptor {
     arrayStride: number;
     stepMode?: GPUInputStepMode;
-    attributes: GPUVertexAttributeDescriptor[];
+    attributes: Iterable<GPUVertexAttributeDescriptor>;
   }
 
   export interface GPUVertexStateDescriptor {
     indexFormat?: GPUIndexFormat;
-    vertexBuffers?: GPUVertexBufferLayoutDescriptor[];
+    vertexBuffers?: Iterable<GPUVertexBufferLayoutDescriptor>;
   }
 
   export interface GPULimits {
@@ -358,7 +358,7 @@ declare global {
     maxUniformBuffersPerShaderStage?: number;
   }
 
-  export interface GPULimitsOut {
+  export interface GPULimitsOut extends GPULimits {
     maxBindGroups: number;
     maxDynamicUniformBuffersPerPipelineLayout: number;
     maxDynamicStorageBuffersPerPipelineLayout: number;
@@ -375,7 +375,7 @@ declare global {
   }
 
   export interface GPUPipelineLayoutDescriptor extends GPUObjectDescriptorBase {
-    bindGroupLayouts: GPUBindGroupLayout[];
+    bindGroupLayouts: Iterable<GPUBindGroupLayout>;
   }
 
   export interface GPUProgrammableStageDescriptor {
@@ -410,7 +410,7 @@ declare global {
   }
 
   export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
-    colorAttachments: GPURenderPassColorAttachmentDescriptor[];
+    colorAttachments: Iterable<GPURenderPassColorAttachmentDescriptor>;
     depthStencilAttachment?: GPURenderPassDepthStencilAttachmentDescriptor;
   }
 
@@ -421,7 +421,7 @@ declare global {
 
     primitiveTopology: GPUPrimitiveTopology;
     rasterizationState?: GPURasterizationStateDescriptor;
-    colorStates: GPUColorStateDescriptor[];
+    colorStates: Iterable<GPUColorStateDescriptor>;
     depthStencilState?: GPUDepthStencilStateDescriptor;
     vertexState?: GPUVertexStateDescriptor;
 
@@ -572,7 +572,7 @@ declare global {
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
-      dynamicOffsets?: number[]
+      dynamicOffsets?: Iterable<number>
     ): void;
 
     popDebugGroup(): void;
@@ -668,7 +668,7 @@ declare global {
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
-      dynamicOffsets?: number[]
+      dynamicOffsets?: Iterable<number>
     ): void;
 
     popDebugGroup(): void;
@@ -681,7 +681,7 @@ declare global {
     label: string | undefined;
 
     signal(fence: GPUFence, signalValue: number): void;
-    submit(commandBuffers: GPUCommandBuffer[]): void;
+    submit(commandBuffers: Iterable<GPUCommandBuffer>): void;
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
     copyImageBitmapToTexture(
       source: GPUImageBitmapCopyView,
@@ -724,7 +724,7 @@ declare global {
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
-      dynamicOffsets?: number[]
+      dynamicOffsets?: Iterable<number>
     ): void;
 
     popDebugGroup(): void;
@@ -769,7 +769,7 @@ declare global {
     setBlendColor(color: GPUColor): void;
     setStencilReference(reference: number): void;
 
-    executeBundles(bundles: GPURenderBundle[]): void;
+    executeBundles(bundles: Iterable<GPURenderBundle>): void;
     endPass(): void;
   }
 
@@ -787,7 +787,7 @@ declare global {
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
-      dynamicOffsets?: number[]
+      dynamicOffsets?: Iterable<number>
     ): void;
 
     popDebugGroup(): void;
@@ -824,7 +824,7 @@ declare global {
 
   export interface GPURenderBundleEncoderDescriptor
     extends GPUObjectDescriptorBase {
-    colorFormats: GPUTextureFormat[];
+    colorFormats: Iterable<GPUTextureFormat>;
     depthStencilFormat?: GPUTextureFormat;
     sampleCount?: number;
   }
