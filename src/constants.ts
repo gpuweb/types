@@ -129,7 +129,7 @@ export const enum TextureFormat {
   BGRA8Unorm = 'bgra8unorm',
   BGRA8UnormSRGB = 'bgra8unorm-srgb',
   RGB10A2Unorm = 'rgb10a2unorm',
-  RGB11B10Float = 'rg11b10float',
+  RG11B10Float = 'rg11b10float',
   RG32Uint = 'rg32uint',
   RG32Sint = 'rg32sint',
   RG32Float = 'rg32float',
