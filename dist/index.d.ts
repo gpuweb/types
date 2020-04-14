@@ -2,6 +2,7 @@
 // except #280 which removed setSubData
 // except #494 which reverted the addition of GPUAdapter.limits
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
+// including #543 which adds GPUPipelineBase.getBindGroupLayout
 
 export {};
 
@@ -371,7 +372,7 @@ declare global {
 
   export interface GPUPipelineDescriptorBase {
     label?: string;
-    layout: GPUPipelineLayout;
+    layout?: GPUPipelineLayout;
   }
 
   export interface GPUPipelineLayoutDescriptor extends GPUObjectDescriptorBase {
@@ -586,9 +587,11 @@ declare global {
     endPass(): void;
   }
 
-  export class GPUComputePipeline implements GPUObjectBase {
+  export class GPUComputePipeline implements GPUPipelineBase {
     private __brand: void;
     label: string | undefined;
+
+    getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
 
   export interface GPUObjectBase {
@@ -657,6 +660,10 @@ declare global {
 
     getCompletedValue(): number;
     onCompletion(completionValue: number): Promise<void>;
+  }
+
+  export interface GPUPipelineBase extends GPUObjectBase {
+    getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
 
   export class GPUPipelineLayout implements GPUObjectBase {
@@ -829,9 +836,11 @@ declare global {
     sampleCount?: number;
   }
 
-  export class GPURenderPipeline implements GPUObjectBase {
+  export class GPURenderPipeline implements GPUPipelineBase {
     private __brand: void;
     label: string | undefined;
+
+    getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
 
   export class GPUSampler implements GPUObjectBase {
