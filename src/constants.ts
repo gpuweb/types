@@ -1,4 +1,4 @@
-// https://github.com/gpuweb/gpuweb/blob/0a48816412b5d08a5fb8b89005e019165a1a2c63/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/01b20b4ad93fabae1e8e0d7752515f69708d33e0/spec/index.bs
 
 // tslint:disable:variable-name
 
@@ -193,6 +193,14 @@ export const enum TextureAspect {
   StencilOnly = 'stencil-only',
   DepthOnly = 'depth-only',
 }
+export const enum CompilationMessageType {
+  Error = 'error',
+  Warning = 'warning',
+  Info = 'info',
+}
+export const enum QueryType {
+  Occlusion = 'occlusion',
+}
 
 // Bit fields
 export const enum BufferUsage {
@@ -205,6 +213,7 @@ export const enum BufferUsage {
   Uniform = 0x0040,
   Storage = 0x0080,
   Indirect = 0x0100,
+  QueryResolve = 0x0200,
 }
 export const enum ColorWrite {
   Red = 0x1,
