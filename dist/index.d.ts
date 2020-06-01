@@ -409,11 +409,11 @@ declare global {
 
     depthLoadValue: GPULoadOp | number;
     depthStoreOp: GPUStoreOp;
-    depthReadOnly: boolean;
+    depthReadOnly?: boolean;
 
     stencilLoadValue: GPULoadOp | number;
     stencilStoreOp: GPUStoreOp;
-    stencilReadOnly: boolean;
+    stencilReadOnly?: boolean;
   }
 
   export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
