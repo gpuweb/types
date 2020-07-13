@@ -3,6 +3,7 @@
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
 // except #708's removal of mapWriteAsync/mapReadAsync/createBufferMapped
 // except #691 et al which added pipeline statistics query (still in flux)
+// including #678 which adds GPUBindGroupLayoutEntry.minBufferBindingSize
 
 export {};
 
@@ -243,10 +244,11 @@ declare global {
     binding: number;
     visibility: GPUShaderStageFlags;
     type: GPUBindingType;
+    hasDynamicOffset?: boolean;
+    minBufferBindingSize?: number;
     viewDimension?: GPUTextureViewDimension;
     textureComponentType?: GPUTextureComponentType;
     multisampled?: boolean;
-    hasDynamicOffset?: boolean;
     storageTextureFormat?: GPUTextureFormat;
   }
 
