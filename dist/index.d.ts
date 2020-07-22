@@ -4,6 +4,7 @@
 // except #708's removal of mapWriteAsync/mapReadAsync/createBufferMapped
 // except #691 et al which added pipeline statistics query (still in flux)
 // including #678 which adds GPUBindGroupLayoutEntry.minBufferBindingSize
+// including #605 which adds new mapping, but without removing the old mapping
 
 export {};
 
@@ -228,6 +229,12 @@ declare global {
     SAMPLED:           0x04;
     STORAGE:           0x08;
     OUTPUT_ATTACHMENT: 0x10;
+  };
+
+  export type GPUMapModeFlags = number;
+  export const GPUMapMode: {
+    READ:  0x1;
+    WRITE: 0x2;
   };
 
   export interface GPUBindGroupEntry {
@@ -518,7 +525,7 @@ declare global {
     destroy(): void;
     unmap(): void;
 
-    mapAsync(offset?: number, size?: number): Promise<void>;
+    mapAsync(mode: GPUMapModeFlags, offset?: number, size?: number): Promise<void>;
     getMappedRange(offset?: number, size?: number): ArrayBuffer;
 
     // TODO: remove

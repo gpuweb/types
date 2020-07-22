@@ -234,3 +234,7 @@ export const enum TextureUsage {
   Storage = 0x08,
   OutputAttachment = 0x10,
 }
+export const enum MapMode {
+  Read = 0x01,
+  Write = 0x02,
+}
