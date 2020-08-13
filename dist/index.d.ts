@@ -740,6 +740,7 @@ declare global {
 
   type GPUQueryType =
     | "occlusion"
+    | "timestamp"
     | "pipeline-statistics";
   type GPUPipelineStatisticName =
     | "vertex-shader-invocations"
