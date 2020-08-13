@@ -1,10 +1,7 @@
-// https://github.com/gpuweb/gpuweb/blob/01b20b4ad93fabae1e8e0d7752515f69708d33e0/spec/index.bs
+// https://github.com/gpuweb/gpuweb/blob/38236513beaf98e1579b212c0df6f33bd19691ab/spec/index.bs
 // except #494 which reverted the addition of GPUAdapter.limits
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
-// except #708's removal of mapWriteAsync/mapReadAsync/createBufferMapped
-// except #691 et al which added pipeline statistics query (still in flux)
-// including #678 which adds GPUBindGroupLayoutEntry.minBufferBindingSize
-// including #605 which adds new mapping, but without removing the old mapping
+// except removal of old setIndexBuffer signature in #943
 
 export {};
 
@@ -48,7 +45,10 @@ declare global {
     | GPUBufferBinding;
 
   export type GPUExtensionName =
-    | "texture-compression-bc";
+    | "texture-compression-bc"
+    | "timestamp-query"
+    | "pipeline-statistics-query"
+    | "depth-clamping";
   export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
   export type GPUBindingType =
     | "uniform-buffer"
@@ -327,6 +327,8 @@ declare global {
 
   export interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
     label?: string;
+
+    measureExecutionTime?: boolean;
   }
 
   export interface GPUComputePipelineDescriptor
@@ -384,17 +386,7 @@ declare global {
     maxStorageBuffersPerShaderStage?: number;
     maxStorageTexturesPerShaderStage?: number;
     maxUniformBuffersPerShaderStage?: number;
-  }
-
-  export interface GPULimitsOut extends GPULimits {
-    maxBindGroups: number;
-    maxDynamicUniformBuffersPerPipelineLayout: number;
-    maxDynamicStorageBuffersPerPipelineLayout: number;
-    maxSampledTexturesPerShaderStage: number;
-    maxSamplersPerShaderStage: number;
-    maxStorageBuffersPerShaderStage: number;
-    maxStorageTexturesPerShaderStage: number;
-    maxUniformBuffersPerShaderStage: number;
+    maxUniformBufferBindingSize?: number;
   }
 
   export interface GPUPipelineDescriptorBase {
@@ -414,6 +406,7 @@ declare global {
   export interface GPURasterizationStateDescriptor {
     frontFace?: GPUFrontFace;
     cullMode?: GPUCullMode;
+    clampDepth?: boolean;
     depthBias?: number;
     depthBiasSlopeScale?: number;
     depthBiasClamp?: number;
@@ -461,16 +454,16 @@ declare global {
   }
 
   export interface GPUSamplerDescriptor extends GPUObjectDescriptorBase {
-    compare?: GPUCompareFunction;
-    lodMaxClamp?: number;
-    lodMinClamp?: number;
-    magFilter?: GPUFilterMode;
-    maxAnisotropy?: number;
-    minFilter?: GPUFilterMode;
-    mipmapFilter?: GPUFilterMode;
     addressModeU?: GPUAddressMode;
     addressModeV?: GPUAddressMode;
     addressModeW?: GPUAddressMode;
+    magFilter?: GPUFilterMode;
+    minFilter?: GPUFilterMode;
+    mipmapFilter?: GPUFilterMode;
+    lodMinClamp?: number;
+    lodMaxClamp?: number;
+    compare?: GPUCompareFunction;
+    maxAnisotropy?: number;
   }
 
   export interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
@@ -517,9 +510,9 @@ declare global {
     private __brand: void;
     readonly name: string;
     readonly extensions: GPUExtensionName[];
-    readonly limits: GPULimitsOut;
+    readonly limits: Required<GPULimits>;
 
-    requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
+    requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice | null>;
   }
 
   export class GPUBindGroup implements GPUObjectBase {
@@ -541,15 +534,13 @@ declare global {
 
     mapAsync(mode: GPUMapModeFlags, offset?: number, size?: number): Promise<void>;
     getMappedRange(offset?: number, size?: number): ArrayBuffer;
-
-    // TODO: remove
-    mapWriteAsync(): Promise<ArrayBuffer>;
-    mapReadAsync(): Promise<ArrayBuffer>;
   }
 
   export class GPUCommandBuffer implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
+
+    readonly executionTime: Promise<number>;
   }
 
   export interface GPUCommandBufferDescriptor extends GPUObjectDescriptorBase {}
@@ -586,6 +577,8 @@ declare global {
     ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
 
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
+
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
     insertDebugMarker(markerLabel: string): void;
@@ -593,7 +586,7 @@ declare global {
 
   export interface GPUComputePassDescriptor extends GPUObjectDescriptorBase {}
 
-  export class GPUComputePassEncoder implements GPUProgrammablePassEncoder {
+  export class GPUComputePassEncoder implements GPUObjectBase, GPUProgrammablePassEncoder {
     private __brand: void;
     label: string | undefined;
 
@@ -610,6 +603,10 @@ declare global {
     setPipeline(pipeline: GPUComputePipeline): void;
     dispatch(x: number, y?: number, z?: number): void;
     dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
+    beginPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
 
     endPass(): void;
   }
@@ -643,28 +640,32 @@ declare global {
 
     readonly adapter: GPUAdapter;
     readonly extensions: GPUExtensionName[];
-    readonly limits: GPULimitsOut;
+    readonly limits: Required<GPULimits>;
 
     createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
     createBindGroupLayout(
       descriptor: GPUBindGroupLayoutDescriptor
     ): GPUBindGroupLayout;
     createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
-    createBufferMapped(
-      descriptor: GPUBufferDescriptor
-    ): [GPUBuffer, ArrayBuffer];
-    createComputePipeline(
-      descriptor: GPUComputePipelineDescriptor
-    ): GPUComputePipeline;
     createPipelineLayout(
       descriptor: GPUPipelineLayoutDescriptor
     ): GPUPipelineLayout;
-    createRenderPipeline(
-      descriptor: GPURenderPipelineDescriptor
-    ): GPURenderPipeline;
     createSampler(descriptor?: GPUSamplerDescriptor): GPUSampler;
     createShaderModule(descriptor: GPUShaderModuleDescriptor): GPUShaderModule;
     createTexture(descriptor: GPUTextureDescriptor): GPUTexture;
+
+    createComputePipeline(
+      descriptor: GPUComputePipelineDescriptor
+    ): GPUComputePipeline;
+    createRenderPipeline(
+      descriptor: GPURenderPipelineDescriptor
+    ): GPURenderPipeline;
+    createReadyComputePipeline(
+      descriptor: GPUComputePipelineDescriptor
+    ): Promise<GPUComputePipeline>;
+    createReadyRenderPipeline(
+      descriptor: GPURenderPipelineDescriptor
+    ): Promise<GPURenderPipeline>;
 
     createCommandEncoder(
       descriptor?: GPUCommandEncoderDescriptor
@@ -700,7 +701,7 @@ declare global {
     label: string | undefined;
   }
 
-  export interface GPUProgrammablePassEncoder extends GPUObjectBase {
+  export interface GPUProgrammablePassEncoder {
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
@@ -722,11 +723,11 @@ declare global {
 
     writeBuffer(buffer: GPUBuffer,
                 bufferOffset: number,
-                data: ArrayBuffer,
+                data: BufferSource | SharedArrayBuffer,
                 dataOffset?: number,
                 size?: number): void;
     writeTexture(destination: GPUTextureCopyView,
-                 data: ArrayBuffer,
+                 data: BufferSource | SharedArrayBuffer,
                  dataLayout: GPUTextureDataLayout,
                  size: GPUExtent3D): void;
 
@@ -738,11 +739,19 @@ declare global {
   }
 
   type GPUQueryType =
-    | "occlusion";
+    | "occlusion"
+    | "pipeline-statistics";
+  type GPUPipelineStatisticName =
+    | "vertex-shader-invocations"
+    | "clipper-invocations"
+    | "clipper-primitives-out"
+    | "fragment-shader-invocations"
+    | "compute-shader-invocations";
 
   export interface GPUQuerySetDescriptor extends GPUObjectDescriptorBase {
     type: GPUQueryType;
     count: number;
+    pipelineStatistics?: Iterable<GPUPipelineStatisticName>;
   }
 
   export class GPUQuerySet implements GPUObjectBase {
@@ -752,10 +761,11 @@ declare global {
     destroy(): void;
   }
 
-  export interface GPURenderEncoderBase extends GPUProgrammablePassEncoder {
+  export interface GPURenderEncoderBase {
     setPipeline(pipeline: GPURenderPipeline): void;
 
     setIndexBuffer(buffer: GPUBuffer, offset?: number, size?: number): void;
+    setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number, size?: number): void;
 
     draw(
@@ -779,7 +789,7 @@ declare global {
     ): void;
   }
 
-  export class GPURenderPassEncoder implements GPURenderEncoderBase {
+  export class GPURenderPassEncoder implements GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
     private __brand: void;
     label: string | undefined;
 
@@ -796,6 +806,7 @@ declare global {
     setPipeline(pipeline: GPURenderPipeline): void;
 
     setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
+    setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
 
     draw(
@@ -831,8 +842,11 @@ declare global {
     setBlendColor(color: GPUColor): void;
     setStencilReference(reference: number): void;
 
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
     beginOcclusionQuery(queryIndex: number): void;
-    endOcclusionQuery(queryIndex: number): void;
+    endOcclusionQuery(): void;
+    beginPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
 
     executeBundles(bundles: Iterable<GPURenderBundle>): void;
     endPass(): void;
@@ -862,6 +876,7 @@ declare global {
     setPipeline(pipeline: GPURenderPipeline): void;
 
     setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
+    setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
 
     draw(
@@ -919,7 +934,7 @@ declare global {
   }
 
   export interface GPUCompilationInfo {
-    readonly messages: Iterable<GPUCompilationMessage>;
+    readonly messages: readonly GPUCompilationMessage[];
   }
 
   export class GPUShaderModule implements GPUObjectBase {
@@ -956,14 +971,14 @@ declare global {
 
   export class GPU {
     private __brand: void;
-    requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter>;
+    requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter | null>;
   }
 
   // ****************************************************************************
   // ERROR SCOPES
   // ****************************************************************************
 
-  export type GPUErrorFilter = "none" | "out-of-memory" | "validation";
+  export type GPUErrorFilter = "out-of-memory" | "validation";
 
   export class GPUOutOfMemoryError {
     private __brand: void;
