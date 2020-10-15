@@ -128,8 +128,9 @@ export const enum TextureFormat {
   RGBA8Sint = 'rgba8sint',
   BGRA8Unorm = 'bgra8unorm',
   BGRA8UnormSRGB = 'bgra8unorm-srgb',
+  RGB9E5Ufloat = 'rgb9e5ufloat',
   RGB10A2Unorm = 'rgb10a2unorm',
-  RG11B10Float = 'rg11b10float',
+  RG11B10Ufloat = 'rg11b10ufloat',
   RG32Uint = 'rg32uint',
   RG32Sint = 'rg32sint',
   RG32Float = 'rg32float',
@@ -147,6 +148,7 @@ export const enum TextureComponentType {
   Float = 'float',
   Sint = 'sint',
   Uint = 'uint',
+  DepthComparison = 'depth-comparison',
 }
 export const enum TextureViewDimension {
   E1d = '1d',
