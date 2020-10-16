@@ -30,14 +30,14 @@ declare global {
     y?: number;
     z?: number;
   }
-  export type GPUOrigin3D = [number, number, number] | GPUOrigin3DDict;
+  export type GPUOrigin3D = number[] | GPUOrigin3DDict;
 
   export interface GPUExtent3DDict {
     width: number;
     height: number;
     depth: number;
   }
-  export type GPUExtent3D = [number, number, number] | GPUExtent3DDict;
+  export type GPUExtent3D = number[] | GPUExtent3DDict;
 
   export type GPUBindingResource =
     | GPUSampler
