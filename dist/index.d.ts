@@ -30,14 +30,14 @@ declare global {
     y?: number;
     z?: number;
   }
-  export type GPUOrigin3D = [number, number, number] | GPUOrigin3DDict;
+  export type GPUOrigin3D = number[] | GPUOrigin3DDict;
 
   export interface GPUExtent3DDict {
     width: number;
     height: number;
     depth: number;
   }
-  export type GPUExtent3D = [number, number, number] | GPUExtent3DDict;
+  export type GPUExtent3D = number[] | GPUExtent3DDict;
 
   export type GPUBindingResource =
     | GPUSampler
@@ -57,6 +57,7 @@ declare global {
     | "sampler"
     | "comparison-sampler"
     | "sampled-texture"
+    | "multisampled-texture"
     | "readonly-storage-texture"
     | "writeonly-storage-texture";
   export type GPUBlendFactor =
@@ -137,7 +138,8 @@ declare global {
     | "bgra8unorm"
     | "bgra8unorm-srgb"
     | "rgb10a2unorm"
-    | "rg11b10float"
+    | "rg11b10ufloat"
+    | "rgb9e5ufloat"
     | "rg32uint"
     | "rg32sint"
     | "rg32float"
@@ -161,10 +163,10 @@ declare global {
     | "bc5-rg-unorm"
     | "bc5-rg-snorm"
     | "bc6h-rgb-ufloat"
-    | "bc6h-rgb-sfloat"
+    | "bc6h-rgb-float"
     | "bc7-rgba-unorm"
     | "bc7-rgba-unorm-srgb";
-  export type GPUTextureComponentType = "float" | "sint" | "uint";
+  export type GPUTextureComponentType = "float" | "sint" | "uint" | "depth-comparison";
   export type GPUTextureViewDimension =
     | "1d"
     | "2d"
@@ -269,7 +271,6 @@ declare global {
     minBufferBindingSize?: number;
     viewDimension?: GPUTextureViewDimension;
     textureComponentType?: GPUTextureComponentType;
-    multisampled?: boolean;
     storageTextureFormat?: GPUTextureFormat;
   }
 
@@ -765,7 +766,6 @@ declare global {
   export interface GPURenderEncoderBase {
     setPipeline(pipeline: GPURenderPipeline): void;
 
-    setIndexBuffer(buffer: GPUBuffer, offset?: number, size?: number): void;
     setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number, size?: number): void;
 
@@ -806,7 +806,6 @@ declare global {
 
     setPipeline(pipeline: GPURenderPipeline): void;
 
-    setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
     setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
 
@@ -876,7 +875,6 @@ declare global {
 
     setPipeline(pipeline: GPURenderPipeline): void;
 
-    setIndexBuffer(buffer: GPUBuffer, offset?: number): void;
     setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
     setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
 
