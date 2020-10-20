@@ -1,6 +1,10 @@
-# Definitely Typed
+# Typescript Type Definitions for WebGPU
 
-The repository for WebGPU developing when using TypeScript.
+This package defines Typescript types (`.d.ts`) for the upcoming [WebGPU standard](https://github.com/gpuweb/gpuweb/wiki/Implementation-Status).
+
+_This package matches the work-in-progress WebGPU API, which is **currently unstable!**_
+
+Use this package to augment the ambient [`"dom"`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#compiler-options) type definitions with the new definitions for WebGPU.
 
 ## What are declaration files?
 
