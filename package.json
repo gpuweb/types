@@ -1,5 +1,8 @@
 {
   "name": "@webgpu/types",
+  "repository": "gpuweb/types",
+  "homepage": "https://github.com/gpuweb/types",
+  "bugs": "https://github.com/gpuweb/types/issues",
   "version": "0.0.31",
   "main": "",
   "types": "dist/index.d.ts",
