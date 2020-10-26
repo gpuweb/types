@@ -876,7 +876,7 @@ declare global {
     setPipeline(pipeline: GPURenderPipeline): void;
 
     setIndexBuffer(buffer: GPUBuffer, indexFormat: GPUIndexFormat, offset?: number, size?: number): void;
-    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number, size?: number): void;
 
     draw(
       vertexCount: number,
