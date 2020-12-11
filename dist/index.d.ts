@@ -577,7 +577,8 @@ declare global {
       copySize: GPUExtent3D
     ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
-
+    
+    resolveQuerySet(querySet: GPUQuerySet, firstQuery: number, queryCount: number, destination: GPUBuffer, destinationOffset: number): void;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
 
     popDebugGroup(): void;
