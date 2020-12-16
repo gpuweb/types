@@ -11,6 +11,10 @@ declare global {
     readonly gpu: GPU | undefined;
   }
 
+  export interface HTMLCanvasElement {
+    getContext(contextId: "gpupresent"): GPUCanvasContext | null;
+  }
+
   export interface GPUColorDict {
     a: number;
     b: number;
