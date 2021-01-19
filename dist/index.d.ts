@@ -317,6 +317,7 @@ declare global {
     texture: GPUTexture;
     mipLevel?: number;
     origin?: GPUOrigin3D;
+    aspect?: GPUTextureAspect;
   }
 
   export interface GPUImageBitmapCopyView {
