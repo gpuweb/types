@@ -2,7 +2,7 @@
 // except #494 which reverted the addition of GPUAdapter.limits
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
 // except removal of old setIndexBuffer signature in #943
-// except #873 which added aspect back to GPUTextureCopyView
+// plus #873 which added aspect back to GPUTextureCopyView
 
 export {};
 
