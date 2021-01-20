@@ -2,6 +2,7 @@
 // except #494 which reverted the addition of GPUAdapter.limits
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
 // except removal of old setIndexBuffer signature in #943
+// plus #873 which added aspect back to GPUTextureCopyView
 
 export {};
 
@@ -317,6 +318,7 @@ declare global {
     texture: GPUTexture;
     mipLevel?: number;
     origin?: GPUOrigin3D;
+    aspect?: GPUTextureAspect;
   }
 
   export interface GPUImageBitmapCopyView {
