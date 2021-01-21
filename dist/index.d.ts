@@ -3,6 +3,7 @@
 // except #591 which removed Uint32Array from GPUShaderModuleDescriptor
 // except removal of old setIndexBuffer signature in #943
 // plus #873 which added aspect back to GPUTextureCopyView
+// plus #971 which added stencil8 to GPUTextureFormat
 
 export {};
 
@@ -157,6 +158,7 @@ declare global {
     | "depth32float"
     | "depth24plus"
     | "depth24plus-stencil8"
+    | "stencil8"
     | "bc1-rgba-unorm"
     | "bc1-rgba-unorm-srgb"
     | "bc2-rgba-unorm"
