@@ -4,6 +4,8 @@
 // except removal of old setIndexBuffer signature in #943
 // plus #873 which added aspect back to GPUTextureCopyView
 // plus #971 which added stencil8 to GPUTextureFormat
+// plus #1168 which renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
+// plus #1367 which renamed defaultQueue to queue
 
 export {};
 
