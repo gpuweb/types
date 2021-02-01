@@ -273,12 +273,11 @@ declare global {
   export interface GPUBindGroupLayoutEntry {
     binding: number;
     visibility: GPUShaderStageFlags;
-    type: GPUBindingType;
-    hasDynamicOffset?: boolean;
-    minBufferBindingSize?: number;
-    viewDimension?: GPUTextureViewDimension;
-    textureComponentType?: GPUTextureComponentType;
-    storageTextureFormat?: GPUTextureFormat;
+
+    buffer?:GPUBufferBindingLayout
+    sampler?:GPUSamplerBindingLayout;
+    texture?:GPUTextureBindingLayout;
+    storageTexture?:GPUStorageTextureBindingLayout;
   }
 
   export interface GPUBindGroupLayoutDescriptor
