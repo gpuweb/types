@@ -240,3 +240,24 @@ export const enum MapMode {
   Read = 0x01,
   Write = 0x02,
 }
+export const enum GPUBufferBindingType {
+  "uniform" = 0x0001,
+  "storage" = 0x0002,
+  "read-only-storage" = 0x0004,
+}
+export const enum GPUSamplerBindingType {
+  "filtering" = 0x0001,
+  "non-filtering" = 0x0002,
+  "comparison" = 0x0004,
+}
+export const enum GPUTextureSampleType {
+  "float" = 0x0001,
+  "unfilterable-float" = 0x0002,
+  "depth" = 0x0004,
+  "sint" = 0x0008,
+  "uint" = 0x00016,
+}
+export const enum GPUStorageTextureAccess {
+  "read-only" = 0x0001,
+  "write-only" = 0x0002,
+}
