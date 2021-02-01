@@ -234,7 +234,7 @@ export const enum TextureUsage {
   CopyDst = 0x02,
   Sampled = 0x04,
   Storage = 0x08,
-  OutputAttachment = 0x10,
+  RenderAttachment = 0x10,
 }
 export const enum MapMode {
   Read = 0x01,

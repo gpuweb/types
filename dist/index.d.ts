@@ -251,7 +251,7 @@ declare global {
     COPY_DST:          0x02;
     SAMPLED:           0x04;
     STORAGE:           0x08;
-    OUTPUT_ATTACHMENT: 0x10;
+    RENDER_ATTACHMENT: 0x10;
   };
 
   export type GPUMapModeFlags = number;
@@ -585,7 +585,7 @@ declare global {
       copySize: GPUExtent3D
     ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
-    
+
     resolveQuerySet(querySet: GPUQuerySet, firstQuery: number, queryCount: number, destination: GPUBuffer, destinationOffset: number): void;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
 
@@ -686,7 +686,7 @@ declare global {
 
     createQuerySet(descriptor: GPUQuerySetDescriptor): GPUQuerySet;
 
-    defaultQueue: GPUQueue;
+    queue: GPUQueue;
 
     pushErrorScope(filter: GPUErrorFilter): void;
     popErrorScope(): Promise<GPUError | null>;
