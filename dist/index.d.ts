@@ -608,6 +608,14 @@ declare global {
       dynamicOffsets?: Iterable<number>
     ): void;
 
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsetsData: Uint32Array,
+      dynamicOffsetsDataStart: number,
+      dynamicOffsetsDataLength: number
+    ): void;
+
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
     insertDebugMarker(markerLabel: string): void;
@@ -720,6 +728,14 @@ declare global {
       dynamicOffsets?: Iterable<number>
     ): void;
 
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsetsData: Uint32Array,
+      dynamicOffsetsDataStart: number,
+      dynamicOffsetsDataLength: number
+    ): void;
+
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
     insertDebugMarker(markerLabel: string): void;
@@ -811,6 +827,14 @@ declare global {
       dynamicOffsets?: Iterable<number>
     ): void;
 
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsetsData: Uint32Array,
+      dynamicOffsetsDataStart: number,
+      dynamicOffsetsDataLength: number
+    ): void;
+
     popDebugGroup(): void;
     pushDebugGroup(groupLabel: string): void;
     insertDebugMarker(markerLabel: string): void;
@@ -878,6 +902,14 @@ declare global {
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsets?: Iterable<number>
+    ): void;
+
+    setBindGroup(
+      index: number,
+      bindGroup: GPUBindGroup,
+      dynamicOffsetsData: Uint32Array,
+      dynamicOffsetsDataStart: number,
+      dynamicOffsetsDataLength: number
     ): void;
 
     popDebugGroup(): void;
