@@ -10,6 +10,7 @@ Use this package to augment the ambient [`"dom"`](https://www.typescriptlang.org
 
 See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html).
 
+
 ## How can I get them?
 
 ### npm
@@ -22,4 +23,9 @@ npm install --save @webgpu/types
 
 ```sh
 yarn add @webgpu/types
+```
+
+After installing the package, add the types to your `webpack.config.js`:
+```
+"types": ["@webgpu/types"]
 ```
