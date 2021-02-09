@@ -6,26 +6,20 @@ _This package matches the work-in-progress WebGPU API, which is **currently unst
 
 Use this package to augment the ambient [`"dom"`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#compiler-options) type definitions with the new definitions for WebGPU.
 
+
 ## What are declaration files?
 
 See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html).
 
 
-## How can I get them?
+## How can I use them?
 
-### npm
+### Install
 
-```sh
-npm install --save @webgpu/types
-```
+- npm: `npm install --save @webgpu/types`
+- yarn: `yarn add @webgpu/types`
 
-### yarn
+### Configure
 
-```sh
-yarn add @webgpu/types
-```
-
-After installing the package, add the types to your `webpack.config.js`:
-```
-"types": ["@webgpu/types"]
-```
+- webpack: add to `webpack.config.js`: `"types": ["@webgpu/types"]`
+- others: TODO
