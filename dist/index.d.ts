@@ -6,6 +6,8 @@
 // plus #971 which added stencil8 to GPUTextureFormat
 // plus #1168 which renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
 // plus #1367 which renamed defaultQueue to queue
+// plus #1014 which made bytesPerRow optional
+// plus #1375 which renamed to GPUImageCopyX (but without removing old names)
 
 export {};
 
@@ -308,17 +310,23 @@ declare global {
     size?: number;
   }
 
-  export interface GPUTextureDataLayout {
+  /** @deprecated */
+  export type GPUTextureDataLayout = GPUImageDataLayout;
+  export interface GPUImageDataLayout {
     offset?: number;
-    bytesPerRow: number;
+    bytesPerRow?: number;
     rowsPerImage?: number;
   }
 
-  export interface GPUBufferCopyView extends GPUTextureDataLayout {
+  /** @deprecated */
+  export type GPUBufferCopyView = GPUImageCopyBuffer;
+  export interface GPUImageCopyBuffer extends GPUImageDataLayout {
     buffer: GPUBuffer;
   }
 
-  export interface GPUTextureCopyView {
+  /** @deprecated */
+  export type GPUTextureCopyView = GPUImageCopyTexture;
+  export interface GPUImageCopyTexture {
     texture: GPUTexture;
     mipLevel?: number;
     origin?: GPUOrigin3D;
