@@ -8,6 +8,7 @@
 // plus #1367 which renamed defaultQueue to queue
 // plus #1014 which made bytesPerRow optional
 // plus #1375 which renamed to GPUImageCopyX (but without removing old names)
+// plus #1390 which renamed depth to depthOrArrayLayers
 
 export {};
 
@@ -45,7 +46,7 @@ declare global {
   export interface GPUExtent3DDict {
     width: number;
     height: number;
-    depth: number;
+    depthOrArrayLayers: number;
   }
   export type GPUExtent3D = number[] | GPUExtent3DDict;
 
