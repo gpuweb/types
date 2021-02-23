@@ -9,6 +9,7 @@
 // plus #1014 which made bytesPerRow optional
 // plus #1375 which renamed to GPUImageCopyX (but without removing old names)
 // plus #1390 which renamed depth to depthOrArrayLayers
+// plus #1223 which refactors GPUBindGroupLayout to isolate binding type definitions
 
 export {};
 
@@ -61,6 +62,7 @@ declare global {
     | "pipeline-statistics-query"
     | "depth-clamping";
   export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
+  /** @deprecated */
   export type GPUBindingType =
     | "uniform-buffer"
     | "storage-buffer"
@@ -91,6 +93,10 @@ declare global {
     | "reverse-subtract"
     | "min"
     | "max";
+  export type GPUBufferBindingType =
+    | "uniform"
+    | "storage"
+    | "read-only-storage";  
   export type GPUCompareFunction =
     | "never"
     | "less"
@@ -112,6 +118,10 @@ declare global {
     | "line-strip"
     | "triangle-list"
     | "triangle-strip";
+  export type GPUSamplerBindingType =
+    | "filtering"
+    | "non-filtering"
+    | "comparison";
   export type GPUStencilOperation =
     | "keep"
     | "zero"
@@ -121,6 +131,7 @@ declare global {
     | "decrement-clamp"
     | "increment-wrap"
     | "decrement-wrap";
+  export type GPUStorageTextureAccess = "read-only" | "write-only";
   export type GPUStoreOp = "store" | "clear";
   export type GPUTextureDimension = "1d" | "2d" | "3d";
   export type GPUTextureFormat =
@@ -179,6 +190,12 @@ declare global {
     | "bc7-rgba-unorm"
     | "bc7-rgba-unorm-srgb";
   export type GPUTextureComponentType = "float" | "sint" | "uint" | "depth-comparison";
+  export type GPUTextureSampleType =
+    | "float"
+    | "unfilterable-float"
+    | "depth"
+    | "sint"
+    | "uint";
   export type GPUTextureViewDimension =
     | "1d"
     | "2d"
@@ -278,11 +295,23 @@ declare global {
   export interface GPUBindGroupLayoutEntry {
     binding: number;
     visibility: GPUShaderStageFlags;
-    type: GPUBindingType;
+
+    buffer?: GPUBufferBindingLayout;
+    sampler?: GPUSamplerBindingLayout;
+    texture?: GPUTextureBindingLayout;
+    storageTexture?: GPUStorageTextureBindingLayout;
+
+    /** @deprecated */
+    type?: GPUBindingType;
+    /** @deprecated */
     hasDynamicOffset?: boolean;
-    minBufferBindingSize?: number;
+    /** @deprecated */
+    minBufferBindingSize?: number
+    /** @deprecated */
     viewDimension?: GPUTextureViewDimension;
+    /** @deprecated */
     textureComponentType?: GPUTextureComponentType;
+    /** @deprecated */
     storageTextureFormat?: GPUTextureFormat;
   }
 
@@ -295,6 +324,12 @@ declare global {
     dstFactor?: GPUBlendFactor;
     operation?: GPUBlendOperation;
     srcFactor?: GPUBlendFactor;
+  }
+
+  export interface GPUBufferBindingLayout {
+    type?: GPUBufferBindingType;
+    hasDynamicOffset?: boolean;
+    minBindingSize?: number;
   }
 
   export interface GPUColorStateDescriptor {
@@ -486,6 +521,10 @@ declare global {
     maxAnisotropy?: number;
   }
 
+  export interface GPUSamplerBindingLayout {
+    type?: GPUSamplerBindingType;
+  }
+
   export interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
     code: Uint32Array | string;
     label?: string;
@@ -500,10 +539,22 @@ declare global {
     failOp?: GPUStencilOperation;
   }
 
+  export interface GPUStorageTextureBindingLayout {
+    access: GPUStorageTextureAccess;
+    format: GPUTextureFormat;
+    viewDimension?: GPUTextureViewDimension;
+  }
+
   export interface GPUSwapChainDescriptor extends GPUObjectDescriptorBase {
     device: GPUDevice;
     format: GPUTextureFormat;
     usage?: GPUTextureUsageFlags;
+  }
+
+  export interface GPUTextureBindingLayout {
+    sampleType?: GPUTextureSampleType;
+    viewDimension?: GPUTextureViewDimension;
+    multisampled?: boolean;
   }
 
   export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
