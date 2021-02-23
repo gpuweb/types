@@ -5,6 +5,8 @@
 // String enums
 export const enum ExtensionName {
   TextureCompressionBC = 'texture-compression-bc',
+  Depth24UnormStencil8 = 'depth24unorm-stencil8',
+  Depth32FloatStencil8 = 'depth32float-stencil8',
 }
 export const enum AddressMode {
   ClampToEdge = 'clamp-to-edge',
@@ -140,9 +142,11 @@ export const enum TextureFormat {
   RGBA32Uint = 'rgba32uint',
   RGBA32Sint = 'rgba32sint',
   RGBA32Float = 'rgba32float',
+  Depth16Unorm = 'depth16unorm',
   Depth32Float = 'depth32float',
   Depth24Plus = 'depth24plus',
   Depth24PlusStencil8 = 'depth24plus-stencil8',
+  Stencil8 = 'stencil8',
 }
 export const enum TextureComponentType {
   Float = 'float',

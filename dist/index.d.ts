@@ -10,6 +10,8 @@
 // plus #1375 which renamed to GPUImageCopyX (but without removing old names)
 // plus #1390 which renamed depth to depthOrArrayLayers
 // plus #1223 which refactors GPUBindGroupLayout to isolate binding type definitions
+// plus #1024 which added depth24unorm-stencil8 and depth32float-stencil8 to GPUTextureFormat via extensions
+// plus #1026 which added depth16unorm to GPUTextureFormat
 
 export {};
 
@@ -60,7 +62,9 @@ declare global {
     | "texture-compression-bc"
     | "timestamp-query"
     | "pipeline-statistics-query"
-    | "depth-clamping";
+    | "depth-clamping"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8";
   export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
   /** @deprecated */
   export type GPUBindingType =
@@ -171,10 +175,13 @@ declare global {
     | "rgba32uint"
     | "rgba32sint"
     | "rgba32float"
+    | "depth16unorm"
     | "depth32float"
     | "depth24plus"
     | "depth24plus-stencil8"
     | "stencil8"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8"
     | "bc1-rgba-unorm"
     | "bc1-rgba-unorm-srgb"
     | "bc2-rgba-unorm"
