@@ -497,6 +497,7 @@ declare global {
   export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
     colorAttachments: Iterable<GPURenderPassColorAttachmentDescriptor>;
     depthStencilAttachment?: GPURenderPassDepthStencilAttachmentDescriptor;
+    occlusionQuerySet?: GPUQuerySet;
   }
 
   export interface GPURenderPipelineDescriptor
