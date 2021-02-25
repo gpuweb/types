@@ -49,7 +49,7 @@ declare global {
   export interface GPUExtent3DDict {
     width: number;
     height: number;
-    depthOrArrayLayers: number;
+    depthOrArrayLayers?: number;
   }
   export type GPUExtent3D = number[] | GPUExtent3DDict;
 
