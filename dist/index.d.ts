@@ -1036,14 +1036,18 @@ declare global {
     | "warning"
     | "info";
 
-  export interface GPUCompilationMessage {
+  export class GPUCompilationMessage {
+    private __brand: void;
+
     readonly message: string;
     readonly type: GPUCompilationMessageType;
     readonly lineNum: number;
     readonly linePos: number;
   }
 
-  export interface GPUCompilationInfo {
+  export class GPUCompilationInfo {
+    private __brand: void;
+
     readonly messages: readonly GPUCompilationMessage[];
   }
 
