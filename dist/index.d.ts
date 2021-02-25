@@ -1,18 +1,23 @@
+// ****************************************************************
+// NOTE:
+// Every change to this file should be tracked here so that we know
+// the exact status relative to the upstream spec (except bugfixes
+// that bring the file in-line with this tracking).
+// ****************************************************************
+//
+// This revision of the types is based on:
 // https://github.com/gpuweb/gpuweb/blob/38236513beaf98e1579b212c0df6f33bd19691ab/spec/index.bs
-// except #494 which reverted the addition of GPUAdapter.limits
-// except #591 which removed Uint32Array from GPUShaderModuleDescriptor
-// except removal of old setIndexBuffer signature in #943
-// plus #873 which added aspect back to GPUTextureCopyView
-// plus #971 which added stencil8 to GPUTextureFormat
-// plus #1168 which renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
-// plus #1367 which renamed defaultQueue to queue
-// plus #1014 which made bytesPerRow optional
-// plus #1375 which renamed to GPUImageCopyX (but without removing old names)
-// plus #1390 which renamed depth to depthOrArrayLayers
-// plus #1223 which refactors GPUBindGroupLayout to isolate binding type definitions
-// plus #1024 which added depth24unorm-stencil8 and depth32float-stencil8 to GPUTextureFormat via extensions
-// plus #1026 which added depth16unorm to GPUTextureFormat
-// plus #1152+#1441 which made height/depthOrArrayLayers optional
+// - except #494: reverted the addition of GPUAdapter.limits
+// - except #591: removed Uint32Array from GPUShaderModuleDescriptor
+// - except removal of old setIndexBuffer signature in #943
+// - plus #873: added aspect back to GPUTextureCopyView
+// - plus #971: added stencil8 to GPUTextureFormat
+// - plus #1168: renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
+// - plus #1367: renamed defaultQueue to queue
+// - plus #1014: made bytesPerRow optional
+// - plus #1375: renamed to GPUImageCopyX (but without removing old names)
+// - plus #1390: renamed depth to depthOrArrayLayers
+// - plus #1152+#1441: made height/depthOrArrayLayers optional
 
 export {};
 
