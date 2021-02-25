@@ -12,6 +12,7 @@
 // plus #1223 which refactors GPUBindGroupLayout to isolate binding type definitions
 // plus #1024 which added depth24unorm-stencil8 and depth32float-stencil8 to GPUTextureFormat via extensions
 // plus #1026 which added depth16unorm to GPUTextureFormat
+// plus #1152+#1441 which made height/depthOrArrayLayers optional
 
 export {};
 
@@ -48,10 +49,15 @@ declare global {
 
   export interface GPUExtent3DDict {
     width: number;
-    height: number;
-    depthOrArrayLayers: number;
+    height?: number;
+    depthOrArrayLayers?: number;
   }
   export type GPUExtent3D = number[] | GPUExtent3DDict;
+
+  interface GPUExtent3DDictStrict extends GPUExtent3DDict {
+    depth?: undefined;
+  }
+  type GPUExtent3DStrict = number[] | GPUExtent3DDictStrict;
 
   export type GPUBindingResource =
     | GPUSampler
@@ -566,7 +572,7 @@ declare global {
   }
 
   export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
-    size: GPUExtent3D;
+    size: GPUExtent3DStrict;
     mipLevelCount?: number;
     sampleCount?: number;
     dimension?: GPUTextureDimension;
@@ -642,17 +648,17 @@ declare global {
     copyBufferToTexture(
       source: GPUBufferCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     copyTextureToBuffer(
       source: GPUTextureCopyView,
       destination: GPUBufferCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     copyTextureToTexture(
       source: GPUTextureCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
 
@@ -825,12 +831,12 @@ declare global {
     writeTexture(destination: GPUTextureCopyView,
                  data: BufferSource | SharedArrayBuffer,
                  dataLayout: GPUTextureDataLayout,
-                 size: GPUExtent3D): void;
+                 size: GPUExtent3DStrict): void;
 
     copyImageBitmapToTexture(
       source: GPUImageBitmapCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
   }
 
