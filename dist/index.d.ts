@@ -111,7 +111,7 @@ declare global {
   export type GPUBufferBindingType =
     | "uniform"
     | "storage"
-    | "read-only-storage";  
+    | "read-only-storage";
   export type GPUCompareFunction =
     | "never"
     | "less"
@@ -207,7 +207,11 @@ declare global {
     | "bc6h-rgb-float"
     | "bc7-rgba-unorm"
     | "bc7-rgba-unorm-srgb";
-  export type GPUTextureComponentType = "float" | "sint" | "uint" | "depth-comparison";
+  export type GPUTextureComponentType =
+    | "float"
+    | "sint"
+    | "uint"
+    | "depth-comparison";
   export type GPUTextureSampleType =
     | "float"
     | "unfilterable-float"
@@ -324,7 +328,7 @@ declare global {
     /** @deprecated */
     hasDynamicOffset?: boolean;
     /** @deprecated */
-    minBufferBindingSize?: number
+    minBufferBindingSize?: number;
     /** @deprecated */
     viewDimension?: GPUTextureViewDimension;
     /** @deprecated */
@@ -1023,8 +1027,7 @@ declare global {
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
 
-  export interface GPURenderBundleEncoderDescriptor
-    extends GPUObjectDescriptorBase {
+  export interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
     colorFormats: Iterable<GPUTextureFormat>;
     depthStencilFormat?: GPUTextureFormat;
     sampleCount?: number;
