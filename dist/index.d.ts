@@ -1,17 +1,23 @@
+// ****************************************************************
+// NOTE:
+// Every change to this file should be tracked here so that we know
+// the exact status relative to the upstream spec (except bugfixes
+// that bring the file in-line with this tracking).
+// ****************************************************************
+//
+// This revision of the types is based on:
 // https://github.com/gpuweb/gpuweb/blob/38236513beaf98e1579b212c0df6f33bd19691ab/spec/index.bs
-// except #494 which reverted the addition of GPUAdapter.limits
-// except #591 which removed Uint32Array from GPUShaderModuleDescriptor
-// except removal of old setIndexBuffer signature in #943
-// plus #873 which added aspect back to GPUTextureCopyView
-// plus #971 which added stencil8 to GPUTextureFormat
-// plus #1168 which renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
-// plus #1367 which renamed defaultQueue to queue
-// plus #1014 which made bytesPerRow optional
-// plus #1375 which renamed to GPUImageCopyX (but without removing old names)
-// plus #1390 which renamed depth to depthOrArrayLayers
-// plus #1223 which refactors GPUBindGroupLayout to isolate binding type definitions
-// plus #1024 which added depth24unorm-stencil8 and depth32float-stencil8 to GPUTextureFormat via extensions
-// plus #1026 which added depth16unorm to GPUTextureFormat
+// - except #494: reverted the addition of GPUAdapter.limits
+// - except #591: removed Uint32Array from GPUShaderModuleDescriptor
+// - except removal of old setIndexBuffer signature in #943
+// - plus #873: added aspect back to GPUTextureCopyView
+// - plus #971: added stencil8 to GPUTextureFormat
+// - plus #1168: renamed OUTPUT_ATTACHMENT to RENDER_ATTACHMENT
+// - plus #1367: renamed defaultQueue to queue
+// - plus #1014: made bytesPerRow optional
+// - plus #1375: renamed to GPUImageCopyX (but without removing old names)
+// - plus #1390: renamed depth to depthOrArrayLayers
+// - plus #1152+#1441: made height/depthOrArrayLayers optional
 
 export {};
 
@@ -48,10 +54,15 @@ declare global {
 
   export interface GPUExtent3DDict {
     width: number;
-    height: number;
-    depthOrArrayLayers: number;
+    height?: number;
+    depthOrArrayLayers?: number;
   }
   export type GPUExtent3D = number[] | GPUExtent3DDict;
+
+  interface GPUExtent3DDictStrict extends GPUExtent3DDict {
+    depth?: undefined;
+  }
+  type GPUExtent3DStrict = number[] | GPUExtent3DDictStrict;
 
   export type GPUBindingResource =
     | GPUSampler
@@ -100,7 +111,7 @@ declare global {
   export type GPUBufferBindingType =
     | "uniform"
     | "storage"
-    | "read-only-storage";  
+    | "read-only-storage";
   export type GPUCompareFunction =
     | "never"
     | "less"
@@ -196,7 +207,11 @@ declare global {
     | "bc6h-rgb-float"
     | "bc7-rgba-unorm"
     | "bc7-rgba-unorm-srgb";
-  export type GPUTextureComponentType = "float" | "sint" | "uint" | "depth-comparison";
+  export type GPUTextureComponentType =
+    | "float"
+    | "sint"
+    | "uint"
+    | "depth-comparison";
   export type GPUTextureSampleType =
     | "float"
     | "unfilterable-float"
@@ -313,7 +328,7 @@ declare global {
     /** @deprecated */
     hasDynamicOffset?: boolean;
     /** @deprecated */
-    minBufferBindingSize?: number
+    minBufferBindingSize?: number;
     /** @deprecated */
     viewDimension?: GPUTextureViewDimension;
     /** @deprecated */
@@ -497,6 +512,7 @@ declare global {
   export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
     colorAttachments: Iterable<GPURenderPassColorAttachmentDescriptor>;
     depthStencilAttachment?: GPURenderPassDepthStencilAttachmentDescriptor;
+    occlusionQuerySet?: GPUQuerySet;
   }
 
   export interface GPURenderPipelineDescriptor
@@ -565,7 +581,7 @@ declare global {
   }
 
   export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
-    size: GPUExtent3D;
+    size: GPUExtent3DStrict;
     mipLevelCount?: number;
     sampleCount?: number;
     dimension?: GPUTextureDimension;
@@ -641,17 +657,17 @@ declare global {
     copyBufferToTexture(
       source: GPUBufferCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     copyTextureToBuffer(
       source: GPUTextureCopyView,
       destination: GPUBufferCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     copyTextureToTexture(
       source: GPUTextureCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
 
@@ -824,12 +840,12 @@ declare global {
     writeTexture(destination: GPUTextureCopyView,
                  data: BufferSource | SharedArrayBuffer,
                  dataLayout: GPUTextureDataLayout,
-                 size: GPUExtent3D): void;
+                 size: GPUExtent3DStrict): void;
 
     copyImageBitmapToTexture(
       source: GPUImageBitmapCopyView,
       destination: GPUTextureCopyView,
-      copySize: GPUExtent3D
+      copySize: GPUExtent3DStrict
     ): void;
   }
 
@@ -1011,8 +1027,7 @@ declare global {
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
 
-  export interface GPURenderBundleEncoderDescriptor
-    extends GPUObjectDescriptorBase {
+  export interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
     colorFormats: Iterable<GPUTextureFormat>;
     depthStencilFormat?: GPUTextureFormat;
     sampleCount?: number;
@@ -1035,14 +1050,18 @@ declare global {
     | "warning"
     | "info";
 
-  export interface GPUCompilationMessage {
+  export class GPUCompilationMessage {
+    private __brand: void;
+
     readonly message: string;
     readonly type: GPUCompilationMessageType;
     readonly lineNum: number;
     readonly linePos: number;
   }
 
-  export interface GPUCompilationInfo {
+  export class GPUCompilationInfo {
+    private __brand: void;
+
     readonly messages: readonly GPUCompilationMessage[];
   }
 
