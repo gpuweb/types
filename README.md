@@ -21,5 +21,23 @@ See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declar
 
 ### Configure
 
-- webpack: add to `webpack.config.js`: `"types": ["@webgpu/types"]`
-- others: TODO
+**webpack:**  
+In `webpack.config.js` add:
+```
+"types": ["@webgpu/types"]
+```
+
+**`tsc` based bundlers:**  
+In `tsconfig.json`:
+```
+{ 
+  ...
+  "compilerOptions": { 
+    ...
+    "typeRoots": [ "./node_modules/@webgpu/types", "./node_modules/@types"]
+  } 
+}
+```
+
+**others:**  
+TODO
