@@ -9,5 +9,8 @@
   "license": "Apache-2.0",
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "devDependencies": {
+    "bikeshed-to-ts": "^1.0.6"
+  }
 }
