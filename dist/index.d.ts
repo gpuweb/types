@@ -18,6 +18,7 @@
 // - plus #1375: renamed to GPUImageCopyX (but without removing old names)
 // - plus #1390: renamed depth to depthOrArrayLayers
 // - plus #1152+#1441: made height/depthOrArrayLayers optional
+// - plus #1328: add texture dimension limits
 
 export {};
 
@@ -455,6 +456,10 @@ declare global {
   }
 
   export interface GPULimits {
+    maxTextureDimension1D?: number;
+    maxTextureDimension2D?: number;
+    maxTextureDimension3D?: number;
+    maxTextureArrayLayers?: number;
     maxBindGroups?: number;
     maxDynamicUniformBuffersPerPipelineLayout?: number;
     maxDynamicStorageBuffersPerPipelineLayout?: number;
