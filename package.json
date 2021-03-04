@@ -14,6 +14,6 @@
     "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./dist/index.d.ts --forceGlobal"
   },
   "devDependencies": {
-    "bikeshed-to-ts": "^1.0.6"
+    "bikeshed-to-ts": "^1.1.0"
   }
 }

@@ -99,10 +99,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bikeshed-to-ts@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmjs.org/bikeshed-to-ts/-/bikeshed-to-ts-1.0.6.tgz#37e29a6907d7dce1ed52a82ff26272ac4c094467"
-  integrity sha512-KwLaMP8xlQ9cFb8I19odp+MkDP/E1mXe7B5M1Z6iqMmIqvV6Sc+zIo4DVB7M1hcVI9KXqobZCrA1hoHdmhBq8Q==
+bikeshed-to-ts@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/bikeshed-to-ts/-/bikeshed-to-ts-1.1.0.tgz#0b3445ae40ad8f510ca39d0fb0f6c062437a1fef"
+  integrity sha512-yNcF292rBmOKeVVxetg4kXuSozLT/NH/QoMh4WAJZBItg4q4aeWGoEX9o27nWRgFTZRMlGFCZQRF1sTcvQJDUA==
   dependencies:
     "@dekkai/data-source" "^0.2.1"
     typescript "^4.2.2"
