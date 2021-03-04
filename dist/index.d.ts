@@ -1,15 +1,5 @@
-// ****************************************************************
-// NOTE:
-// This file is generated automatically from the spec file
-// `gpuweb/spec/index.bs` which points at the spec repo.
-// As the spec evolves the spec will be incomplete or have bugs,
-// every change needed for this file to work should be tracked here
-// ****************************************************************
-//
-// - commented out `GPUDevice.onuncapturederror` as its type doesn't exist
-
 declare global {
-    export interface GPUObjectBase {
+    interface GPUObjectBase {
         /**
          * A label which can be used by development tools (such as error/warning messages,
          * browser developer tools, or platform debugging utilities) to identify the underlying
@@ -19,39 +9,63 @@ declare global {
          */
         label: string;
     }
-    export interface GPUObjectDescriptorBase {
+    interface GPUObjectDescriptorBase {
         /**
          * The initial value of {@link GPUObjectBase#label|GPUObjectBase.label}.
          */
         label?: string;
     }
-    export interface GPUAdapterLimits {
-        readonly maxTextureDimension1D: GPUSize32;
-        readonly maxTextureDimension2D: GPUSize32;
-        readonly maxTextureDimension3D: GPUSize32;
-        readonly maxTextureArrayLayers: GPUSize32;
-        readonly maxBindGroups: GPUSize32;
-        readonly maxDynamicUniformBuffersPerPipelineLayout: GPUSize32;
-        readonly maxDynamicStorageBuffersPerPipelineLayout: GPUSize32;
-        readonly maxSampledTexturesPerShaderStage: GPUSize32;
-        readonly maxSamplersPerShaderStage: GPUSize32;
-        readonly maxStorageBuffersPerShaderStage: GPUSize32;
-        readonly maxStorageTexturesPerShaderStage: GPUSize32;
-        readonly maxUniformBuffersPerShaderStage: GPUSize32;
-        readonly maxUniformBufferBindingSize: GPUSize32;
-        readonly maxStorageBufferBindingSize: GPUSize32;
-        readonly maxVertexBuffers: GPUSize32;
-        readonly maxVertexAttributes: GPUSize32;
-        readonly maxVertexBufferArrayStride: GPUSize32;
+    interface GPUAdapterLimits {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUAdapterLimits';
+        readonly maxTextureDimension1D: number;
+        readonly maxTextureDimension2D: number;
+        readonly maxTextureDimension3D: number;
+        readonly maxTextureArrayLayers: number;
+        readonly maxBindGroups: number;
+        readonly maxDynamicUniformBuffersPerPipelineLayout: number;
+        readonly maxDynamicStorageBuffersPerPipelineLayout: number;
+        readonly maxSampledTexturesPerShaderStage: number;
+        readonly maxSamplersPerShaderStage: number;
+        readonly maxStorageBuffersPerShaderStage: number;
+        readonly maxStorageTexturesPerShaderStage: number;
+        readonly maxUniformBuffersPerShaderStage: number;
+        readonly maxUniformBufferBindingSize: number;
+        readonly maxStorageBufferBindingSize: number;
+        readonly maxVertexBuffers: number;
+        readonly maxVertexAttributes: number;
+        readonly maxVertexBufferArrayStride: number;
     }
-    export type GPUAdapterFeatures = ReadonlySet<GPUFeatureName>;
-    export interface Navigator {
+    type GPUAdapterFeatures = ReadonlySet<GPUFeatureName>;
+    interface Navigator {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'Navigator';
         readonly gpu: GPU;
     }
-    export interface WorkerNavigator {
+    interface WorkerNavigator {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'WorkerNavigator';
         readonly gpu: GPU;
     }
-    export interface GPU {
+    interface GPU {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPU';
         /**
          * Requests an adapter from the user agent.
          * The user agent chooses whether to return an adapter, and, if so,
@@ -60,11 +74,23 @@ declare global {
          */
         requestAdapter(options?: GPURequestAdapterOptions): Promise<GPUAdapter>;
     }
-    export interface GPURequestAdapterOptions {
+    interface GPURequestAdapterOptions {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURequestAdapterOptions';
         powerPreference?: GPUPowerPreference;
     }
-    export type GPUPowerPreference = "low-power" | "high-performance";
-    export interface GPUAdapter {
+    type GPUPowerPreference = "low-power" | "high-performance";
+    interface GPUAdapter {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUAdapter';
         /**
          * A human-readable name identifying the adapter.
          * The contents are implementation-defined.
@@ -84,7 +110,13 @@ declare global {
          */
         requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
     }
-    export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
+    interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUDeviceDescriptor';
         /**
          * The set of {@link GPUFeatureName} values in this sequence defines the exact set of
          * features that must be enabled on the device.
@@ -100,8 +132,14 @@ declare global {
          */
         nonGuaranteedLimits?: Record<string, GPUSize32>;
     }
-    export type GPUFeatureName = "depth-clamping" | "depth24unorm-stencil8" | "depth32float-stencil8" | "pipeline-statistics-query" | "texture-compression-bc" | "timestamp-query";
-    export interface GPUDevice extends EventTarget, GPUObjectBase {
+    type GPUFeatureName = "depth-clamping" | "depth24unorm-stencil8" | "depth32float-stencil8" | "pipeline-statistics-query" | "texture-compression-bc" | "timestamp-query";
+    interface GPUDevice extends EventTarget, GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUDevice';
         /**
          * The {@link GPUAdapter} from which this device was created.
          */
@@ -223,9 +261,15 @@ declare global {
          * - There are no error scopes on the stack.
          */
         popErrorScope(): Promise<GPUError>;
-        // onuncapturederror: EventHandler;
+        onuncapturederror: EventHandler;
     }
-    export interface GPUBuffer extends GPUObjectBase {
+    interface GPUBuffer extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBuffer';
         /**
          * Maps the given range of the {@link GPUBuffer} and resolves the returned {@link Promise} when the
          * {@link GPUBuffer}'s content is ready to be accessed with {@link GPUBuffer#getMappedRange}.
@@ -250,13 +294,25 @@ declare global {
          */
         destroy(): undefined;
     }
-    export interface GPUBufferDescriptor extends GPUObjectDescriptorBase {
+    interface GPUBufferDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBufferDescriptor';
         size: GPUSize64;
         usage: GPUBufferUsageFlags;
         mappedAtCreation?: boolean;
     }
-    export type GPUBufferUsageFlags = number;
-    export interface GPUBufferUsage {
+    type GPUBufferUsageFlags = number;
+    interface GPUBufferUsage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBufferUsage';
         readonly MAP_READ: GPUFlagsConstant;
         readonly MAP_WRITE: GPUFlagsConstant;
         readonly COPY_SRC: GPUFlagsConstant;
@@ -268,12 +324,24 @@ declare global {
         readonly INDIRECT: GPUFlagsConstant;
         readonly QUERY_RESOLVE: GPUFlagsConstant;
     }
-    export type GPUMapModeFlags = number;
-    export interface GPUMapMode {
+    type GPUMapModeFlags = number;
+    interface GPUMapMode {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUMapMode';
         readonly READ: GPUFlagsConstant;
         readonly WRITE: GPUFlagsConstant;
     }
-    export interface GPUTexture extends GPUObjectBase {
+    interface GPUTexture extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTexture';
         /**
          * Creates a {@link GPUTextureView}.
          * @param descriptor - Description of the {@link GPUTextureView} to create.
@@ -284,7 +352,13 @@ declare global {
          */
         destroy(): undefined;
     }
-    export interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
+    interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTextureDescriptor';
         size: GPUExtent3D;
         mipLevelCount?: GPUIntegerCoordinate;
         sampleCount?: GPUSize32;
@@ -292,18 +366,36 @@ declare global {
         format: GPUTextureFormat;
         usage: GPUTextureUsageFlags;
     }
-    export type GPUTextureDimension = "1d" | "2d" | "3d";
-    export type GPUTextureUsageFlags = number;
-    export interface GPUTextureUsage {
+    type GPUTextureDimension = "1d" | "2d" | "3d";
+    type GPUTextureUsageFlags = number;
+    interface GPUTextureUsage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTextureUsage';
         readonly COPY_SRC: GPUFlagsConstant;
         readonly COPY_DST: GPUFlagsConstant;
         readonly SAMPLED: GPUFlagsConstant;
         readonly STORAGE: GPUFlagsConstant;
         readonly RENDER_ATTACHMENT: GPUFlagsConstant;
     }
-    export interface GPUTextureView extends GPUObjectBase {
+    interface GPUTextureView extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTextureView';
     }
-    export interface GPUTextureViewDescriptor extends GPUObjectDescriptorBase {
+    interface GPUTextureViewDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTextureViewDescriptor';
         format?: GPUTextureFormat;
         dimension?: GPUTextureViewDimension;
         aspect?: GPUTextureAspect;
@@ -312,12 +404,24 @@ declare global {
         baseArrayLayer?: GPUIntegerCoordinate;
         arrayLayerCount?: GPUIntegerCoordinate;
     }
-    export type GPUTextureViewDimension = "1d" | "2d" | "2d-array" | "cube" | "cube-array" | "3d";
-    export type GPUTextureAspect = "all" | "stencil-only" | "depth-only";
-    export type GPUTextureFormat = "r8unorm" | "r8snorm" | "r8uint" | "r8sint" | "r16uint" | "r16sint" | "r16float" | "rg8unorm" | "rg8snorm" | "rg8uint" | "rg8sint" | "r32uint" | "r32sint" | "r32float" | "rg16uint" | "rg16sint" | "rg16float" | "rgba8unorm" | "rgba8unorm-srgb" | "rgba8snorm" | "rgba8uint" | "rgba8sint" | "bgra8unorm" | "bgra8unorm-srgb" | "rgb9e5ufloat" | "rgb10a2unorm" | "rg11b10ufloat" | "rg32uint" | "rg32sint" | "rg32float" | "rgba16uint" | "rgba16sint" | "rgba16float" | "rgba32uint" | "rgba32sint" | "rgba32float" | "stencil8" | "depth16unorm" | "depth24plus" | "depth24plus-stencil8" | "depth32float" | "bc1-rgba-unorm" | "bc1-rgba-unorm-srgb" | "bc2-rgba-unorm" | "bc2-rgba-unorm-srgb" | "bc3-rgba-unorm" | "bc3-rgba-unorm-srgb" | "bc4-r-unorm" | "bc4-r-snorm" | "bc5-rg-unorm" | "bc5-rg-snorm" | "bc6h-rgb-ufloat" | "bc6h-rgb-float" | "bc7-rgba-unorm" | "bc7-rgba-unorm-srgb" | "depth24unorm-stencil8" | "depth32float-stencil8";
-    export interface GPUSampler extends GPUObjectBase {
+    type GPUTextureViewDimension = "1d" | "2d" | "2d-array" | "cube" | "cube-array" | "3d";
+    type GPUTextureAspect = "all" | "stencil-only" | "depth-only";
+    type GPUTextureFormat = "r8unorm" | "r8snorm" | "r8uint" | "r8sint" | "r16uint" | "r16sint" | "r16float" | "rg8unorm" | "rg8snorm" | "rg8uint" | "rg8sint" | "r32uint" | "r32sint" | "r32float" | "rg16uint" | "rg16sint" | "rg16float" | "rgba8unorm" | "rgba8unorm-srgb" | "rgba8snorm" | "rgba8uint" | "rgba8sint" | "bgra8unorm" | "bgra8unorm-srgb" | "rgb9e5ufloat" | "rgb10a2unorm" | "rg11b10ufloat" | "rg32uint" | "rg32sint" | "rg32float" | "rgba16uint" | "rgba16sint" | "rgba16float" | "rgba32uint" | "rgba32sint" | "rgba32float" | "stencil8" | "depth16unorm" | "depth24plus" | "depth24plus-stencil8" | "depth32float" | "bc1-rgba-unorm" | "bc1-rgba-unorm-srgb" | "bc2-rgba-unorm" | "bc2-rgba-unorm-srgb" | "bc3-rgba-unorm" | "bc3-rgba-unorm-srgb" | "bc4-r-unorm" | "bc4-r-snorm" | "bc5-rg-unorm" | "bc5-rg-snorm" | "bc6h-rgb-ufloat" | "bc6h-rgb-float" | "bc7-rgba-unorm" | "bc7-rgba-unorm-srgb" | "depth24unorm-stencil8" | "depth32float-stencil8";
+    interface GPUSampler extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUSampler';
     }
-    export interface GPUSamplerDescriptor extends GPUObjectDescriptorBase {
+    interface GPUSamplerDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUSamplerDescriptor';
         addressModeU?: GPUAddressMode;
         addressModeV?: GPUAddressMode;
         addressModeW?: GPUAddressMode;
@@ -329,21 +433,45 @@ declare global {
         compare?: GPUCompareFunction;
         maxAnisotropy?: number;
     }
-    export type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
-    export type GPUFilterMode = "nearest" | "linear";
-    export type GPUCompareFunction = "never" | "less" | "equal" | "less-equal" | "greater" | "not-equal" | "greater-equal" | "always";
-    export interface GPUBindGroupLayout extends GPUObjectBase {
+    type GPUAddressMode = "clamp-to-edge" | "repeat" | "mirror-repeat";
+    type GPUFilterMode = "nearest" | "linear";
+    type GPUCompareFunction = "never" | "less" | "equal" | "less-equal" | "greater" | "not-equal" | "greater-equal" | "always";
+    interface GPUBindGroupLayout extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroupLayout';
     }
-    export interface GPUBindGroupLayoutDescriptor extends GPUObjectDescriptorBase {
+    interface GPUBindGroupLayoutDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroupLayoutDescriptor';
         entries: Array<GPUBindGroupLayoutEntry>;
     }
-    export type GPUShaderStageFlags = number;
-    export interface GPUShaderStage {
+    type GPUShaderStageFlags = number;
+    interface GPUShaderStage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUShaderStage';
         readonly VERTEX: GPUFlagsConstant;
         readonly FRAGMENT: GPUFlagsConstant;
         readonly COMPUTE: GPUFlagsConstant;
     }
-    export interface GPUBindGroupLayoutEntry {
+    interface GPUBindGroupLayoutEntry {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroupLayoutEntry';
         /**
          * A unique identifier for a resource binding within a
          * {@link GPUBindGroupLayoutEntry}, a corresponding {@link GPUBindGroupEntry},
@@ -377,8 +505,14 @@ declare global {
          */
         storageTexture?: GPUStorageTextureBindingLayout;
     }
-    export type GPUBufferBindingType = "uniform" | "storage" | "read-only-storage";
-    export interface GPUBufferBindingLayout {
+    type GPUBufferBindingType = "uniform" | "storage" | "read-only-storage";
+    interface GPUBufferBindingLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBufferBindingLayout';
         /**
          * Indicates the type required for buffers bound to this bindings.
          */
@@ -392,15 +526,27 @@ declare global {
          */
         minBindingSize?: GPUSize64;
     }
-    export type GPUSamplerBindingType = "filtering" | "non-filtering" | "comparison";
-    export interface GPUSamplerBindingLayout {
+    type GPUSamplerBindingType = "filtering" | "non-filtering" | "comparison";
+    interface GPUSamplerBindingLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUSamplerBindingLayout';
         /**
          * Indicates the required type of a sampler bound to this bindings.
          */
         type?: GPUSamplerBindingType;
     }
-    export type GPUTextureSampleType = "float" | "unfilterable-float" | "depth" | "sint" | "uint";
-    export interface GPUTextureBindingLayout {
+    type GPUTextureSampleType = "float" | "unfilterable-float" | "depth" | "sint" | "uint";
+    interface GPUTextureBindingLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUTextureBindingLayout';
         /**
          * Indicates the type required for texture views bound to this binding.
          */
@@ -418,8 +564,14 @@ declare global {
          */
         multisampled?: boolean;
     }
-    export type GPUStorageTextureAccess = "read-only" | "write-only";
-    export interface GPUStorageTextureBindingLayout {
+    type GPUStorageTextureAccess = "read-only" | "write-only";
+    interface GPUStorageTextureBindingLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUStorageTextureBindingLayout';
         /**
          * Indicates whether texture views bound to this binding will be bound for read-only or
          * write-only access.
@@ -438,51 +590,111 @@ declare global {
          */
         viewDimension?: GPUTextureViewDimension;
     }
-    export interface GPUBindGroup extends GPUObjectBase {
+    interface GPUBindGroup extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroup';
     }
-    export interface GPUBindGroupDescriptor extends GPUObjectDescriptorBase {
+    interface GPUBindGroupDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroupDescriptor';
         layout: GPUBindGroupLayout;
         entries: Array<GPUBindGroupEntry>;
     }
-    export type GPUBindingResource = GPUSampler | GPUTextureView | GPUBufferBinding;
-    export interface GPUBindGroupEntry {
+    type GPUBindingResource = GPUSampler | GPUTextureView | GPUBufferBinding;
+    interface GPUBindGroupEntry {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBindGroupEntry';
         binding: GPUIndex32;
         resource: GPUBindingResource;
     }
-    export interface GPUBufferBinding {
+    interface GPUBufferBinding {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBufferBinding';
         buffer: GPUBuffer;
         offset?: GPUSize64;
         size?: GPUSize64;
     }
-    export interface GPUPipelineLayout extends GPUObjectBase {
+    interface GPUPipelineLayout extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUPipelineLayout';
     }
-    export interface GPUPipelineLayoutDescriptor extends GPUObjectDescriptorBase {
+    interface GPUPipelineLayoutDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUPipelineLayoutDescriptor';
         bindGroupLayouts: Array<GPUBindGroupLayout>;
     }
-    export type GPUCompilationMessageType = "error" | "warning" | "info";
-    export interface GPUCompilationMessage {
+    type GPUCompilationMessageType = "error" | "warning" | "info";
+    interface GPUCompilationMessage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCompilationMessage';
         readonly message: string;
         readonly type: GPUCompilationMessageType;
         readonly lineNum: number;
         readonly linePos: number;
     }
-    export interface GPUCompilationInfo {
+    interface GPUCompilationInfo {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCompilationInfo';
         readonly messages: ReadonlyArray<GPUCompilationMessage>;
     }
-    export interface GPUShaderModule extends GPUObjectBase {
+    interface GPUShaderModule extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUShaderModule';
         /**
          * Returns any messages generated during the {@link GPUShaderModule}'s compilation.
          */
         compilationInfo(): Promise<GPUCompilationInfo>;
     }
-    export interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
+    interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUShaderModuleDescriptor';
         code: string;
         sourceMap?: any;
     }
-    export interface GPUPipelineDescriptorBase extends GPUObjectDescriptorBase {
+    interface GPUPipelineDescriptorBase extends GPUObjectDescriptorBase {
         layout?: GPUPipelineLayout;
     }
-    export interface GPUPipelineBase {
+    interface GPUPipelineBase {
         /**
          * Gets a {@link GPUBindGroupLayout} that is compatible with the {@link GPUPipelineBase}'s
          * {@link GPUBindGroupLayout} at `index`.
@@ -491,66 +703,138 @@ declare global {
          */
         getBindGroupLayout(index: number): GPUBindGroupLayout;
     }
-    export interface GPUProgrammableStage {
+    interface GPUProgrammableStage {
         module: GPUShaderModule;
         entryPoint: string;
     }
-    export interface GPUComputePipeline extends GPUObjectBase, GPUPipelineBase {
+    interface GPUComputePipeline extends GPUObjectBase, GPUPipelineBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUComputePipeline';
     }
-    export interface GPUComputePipelineDescriptor extends GPUPipelineDescriptorBase {
+    interface GPUComputePipelineDescriptor extends GPUPipelineDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUComputePipelineDescriptor';
         compute: GPUProgrammableStage;
     }
-    export interface GPURenderPipeline extends GPUObjectBase, GPUPipelineBase {
+    interface GPURenderPipeline extends GPUObjectBase, GPUPipelineBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPipeline';
     }
-    export interface GPURenderPipelineDescriptor extends GPUPipelineDescriptorBase {
+    interface GPURenderPipelineDescriptor extends GPUPipelineDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPipelineDescriptor';
         vertex: GPUVertexState;
         primitive?: GPUPrimitiveState;
         depthStencil?: GPUDepthStencilState;
         multisample?: GPUMultisampleState;
         fragment?: GPUFragmentState;
     }
-    export type GPUPrimitiveTopology = "point-list" | "line-list" | "line-strip" | "triangle-list" | "triangle-strip";
-    export interface GPUPrimitiveState {
+    type GPUPrimitiveTopology = "point-list" | "line-list" | "line-strip" | "triangle-list" | "triangle-strip";
+    interface GPUPrimitiveState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUPrimitiveState';
         topology?: GPUPrimitiveTopology;
         stripIndexFormat?: GPUIndexFormat;
         frontFace?: GPUFrontFace;
         cullMode?: GPUCullMode;
     }
-    export type GPUFrontFace = "ccw" | "cw";
-    export type GPUCullMode = "none" | "front" | "back";
-    export interface GPUMultisampleState {
+    type GPUFrontFace = "ccw" | "cw";
+    type GPUCullMode = "none" | "front" | "back";
+    interface GPUMultisampleState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUMultisampleState';
         count?: GPUSize32;
         mask?: GPUSampleMask;
         alphaToCoverageEnabled?: boolean;
     }
-    export interface GPUFragmentState extends GPUProgrammableStage {
+    interface GPUFragmentState extends GPUProgrammableStage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUFragmentState';
         targets: Array<GPUColorTargetState>;
     }
-    export interface GPUColorTargetState {
+    interface GPUColorTargetState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUColorTargetState';
         format: GPUTextureFormat;
         blend?: GPUBlendState;
         writeMask?: GPUColorWriteFlags;
     }
-    export interface GPUBlendState {
+    interface GPUBlendState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBlendState';
         color: GPUBlendComponent;
         alpha: GPUBlendComponent;
     }
-    export type GPUColorWriteFlags = number;
-    export interface GPUColorWrite {
+    type GPUColorWriteFlags = number;
+    interface GPUColorWrite {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUColorWrite';
         readonly RED: GPUFlagsConstant;
         readonly GREEN: GPUFlagsConstant;
         readonly BLUE: GPUFlagsConstant;
         readonly ALPHA: GPUFlagsConstant;
         readonly ALL: GPUFlagsConstant;
     }
-    export interface GPUBlendComponent {
+    interface GPUBlendComponent {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUBlendComponent';
         srcFactor?: GPUBlendFactor;
         dstFactor?: GPUBlendFactor;
         operation?: GPUBlendOperation;
     }
-    export type GPUBlendFactor = "zero" | "one" | "src-color" | "one-minus-src-color" | "src-alpha" | "one-minus-src-alpha" | "dst-color" | "one-minus-dst-color" | "dst-alpha" | "one-minus-dst-alpha" | "src-alpha-saturated" | "blend-color" | "one-minus-blend-color";
-    export type GPUBlendOperation = "add" | "subtract" | "reverse-subtract" | "min" | "max";
-    export interface GPUDepthStencilState {
+    type GPUBlendFactor = "zero" | "one" | "src-color" | "one-minus-src-color" | "src-alpha" | "one-minus-src-alpha" | "dst-color" | "one-minus-dst-color" | "dst-alpha" | "one-minus-dst-alpha" | "src-alpha-saturated" | "blend-color" | "one-minus-blend-color";
+    type GPUBlendOperation = "add" | "subtract" | "reverse-subtract" | "min" | "max";
+    interface GPUDepthStencilState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUDepthStencilState';
         format: GPUTextureFormat;
         depthWriteEnabled?: boolean;
         depthCompare?: GPUCompareFunction;
@@ -563,30 +847,60 @@ declare global {
         depthBiasClamp?: number;
         clampDepth?: boolean;
     }
-    export interface GPUStencilFaceState {
+    interface GPUStencilFaceState {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUStencilFaceState';
         compare?: GPUCompareFunction;
         failOp?: GPUStencilOperation;
         depthFailOp?: GPUStencilOperation;
         passOp?: GPUStencilOperation;
     }
-    export type GPUStencilOperation = "keep" | "zero" | "replace" | "invert" | "increment-clamp" | "decrement-clamp" | "increment-wrap" | "decrement-wrap";
-    export type GPUIndexFormat = "uint16" | "uint32";
-    export type GPUVertexFormat = "uint8x2" | "uint8x4" | "sint8x2" | "sint8x4" | "unorm8x2" | "unorm8x4" | "snorm8x2" | "snorm8x4" | "uint16x2" | "uint16x4" | "sint16x2" | "sint16x4" | "unorm16x2" | "unorm16x4" | "snorm16x2" | "snorm16x4" | "float16x2" | "float16x4" | "float32" | "float32x2" | "float32x3" | "float32x4" | "uint32" | "uint32x2" | "uint32x3" | "uint32x4" | "sint32" | "sint32x2" | "sint32x3" | "sint32x4";
-    export type GPUInputStepMode = "vertex" | "instance";
-    export interface GPUVertexState extends GPUProgrammableStage {
+    type GPUStencilOperation = "keep" | "zero" | "replace" | "invert" | "increment-clamp" | "decrement-clamp" | "increment-wrap" | "decrement-wrap";
+    type GPUIndexFormat = "uint16" | "uint32";
+    type GPUVertexFormat = "uint8x2" | "uint8x4" | "sint8x2" | "sint8x4" | "unorm8x2" | "unorm8x4" | "snorm8x2" | "snorm8x4" | "uint16x2" | "uint16x4" | "sint16x2" | "sint16x4" | "unorm16x2" | "unorm16x4" | "snorm16x2" | "snorm16x4" | "float16x2" | "float16x4" | "float32" | "float32x2" | "float32x3" | "float32x4" | "uint32" | "uint32x2" | "uint32x3" | "uint32x4" | "sint32" | "sint32x2" | "sint32x3" | "sint32x4";
+    type GPUInputStepMode = "vertex" | "instance";
+    interface GPUVertexState extends GPUProgrammableStage {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUVertexState';
         buffers?: Array<GPUVertexBufferLayout>;
     }
-    export interface GPUVertexBufferLayout {
+    interface GPUVertexBufferLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUVertexBufferLayout';
         arrayStride: GPUSize64;
         stepMode?: GPUInputStepMode;
         attributes: Array<GPUVertexAttribute>;
     }
-    export interface GPUVertexAttribute {
+    interface GPUVertexAttribute {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUVertexAttribute';
         format: GPUVertexFormat;
         offset: GPUSize64;
         shaderLocation: GPUIndex32;
     }
-    export interface GPUCommandBuffer extends GPUObjectBase {
+    interface GPUCommandBuffer extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCommandBuffer';
         /**
          * The total time, in seconds, that the GPU took to execute this command buffer.
          * Note:
@@ -608,8 +922,14 @@ declare global {
          */
         readonly executionTime: Promise<number>;
     }
-    export type GPUCommandBufferDescriptor = GPUObjectDescriptorBase;
-    export interface GPUCommandEncoder extends GPUObjectBase {
+    type GPUCommandBufferDescriptor = GPUObjectDescriptorBase;
+    interface GPUCommandEncoder extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCommandEncoder';
         /**
          * Begins encoding a render pass described by `descriptor`.
          * @param descriptor - Description of the {@link GPURenderPassEncoder} to create.
@@ -689,13 +1009,19 @@ declare global {
          */
         finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
     }
-    export interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
+    interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCommandEncoderDescriptor';
         /**
          * Enable measurement of the GPU execution time of the entire command buffer.
          */
         measureExecutionTime?: boolean;
     }
-    export interface GPUImageDataLayout {
+    interface GPUImageDataLayout {
         offset?: GPUSize64;
         /**
          * The stride, in bytes, between the beginning of each block row and the subsequent block row.
@@ -710,20 +1036,38 @@ declare global {
          */
         rowsPerImage?: GPUSize32;
     }
-    export interface GPUImageCopyBuffer extends GPUImageDataLayout {
+    interface GPUImageCopyBuffer extends GPUImageDataLayout {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUImageCopyBuffer';
         buffer: GPUBuffer;
     }
-    export interface GPUImageCopyTexture {
+    interface GPUImageCopyTexture {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUImageCopyTexture';
         texture: GPUTexture;
         mipLevel?: GPUIntegerCoordinate;
         origin?: GPUOrigin3D;
         aspect?: GPUTextureAspect;
     }
-    export interface GPUImageCopyImageBitmap {
+    interface GPUImageCopyImageBitmap {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUImageCopyImageBitmap';
         imageBitmap: ImageBitmap;
         origin?: GPUOrigin2D;
     }
-    export interface GPUProgrammablePassEncoder {
+    interface GPUProgrammablePassEncoder {
         /**
          * Sets the current {@link GPUBindGroup} for the given index.
          * @param index - The index to set the bind group at.
@@ -762,7 +1106,13 @@ declare global {
          */
         insertDebugMarker(markerLabel: string): undefined;
     }
-    export interface GPUComputePassEncoder extends GPUObjectBase, GPUProgrammablePassEncoder {
+    interface GPUComputePassEncoder extends GPUObjectBase, GPUProgrammablePassEncoder {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUComputePassEncoder';
         /**
          * Sets the current {@link GPUComputePipeline}.
          * @param pipeline - The compute pipeline to use for subsequent dispatch commands.
@@ -809,8 +1159,8 @@ declare global {
          */
         endPass(): undefined;
     }
-    export type GPUComputePassDescriptor = GPUObjectDescriptorBase;
-    export interface GPURenderEncoderBase {
+    type GPUComputePassDescriptor = GPUObjectDescriptorBase;
+    interface GPURenderEncoderBase {
         /**
          * Sets the current {@link GPURenderPipeline}.
          * @param pipeline - The render pipeline to use for subsequent drawing commands.
@@ -883,7 +1233,13 @@ declare global {
          */
         drawIndexedIndirect(indirectBuffer: GPUBuffer, indirectOffset: GPUSize64): undefined;
     }
-    export interface GPURenderPassEncoder extends GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
+    interface GPURenderPassEncoder extends GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPassEncoder';
         /**
          * Sets the viewport used during the rasterization stage to linearly map from normalized device
          * coordinates to viewport coordinates.
@@ -953,7 +1309,13 @@ declare global {
          */
         endPass(): undefined;
     }
-    export interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
+    interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPassDescriptor';
         /**
          * The set of {@link GPURenderPassColorAttachment} values in this sequence defines which
          * color attachments will be output to when executing this render pass.
@@ -969,7 +1331,13 @@ declare global {
          */
         occlusionQuerySet?: GPUQuerySet;
     }
-    export interface GPURenderPassColorAttachment {
+    interface GPURenderPassColorAttachment {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPassColorAttachment';
         /**
          * A {@link GPUTextureView} describing the texture subresource that will be output to for this
          * color attachment.
@@ -994,7 +1362,13 @@ declare global {
          */
         storeOp?: GPUStoreOp;
     }
-    export interface GPURenderPassDepthStencilAttachment {
+    interface GPURenderPassDepthStencilAttachment {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderPassDepthStencilAttachment';
         /**
          * A {@link GPUTextureView} describing the texture subresource that will be output to
          * and read from for this depth/stencil attachment.
@@ -1038,24 +1412,48 @@ declare global {
          */
         stencilReadOnly?: boolean;
     }
-    export type GPULoadOp = "load";
-    export type GPUStoreOp = "store" | "clear";
-    export interface GPURenderBundle extends GPUObjectBase {
+    type GPULoadOp = "load";
+    type GPUStoreOp = "store" | "clear";
+    interface GPURenderBundle extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderBundle';
     }
-    export type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
-    export interface GPURenderBundleEncoder extends GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
+    type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
+    interface GPURenderBundleEncoder extends GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderBundleEncoder';
         /**
          * Completes recording of the render bundle commands sequence.
          * 	descriptor:
          */
         finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
     }
-    export interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
+    interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPURenderBundleEncoderDescriptor';
         colorFormats: Array<GPUTextureFormat>;
         depthStencilFormat?: GPUTextureFormat;
         sampleCount?: GPUSize32;
     }
-    export interface GPUQueue extends GPUObjectBase {
+    interface GPUQueue extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUQueue';
         /**
          * Schedules the execution of the command buffers by the GPU on this queue.
          * 	`commandBuffers`:
@@ -1093,13 +1491,25 @@ declare global {
          */
         copyImageBitmapToTexture(source: GPUImageCopyImageBitmap, destination: GPUImageCopyTexture, copySize: GPUExtent3D): undefined;
     }
-    export interface GPUQuerySet extends GPUObjectBase {
+    interface GPUQuerySet extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUQuerySet';
         /**
          * Destroys the {@link GPUQuerySet}.
          */
         destroy(): undefined;
     }
-    export interface GPUQuerySetDescriptor extends GPUObjectDescriptorBase {
+    interface GPUQuerySetDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUQuerySetDescriptor';
         /**
          * The type of queries managed by {@link GPUQuerySet}.
          */
@@ -1113,9 +1523,15 @@ declare global {
          */
         pipelineStatistics?: Array<GPUPipelineStatisticName>;
     }
-    export type GPUQueryType = "occlusion" | "pipeline-statistics" | "timestamp";
-    export type GPUPipelineStatisticName = "vertex-shader-invocations" | "clipper-invocations" | "clipper-primitives-out" | "fragment-shader-invocations" | "compute-shader-invocations";
-    export interface GPUCanvasContext {
+    type GPUQueryType = "occlusion" | "pipeline-statistics" | "timestamp";
+    type GPUPipelineStatisticName = "vertex-shader-invocations" | "clipper-invocations" | "clipper-primitives-out" | "fragment-shader-invocations" | "compute-shader-invocations";
+    interface GPUCanvasContext {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUCanvasContext';
         /**
          * Configures the swap chain for this canvas, and returns a new
          * {@link GPUSwapChain} object representing it. Destroys any swapchain
@@ -1131,12 +1547,24 @@ declare global {
          */
         getSwapChainPreferredFormat(adapter: GPUAdapter): GPUTextureFormat;
     }
-    export interface GPUSwapChainDescriptor extends GPUObjectDescriptorBase {
+    interface GPUSwapChainDescriptor extends GPUObjectDescriptorBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUSwapChainDescriptor';
         device: GPUDevice;
         format: GPUTextureFormat;
         usage?: GPUTextureUsageFlags;
     }
-    export interface GPUSwapChain extends GPUObjectBase {
+    interface GPUSwapChain extends GPUObjectBase {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUSwapChain';
         /**
          * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
          * that created this swap chain next.
@@ -1146,60 +1574,114 @@ declare global {
          */
         getCurrentTexture(): GPUTexture;
     }
-    export type GPUDeviceLostReason = "destroyed";
-    export interface GPUDeviceLostInfo {
+    type GPUDeviceLostReason = "destroyed";
+    interface GPUDeviceLostInfo {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUDeviceLostInfo';
         readonly reason: GPUDeviceLostReason | undefined;
         readonly message: string;
     }
-    export type GPUErrorFilter = "out-of-memory" | "validation";
-    export interface GPUOutOfMemoryError {
+    type GPUErrorFilter = "out-of-memory" | "validation";
+    interface GPUOutOfMemoryError {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUOutOfMemoryError';
         new ();
     }
-    export interface GPUValidationError {
+    interface GPUValidationError {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUValidationError';
         new (message: string);
         readonly message: string;
     }
-    export type GPUError = GPUOutOfMemoryError | GPUValidationError;
-    export interface GPUUncapturedErrorEvent extends Event {
+    type GPUError = GPUOutOfMemoryError | GPUValidationError;
+    interface GPUUncapturedErrorEvent extends Event {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUUncapturedErrorEvent';
         new (type: string, gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit);
         readonly error: GPUError;
     }
-    export interface GPUUncapturedErrorEventInit extends EventInit {
+    interface GPUUncapturedErrorEventInit extends EventInit {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUUncapturedErrorEventInit';
         error: GPUError;
     }
-    export type GPUBufferDynamicOffset = number;
-    export type GPUStencilValue = number;
-    export type GPUSampleMask = number;
-    export type GPUDepthBias = number;
-    export type GPUSize64 = number;
-    export type GPUIntegerCoordinate = number;
-    export type GPUIndex32 = number;
-    export type GPUSize32 = number;
-    export type GPUSignedOffset32 = number;
-    export type GPUFlagsConstant = number;
-    export interface GPUColorDict {
+    type GPUBufferDynamicOffset = number;
+    type GPUStencilValue = number;
+    type GPUSampleMask = number;
+    type GPUDepthBias = number;
+    type GPUSize64 = number;
+    type GPUIntegerCoordinate = number;
+    type GPUIndex32 = number;
+    type GPUSize32 = number;
+    type GPUSignedOffset32 = number;
+    type GPUFlagsConstant = number;
+    interface GPUColorDict {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUColorDict';
         r: number;
         g: number;
         b: number;
         a: number;
     }
-    export type GPUColor = Array<number> | GPUColorDict;
-    export interface GPUOrigin2DDict {
+    type GPUColor = Array<number> | GPUColorDict;
+    interface GPUOrigin2DDict {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUOrigin2DDict';
         x?: GPUIntegerCoordinate;
         y?: GPUIntegerCoordinate;
     }
-    export type GPUOrigin2D = Array<GPUIntegerCoordinate> | GPUOrigin2DDict;
-    export interface GPUOrigin3DDict {
+    type GPUOrigin2D = Array<GPUIntegerCoordinate> | GPUOrigin2DDict;
+    interface GPUOrigin3DDict {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUOrigin3DDict';
         x?: GPUIntegerCoordinate;
         y?: GPUIntegerCoordinate;
         z?: GPUIntegerCoordinate;
     }
-    export type GPUOrigin3D = Array<GPUIntegerCoordinate> | GPUOrigin3DDict;
-    export interface GPUExtent3DDict {
+    type GPUOrigin3D = Array<GPUIntegerCoordinate> | GPUOrigin3DDict;
+    interface GPUExtent3DDict {
+        /**
+          * Nominal type branding.
+          * https://github.com/microsoft/TypeScript/pull/33038
+          * @internal
+         */
+        readonly __brand: 'GPUExtent3DDict';
         width: GPUIntegerCoordinate;
         height?: GPUIntegerCoordinate;
         depthOrArrayLayers?: GPUIntegerCoordinate;
     }
-    export type GPUExtent3D = Array<GPUIntegerCoordinate> | GPUExtent3DDict;
+    type GPUExtent3D = Array<GPUIntegerCoordinate> | GPUExtent3DDict;
 }
 export {};
