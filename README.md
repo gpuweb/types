@@ -54,3 +54,9 @@ In `webpack.config.js` add:
 #### Others?
 
 Please contribute a PR to add instructions for other setups or improve existing instructions. :)
+
+## How to publish a new npm package version
+
+(only for people who have npm publish access)
+
+`git checkout main && git pull main && npm version patch && git push upstream main --tags && npm publish`
