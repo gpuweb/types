@@ -11,7 +11,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./dist/generated.d.ts --forceGlobal --nominal"
+    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal"
   },
   "devDependencies": {
     "bikeshed-to-ts": "^1.1.2"
