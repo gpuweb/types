@@ -20,6 +20,7 @@
 // - plus #1152+#1441: made height/depthOrArrayLayers optional
 // - plus #1328: add texture dimension limits
 // - plus #1322+#1469: rename vertex formats
+// - plus #1352: refactor GPURenderPipelineDescriptor
 
 export {};
 
@@ -344,7 +345,9 @@ declare global {
     entries: Iterable<GPUBindGroupLayoutEntry>;
   }
 
-  export interface GPUBlendDescriptor {
+  /** @deprecated */
+  export type GPUBlendDescriptor = GPUBlendComponent;
+  export interface GPUBlendComponent {
     dstFactor?: GPUBlendFactor;
     operation?: GPUBlendOperation;
     srcFactor?: GPUBlendFactor;
@@ -356,12 +359,24 @@ declare global {
     minBindingSize?: number;
   }
 
+  /** @deprecated */
   export interface GPUColorStateDescriptor {
     format: GPUTextureFormat;
 
     alphaBlend?: GPUBlendDescriptor;
     colorBlend?: GPUBlendDescriptor;
     writeMask?: GPUColorWriteFlags;
+  }
+
+  export interface GPUColorTargetState {
+    format: GPUTextureFormat;
+    blend?: GPUBlendState;
+    writeMask?: GPUColorWriteFlags;
+  }
+
+  export interface GPUBlendState {
+    color: GPUBlendComponent;
+    alpha: GPUBlendComponent;
   }
 
   export interface GPUBufferBinding {
@@ -415,6 +430,7 @@ declare global {
     computeStage: GPUProgrammableStageDescriptor;
   }
 
+  /** @deprecated */
   export interface GPUDepthStencilStateDescriptor {
     format: GPUTextureFormat;
 
@@ -428,6 +444,23 @@ declare global {
     stencilWriteMask?: number;
   }
 
+  export interface GPUDepthStencilState {
+    format: GPUTextureFormat;
+
+    depthWriteEnabled?: boolean;
+    depthCompare?: GPUCompareFunction;
+
+    stencilFront?: GPUStencilStateFaceDescriptor;
+    stencilBack?: GPUStencilStateFaceDescriptor;
+
+    stencilReadMask?: number;
+    stencilWriteMask?: number;
+
+    depthBias?: number;
+    depthBiasSlopeScale?: number;
+    depthBiasClamp?: number;
+  }
+
   export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
     extensions?: Iterable<GPUExtensionName>;
     limits?: GPULimits;
@@ -439,21 +472,30 @@ declare global {
     signalQueue?: GPUQueue;
   }
 
-  export interface GPUVertexAttributeDescriptor {
+  /** @deprecated */
+  export type GPUVertexAttributeDescriptor = GPUVertexAttribute;
+  export interface GPUVertexAttribute {
     format: GPUVertexFormat;
     offset: number;
     shaderLocation: number;
   }
 
-  export interface GPUVertexBufferLayoutDescriptor {
+  /** @deprecated */
+  export type GPUVertexBufferLayoutDescriptor = GPUVertexBufferLayout;
+  export interface GPUVertexBufferLayout {
     arrayStride: number;
     stepMode?: GPUInputStepMode;
-    attributes: Iterable<GPUVertexAttributeDescriptor>;
+    attributes: Iterable<GPUVertexAttribute>;
   }
 
+  /** @deprecated */
   export interface GPUVertexStateDescriptor {
     indexFormat?: GPUIndexFormat;
     vertexBuffers?: Iterable<GPUVertexBufferLayoutDescriptor>;
+  }
+
+  export interface GPUVertexState extends GPUProgrammableStage {
+    buffers?: Iterable<GPUVertexBufferLayout>;
   }
 
   export interface GPULimits {
@@ -481,11 +523,14 @@ declare global {
     bindGroupLayouts: Iterable<GPUBindGroupLayout>;
   }
 
-  export interface GPUProgrammableStageDescriptor {
+  /** @deprecated */
+  export type GPUProgrammableStageDescriptor = GPUProgrammableStage;
+  export interface GPUProgrammableStage {
     module: GPUShaderModule;
     entryPoint: string;
   }
 
+  /** @deprecated */
   export interface GPURasterizationStateDescriptor {
     frontFace?: GPUFrontFace;
     cullMode?: GPUCullMode;
@@ -493,6 +538,13 @@ declare global {
     depthBias?: number;
     depthBiasSlopeScale?: number;
     depthBiasClamp?: number;
+  }
+
+  export interface GPUPrimitiveState {
+    topology?: GPUPrimitiveTopology;
+    stripIndexFormat?: GPUIndexFormat;
+    frontFace?: GPUFrontFace;
+    cullMode?: GPUCullMode;
   }
 
   export interface GPURenderPassColorAttachmentDescriptor {
@@ -523,18 +575,42 @@ declare global {
 
   export interface GPURenderPipelineDescriptor
     extends GPUPipelineDescriptorBase {
-    vertexStage: GPUProgrammableStageDescriptor;
+    vertex?: GPUVertexState;
+    primitive?: GPUPrimitiveState;
+    depthStencil?: GPUDepthStencilState;
+    multisample?: GPUMultisampleState;
+    fragment?: GPUFragmentState;
+
+    /** @deprecated */
+    vertexStage?: GPUProgrammableStageDescriptor;
+    /** @deprecated */
     fragmentStage?: GPUProgrammableStageDescriptor;
-
-    primitiveTopology: GPUPrimitiveTopology;
+    /** @deprecated */
+    primitiveTopology?: GPUPrimitiveTopology;
+    /** @deprecated */
     rasterizationState?: GPURasterizationStateDescriptor;
-    colorStates: Iterable<GPUColorStateDescriptor>;
+    /** @deprecated */
+    colorStates?: Iterable<GPUColorStateDescriptor>;
+    /** @deprecated */
     depthStencilState?: GPUDepthStencilStateDescriptor;
+    /** @deprecated */
     vertexState?: GPUVertexStateDescriptor;
-
+    /** @deprecated */
     sampleCount?: number;
+    /** @deprecated */
     sampleMask?: number;
+    /** @deprecated */
     alphaToCoverageEnabled?: boolean;
+  }
+
+  export interface GPUMultisampleState {
+    count?: number;
+    mask?: number;
+    alphaToCoverageEnabled?: boolean;
+  }
+
+  export interface GPUFragmentState extends GPUProgrammableStage {
+    targets: Iterable<GPUColorTargetState>;
   }
 
   export interface GPUSamplerDescriptor extends GPUObjectDescriptorBase {
