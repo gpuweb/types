@@ -460,7 +460,7 @@ declare global {
     depthBiasSlopeScale?: number;
     depthBiasClamp?: number;
 
-    clampDepth: boolean;
+    clampDepth?: boolean;
   }
 
   export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
@@ -575,14 +575,19 @@ declare global {
     occlusionQuerySet?: GPUQuerySet;
   }
 
-  export interface GPURenderPipelineDescriptor
-    extends GPUPipelineDescriptorBase {
-    vertex?: GPUVertexState;
+  type GPURenderPipelineDescriptor =
+    | GPURenderPipelineDescriptorNew
+    | GPURenderPipelineDescriptorOld;
+  /** @deprecated use GPURenderPipelineDescriptor instead */
+  interface GPURenderPipelineDescriptorNew extends GPUPipelineDescriptorBase {
+    vertex: GPUVertexState;
     primitive?: GPUPrimitiveState;
     depthStencil?: GPUDepthStencilState;
     multisample?: GPUMultisampleState;
     fragment?: GPUFragmentState;
-
+  }
+  /** @deprecated use GPURenderPipelineDescriptor instead */
+  interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
     /** @deprecated */
     vertexStage?: GPUProgrammableStageDescriptor;
     /** @deprecated */
