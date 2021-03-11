@@ -578,7 +578,6 @@ declare global {
   type GPURenderPipelineDescriptor =
     | GPURenderPipelineDescriptorNew
     | GPURenderPipelineDescriptorOld;
-  /** @deprecated use GPURenderPipelineDescriptor instead */
   interface GPURenderPipelineDescriptorNew extends GPUPipelineDescriptorBase {
     vertex: GPUVertexState;
     primitive?: GPUPrimitiveState;
