@@ -1,0 +1,3 @@
+[submodule "gpuweb"]
+	path = gpuweb
+	url = https://github.com/gpuweb/gpuweb.git

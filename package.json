@@ -9,5 +9,11 @@
   "license": "Apache-2.0",
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "scripts": {
+    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal"
+  },
+  "devDependencies": {
+    "bikeshed-to-ts": "^1.1.2"
+  }
 }
