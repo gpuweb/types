@@ -450,8 +450,8 @@ declare global {
     depthWriteEnabled?: boolean;
     depthCompare?: GPUCompareFunction;
 
-    stencilFront?: GPUStencilStateFaceDescriptor;
-    stencilBack?: GPUStencilStateFaceDescriptor;
+    stencilFront?: GPUStencilFaceState;
+    stencilBack?: GPUStencilFaceState;
 
     stencilReadMask?: number;
     stencilWriteMask?: number;
@@ -459,6 +459,8 @@ declare global {
     depthBias?: number;
     depthBiasSlopeScale?: number;
     depthBiasClamp?: number;
+
+    clampDepth: boolean;
   }
 
   export interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
@@ -637,7 +639,9 @@ declare global {
     sourceMap?: object;
   }
 
-  export interface GPUStencilStateFaceDescriptor {
+  /** @deprecated */
+  export type GPUStencilStateFaceDescriptor = GPUStencilFaceState;
+  export interface GPUStencilFaceState {
     compare?: GPUCompareFunction;
     depthFailOp?: GPUStencilOperation;
     passOp?: GPUStencilOperation;
