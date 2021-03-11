@@ -1149,4 +1149,3 @@ declare global {
     readonly message: string;
   }
 }
-export {};
