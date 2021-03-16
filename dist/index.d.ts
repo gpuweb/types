@@ -34,6 +34,10 @@ declare global {
     getContext(contextId: "gpupresent"): GPUCanvasContext | null;
   }
 
+  export interface OffscreenCanvas {
+    getContext(contextId: "gpupresent"): GPUCanvasContext | null;
+  }
+
   export interface GPUColorDict {
     a: number;
     b: number;
