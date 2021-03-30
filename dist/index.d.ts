@@ -21,6 +21,7 @@
 // - plus #1328: add texture dimension limits
 // - plus #1322+#1469: rename vertex formats
 // - plus #1352: refactor GPURenderPipelineDescriptor
+// - plus #1185: update getSwapChainPreferredFormat
 
 export {};
 
@@ -828,6 +829,8 @@ declare global {
     private __brand: void;
     configureSwapChain(descriptor: GPUSwapChainDescriptor): GPUSwapChain;
 
+    getSwapChainPreferredFormat(adapter: GPUAdapter): GPUTextureFormat;
+    /** @deprecated */
     getSwapChainPreferredFormat(device: GPUDevice): Promise<GPUTextureFormat>;
   }
 
