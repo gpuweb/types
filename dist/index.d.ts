@@ -147,14 +147,14 @@ declare global {
   class GPUBuffer implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
-    destroy(): undefined;
-    unmap(): undefined;
     mapAsync(
       mode: GPUMapModeFlags,
       offset?: number,
       size?: number
     ): Promise<undefined>;
     getMappedRange(offset?: number, size?: number): ArrayBuffer;
+    unmap(): undefined;
+    destroy(): undefined;
   }
   interface GPUBufferDescriptor extends GPUObjectDescriptorBase {
     size: number;
@@ -489,9 +489,9 @@ declare global {
     ALL: 0xf;
   };
   interface GPUBlendComponent {
+    srcFactor?: GPUBlendFactor;
     dstFactor?: GPUBlendFactor;
     operation?: GPUBlendOperation;
-    srcFactor?: GPUBlendFactor;
   }
   type GPUBlendFactor =
     | "zero"
@@ -626,7 +626,10 @@ declare global {
       destination: GPUImageCopyTexture,
       copySize: GPUExtent3DStrict
     ): undefined;
-    finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
+    pushDebugGroup(groupLabel: string): undefined;
+    popDebugGroup(): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
     resolveQuerySet(
       querySet: GPUQuerySet,
       firstQuery: number,
@@ -634,10 +637,7 @@ declare global {
       destination: GPUBuffer,
       destinationOffset: number
     ): undefined;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
-    popDebugGroup(): undefined;
-    pushDebugGroup(groupLabel: string): undefined;
-    insertDebugMarker(markerLabel: string): undefined;
+    finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
   }
   interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
     label?: string;
@@ -688,6 +688,19 @@ declare global {
     implements GPUObjectBase, GPUProgrammablePassEncoder {
     private __brand: void;
     label: string | undefined;
+    setPipeline(pipeline: GPUComputePipeline): undefined;
+    dispatch(x: number, y?: number, z?: number): undefined;
+    dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
+    beginPipelineStatisticsQuery(
+      querySet: GPUQuerySet,
+      queryIndex: number
+    ): undefined;
+    // TODO: Wrong args
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
+    endPass(): undefined;
+
+    // GPUProgrammablePassEncoder
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
@@ -700,21 +713,11 @@ declare global {
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
     ): undefined;
-    popDebugGroup(): undefined;
     pushDebugGroup(groupLabel: string): undefined;
+    popDebugGroup(): undefined;
     insertDebugMarker(markerLabel: string): undefined;
-    setPipeline(pipeline: GPUComputePipeline): undefined;
-    dispatch(x: number, y?: number, z?: number): undefined;
-    dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
-    beginPipelineStatisticsQuery(
-      querySet: GPUQuerySet,
-      queryIndex: number
-    ): undefined;
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
-    endPass(): undefined;
   }
-  interface GPUComputePassDescriptor extends GPUObjectDescriptorBase {}
+  type GPUComputePassDescriptor = GPUObjectDescriptorBase;
   interface GPURenderEncoderBase {
     setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
@@ -742,7 +745,10 @@ declare global {
       baseVertex?: number,
       firstInstance?: number
     ): undefined;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
+    drawIndirect(
+      indirectBuffer: GPUBuffer,
+      indirectOffset: number
+    ): undefined;
     drawIndexedIndirect(
       indirectBuffer: GPUBuffer,
       indirectOffset: number
@@ -752,6 +758,35 @@ declare global {
     implements GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
     private __brand: void;
     label: string | undefined;
+    setViewport(
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+      minDepth: number,
+      maxDepth: number
+    ): undefined;
+    setScissorRect(
+      x: number,
+      y: number,
+      width: number,
+      height: number
+    ): undefined;
+    setBlendColor(color: GPUColor): undefined;
+    setStencilReference(reference: number): undefined;
+    beginOcclusionQuery(queryIndex: number): undefined;
+    endOcclusionQuery(): undefined;
+    beginPipelineStatisticsQuery(
+      querySet: GPUQuerySet,
+      queryIndex: number
+    ): undefined;
+    // TODO: wrong args
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
+    executeBundles(bundles: Iterable<GPURenderBundle>): undefined;
+    endPass(): undefined;
+
+    // GPUProgrammablePassEncoder
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
@@ -767,6 +802,8 @@ declare global {
     popDebugGroup(): undefined;
     pushDebugGroup(groupLabel: string): undefined;
     insertDebugMarker(markerLabel: string): undefined;
+
+    // GPURenderEncoderBase
     setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
       buffer: GPUBuffer,
@@ -793,43 +830,18 @@ declare global {
       indirectBuffer: GPUBuffer,
       indirectOffset: number
     ): undefined;
-    setViewport(
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-      minDepth: number,
-      maxDepth: number
-    ): undefined;
-    setScissorRect(x: number, y: number, width: number, height: number): undefined;
-    setBlendColor(color: GPUColor): undefined;
-    setStencilReference(reference: number): undefined;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
-    beginOcclusionQuery(queryIndex: number): undefined;
-    endOcclusionQuery(): undefined;
-    beginPipelineStatisticsQuery(
-      querySet: GPUQuerySet,
-      queryIndex: number
-    ): undefined;
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
-    executeBundles(bundles: Iterable<GPURenderBundle>): undefined;
-    endPass(): undefined;
   }
   interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
     colorAttachments: Iterable<GPURenderPassColorAttachment>;
     depthStencilAttachment?: GPURenderPassDepthStencilAttachment;
     occlusionQuerySet?: GPUQuerySet;
   }
-  /** @deprecated */
-  type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
   interface GPURenderPassColorAttachment {
     attachment: GPUTextureView;
     resolveTarget?: GPUTextureView;
     loadValue: GPULoadOp | GPUColor;
     storeOp?: GPUStoreOp;
   }
-  /** @deprecated */
-  type GPURenderPassDepthStencilAttachmentDescriptor = GPURenderPassDepthStencilAttachment;
   interface GPURenderPassDepthStencilAttachment {
     attachment: GPUTextureView;
     depthLoadValue: GPULoadOp | number;
@@ -846,9 +858,11 @@ declare global {
     label: string | undefined;
   }
   interface GPURenderBundleDescriptor extends GPUObjectDescriptorBase {}
-  class GPURenderBundleEncoder implements GPURenderEncoderBase {
+  class GPURenderBundleEncoder implements GPUProgrammablePassEncoder, GPURenderEncoderBase {
     private __brand: void;
     label: string | undefined;
+    finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
+    // GPUProgrammablePassEncoder
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
@@ -864,6 +878,7 @@ declare global {
     popDebugGroup(): undefined;
     pushDebugGroup(groupLabel: string): undefined;
     insertDebugMarker(markerLabel: string): undefined;
+    // GPURenderEncoderBase
     setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
       buffer: GPUBuffer,
@@ -895,7 +910,6 @@ declare global {
       indirectBuffer: GPUBuffer,
       indirectOffset: number
     ): undefined;
-    finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
   interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
     colorFormats: Iterable<GPUTextureFormat>;
@@ -937,7 +951,7 @@ declare global {
     count: number;
     pipelineStatistics?: Iterable<GPUPipelineStatisticName>;
   }
-  type GPUQueryType = "occlusion" | "timestamp" | "pipeline-statistics";
+  type GPUQueryType = "occlusion" | "pipeline-statistics" | "timestamp";
   type GPUPipelineStatisticName =
     | "vertex-shader-invocations"
     | "clipper-invocations"
@@ -988,10 +1002,10 @@ declare global {
     error: GPUError;
   }
   interface GPUColorDict {
-    a: number;
-    b: number;
-    g: number;
     r: number;
+    g: number;
+    b: number;
+    a: number;
   }
   type GPUColor = [number, number, number, number] | GPUColorDict;
   interface GPUOrigin2DDict {
@@ -1012,6 +1026,7 @@ declare global {
   }
   type GPUExtent3D = number[] | GPUExtent3DDict;
   interface GPUExtent3DDictStrict extends GPUExtent3DDict {
+    /** @deprecated */
     depth?: undefined;
   }
   type GPUExtent3DStrict = number[] | GPUExtent3DDictStrict;
@@ -1019,6 +1034,11 @@ declare global {
   // *********************************************************************************************
   // Deprecated
   // *********************************************************************************************
+
+  /** @deprecated */
+  type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
+  /** @deprecated */
+  type GPURenderPassDepthStencilAttachmentDescriptor = GPURenderPassDepthStencilAttachment;
 
   /** @deprecated use GPURenderPipelineDescriptor instead */
   interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
