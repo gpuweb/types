@@ -100,17 +100,18 @@ declare global {
     readonly adapter: GPUAdapter;
     readonly extensions: GPUExtensionName[];
     readonly limits: Required<GPULimits>;
-    createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
+    readonly queue: GPUQueue;
+    createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
+    createTexture(descriptor: GPUTextureDescriptor): GPUTexture;
+    createSampler(descriptor?: GPUSamplerDescriptor): GPUSampler;
     createBindGroupLayout(
       descriptor: GPUBindGroupLayoutDescriptor
     ): GPUBindGroupLayout;
-    createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
     createPipelineLayout(
       descriptor: GPUPipelineLayoutDescriptor
     ): GPUPipelineLayout;
-    createSampler(descriptor?: GPUSamplerDescriptor): GPUSampler;
+    createBindGroup(descriptor: GPUBindGroupDescriptor): GPUBindGroup;
     createShaderModule(descriptor: GPUShaderModuleDescriptor): GPUShaderModule;
-    createTexture(descriptor: GPUTextureDescriptor): GPUTexture;
     createComputePipeline(
       descriptor: GPUComputePipelineDescriptor
     ): GPUComputePipeline;
@@ -138,11 +139,10 @@ declare global {
       descriptor: GPURenderBundleEncoderDescriptor
     ): GPURenderBundleEncoder;
     createQuerySet(descriptor: GPUQuerySetDescriptor): GPUQuerySet;
-    queue: GPUQueue;
+    readonly lost: Promise<GPUDeviceLostInfo>;
     pushErrorScope(filter: GPUErrorFilter): undefined;
     popErrorScope(): Promise<GPUError | null>;
-    onuncapturederror: Event | undefined;
-    readonly lost: Promise<GPUDeviceLostInfo>;
+    onuncapturederror: EventHandler | null;
   }
   class GPUBuffer implements GPUObjectBase {
     private __brand: void;
@@ -705,8 +705,8 @@ declare global {
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
     ): undefined;
-    popDebugGroup(): undefined;
     pushDebugGroup(groupLabel: string): undefined;
+    popDebugGroup(): undefined;
     insertDebugMarker(markerLabel: string): undefined;
   }
   class GPUComputePassEncoder
