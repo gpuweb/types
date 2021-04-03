@@ -425,7 +425,7 @@ declare global {
     getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
   interface GPUComputePipelineDescriptor extends GPUPipelineDescriptorBase {
-    computeStage: GPUProgrammableStageDescriptor;
+    computeStage: GPUProgrammableStage;
   }
   class GPURenderPipeline implements GPUPipelineBase {
     private __brand: void;
@@ -628,18 +628,18 @@ declare global {
       size: number
     ): undefined;
     copyBufferToTexture(
-      source: GPUBufferCopyView,
-      destination: GPUTextureCopyView,
+      source: GPUImageCopyBuffer,
+      destination: GPUImageCopyTexture,
       copySize: GPUExtent3DStrict
     ): undefined;
     copyTextureToBuffer(
-      source: GPUTextureCopyView,
-      destination: GPUBufferCopyView,
+      source: GPUImageCopyTexture,
+      destination: GPUImageCopyBuffer,
       copySize: GPUExtent3DStrict
     ): undefined;
     copyTextureToTexture(
-      source: GPUTextureCopyView,
-      destination: GPUTextureCopyView,
+      source: GPUImageCopyTexture,
+      destination: GPUImageCopyTexture,
       copySize: GPUExtent3DStrict
     ): undefined;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
@@ -928,14 +928,14 @@ declare global {
       size?: number
     ): undefined;
     writeTexture(
-      destination: GPUTextureCopyView,
+      destination: GPUImageCopyTexture,
       data: BufferSource | SharedArrayBuffer,
       dataLayout: GPUTextureDataLayout,
       size: GPUExtent3DStrict
     ): undefined;
     copyImageBitmapToTexture(
       source: GPUImageBitmapCopyView,
-      destination: GPUTextureCopyView,
+      destination: GPUImageCopyTexture,
       copySize: GPUExtent3DStrict
     ): undefined;
   }
