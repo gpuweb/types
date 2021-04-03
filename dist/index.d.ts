@@ -449,29 +449,6 @@ declare global {
     multisample?: GPUMultisampleState;
     fragment?: GPUFragmentState;
   }
-  /** @deprecated use GPURenderPipelineDescriptor instead */
-  interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
-    /** @deprecated */
-    vertexStage?: GPUProgrammableStageDescriptor;
-    /** @deprecated */
-    fragmentStage?: GPUProgrammableStageDescriptor;
-    /** @deprecated */
-    primitiveTopology?: GPUPrimitiveTopology;
-    /** @deprecated */
-    rasterizationState?: GPURasterizationStateDescriptor;
-    /** @deprecated */
-    colorStates?: Iterable<GPUColorStateDescriptor>;
-    /** @deprecated */
-    depthStencilState?: GPUDepthStencilStateDescriptor;
-    /** @deprecated */
-    vertexState?: GPUVertexStateDescriptor;
-    /** @deprecated */
-    sampleCount?: number;
-    /** @deprecated */
-    sampleMask?: number;
-    /** @deprecated */
-    alphaToCoverageEnabled?: boolean;
-  }
   type GPUPrimitiveTopology =
     | "point-list"
     | "line-list"
@@ -1042,6 +1019,30 @@ declare global {
   // *********************************************************************************************
   // Deprecated
   // *********************************************************************************************
+
+  /** @deprecated use GPURenderPipelineDescriptor instead */
+  interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
+    /** @deprecated */
+    vertexStage?: GPUProgrammableStageDescriptor;
+    /** @deprecated */
+    fragmentStage?: GPUProgrammableStageDescriptor;
+    /** @deprecated */
+    primitiveTopology?: GPUPrimitiveTopology;
+    /** @deprecated */
+    rasterizationState?: GPURasterizationStateDescriptor;
+    /** @deprecated */
+    colorStates?: Iterable<GPUColorStateDescriptor>;
+    /** @deprecated */
+    depthStencilState?: GPUDepthStencilStateDescriptor;
+    /** @deprecated */
+    vertexState?: GPUVertexStateDescriptor;
+    /** @deprecated */
+    sampleCount?: number;
+    /** @deprecated */
+    sampleMask?: number;
+    /** @deprecated */
+    alphaToCoverageEnabled?: boolean;
+  }
 
   /** @deprecated */
   type GPUBindingType =
