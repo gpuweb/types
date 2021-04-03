@@ -412,14 +412,12 @@ declare global {
   }
   interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
     code: Uint32Array | string;
-    label?: string;
     sourceMap?: object;
   }
-  interface GPUPipelineDescriptorBase {
-    label?: string;
+  interface GPUPipelineDescriptorBase extends GPUObjectDescriptorBase {
     layout?: GPUPipelineLayout;
   }
-  interface GPUPipelineBase extends GPUObjectBase {
+  interface GPUPipelineBase {
     getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
   /** @deprecated */
@@ -428,7 +426,7 @@ declare global {
     module: GPUShaderModule;
     entryPoint: string;
   }
-  class GPUComputePipeline implements GPUPipelineBase {
+  class GPUComputePipeline implements GPUObjectBase, GPUPipelineBase {
     private __brand: void;
     label: string | undefined;
     getBindGroupLayout(index: number): GPUBindGroupLayout;
@@ -436,7 +434,7 @@ declare global {
   interface GPUComputePipelineDescriptor extends GPUPipelineDescriptorBase {
     computeStage: GPUProgrammableStage;
   }
-  class GPURenderPipeline implements GPUPipelineBase {
+  class GPURenderPipeline implements GPUObjectBase, GPUPipelineBase {
     private __brand: void;
     label: string | undefined;
     getBindGroupLayout(index: number): GPUBindGroupLayout;
