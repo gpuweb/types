@@ -130,7 +130,7 @@ declare global {
     ): GPURenderBundleEncoder;
     createQuerySet(descriptor: GPUQuerySetDescriptor): GPUQuerySet;
     queue: GPUQueue;
-    pushErrorScope(filter: GPUErrorFilter): void;
+    pushErrorScope(filter: GPUErrorFilter): undefined;
     popErrorScope(): Promise<GPUError | null>;
     onuncapturederror: Event | undefined;
     readonly lost: Promise<GPUDeviceLostInfo>;
@@ -138,13 +138,13 @@ declare global {
   class GPUBuffer implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
-    destroy(): void;
-    unmap(): void;
+    destroy(): undefined;
+    unmap(): undefined;
     mapAsync(
       mode: GPUMapModeFlags,
       offset?: number,
       size?: number
-    ): Promise<void>;
+    ): Promise<undefined>;
     getMappedRange(offset?: number, size?: number): ArrayBuffer;
   }
   interface GPUBufferDescriptor extends GPUObjectDescriptorBase {
@@ -174,7 +174,7 @@ declare global {
     private __brand: void;
     label: string | undefined;
     createView(descriptor?: GPUTextureViewDescriptor): GPUTextureView;
-    destroy(): void;
+    destroy(): undefined;
   }
   interface GPUTextureDescriptor extends GPUObjectDescriptorBase {
     size: GPUExtent3DStrict;
@@ -626,22 +626,22 @@ declare global {
       destination: GPUBuffer,
       destinationOffset: number,
       size: number
-    ): void;
+    ): undefined;
     copyBufferToTexture(
       source: GPUBufferCopyView,
       destination: GPUTextureCopyView,
       copySize: GPUExtent3DStrict
-    ): void;
+    ): undefined;
     copyTextureToBuffer(
       source: GPUTextureCopyView,
       destination: GPUBufferCopyView,
       copySize: GPUExtent3DStrict
-    ): void;
+    ): undefined;
     copyTextureToTexture(
       source: GPUTextureCopyView,
       destination: GPUTextureCopyView,
       copySize: GPUExtent3DStrict
-    ): void;
+    ): undefined;
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
     resolveQuerySet(
       querySet: GPUQuerySet,
@@ -649,11 +649,11 @@ declare global {
       queryCount: number,
       destination: GPUBuffer,
       destinationOffset: number
-    ): void;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
-    popDebugGroup(): void;
-    pushDebugGroup(groupLabel: string): void;
-    insertDebugMarker(markerLabel: string): void;
+    ): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
+    popDebugGroup(): undefined;
+    pushDebugGroup(groupLabel: string): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
   }
   interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
     label?: string;
@@ -688,17 +688,17 @@ declare global {
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsets?: Iterable<number>
-    ): void;
+    ): undefined;
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsetsData: Uint32Array,
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
-    ): void;
-    popDebugGroup(): void;
-    pushDebugGroup(groupLabel: string): void;
-    insertDebugMarker(markerLabel: string): void;
+    ): undefined;
+    popDebugGroup(): undefined;
+    pushDebugGroup(groupLabel: string): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
   }
   class GPUComputePassEncoder
     implements GPUObjectBase, GPUProgrammablePassEncoder {
@@ -708,61 +708,61 @@ declare global {
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsets?: Iterable<number>
-    ): void;
+    ): undefined;
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsetsData: Uint32Array,
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
-    ): void;
-    popDebugGroup(): void;
-    pushDebugGroup(groupLabel: string): void;
-    insertDebugMarker(markerLabel: string): void;
-    setPipeline(pipeline: GPUComputePipeline): void;
-    dispatch(x: number, y?: number, z?: number): void;
-    dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
+    ): undefined;
+    popDebugGroup(): undefined;
+    pushDebugGroup(groupLabel: string): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
+    setPipeline(pipeline: GPUComputePipeline): undefined;
+    dispatch(x: number, y?: number, z?: number): undefined;
+    dispatchIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
     beginPipelineStatisticsQuery(
       querySet: GPUQuerySet,
       queryIndex: number
-    ): void;
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
-    endPass(): void;
+    ): undefined;
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    endPass(): undefined;
   }
   interface GPUComputePassDescriptor extends GPUObjectDescriptorBase {}
   interface GPURenderEncoderBase {
-    setPipeline(pipeline: GPURenderPipeline): void;
+    setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
       buffer: GPUBuffer,
       indexFormat: GPUIndexFormat,
       offset?: number,
       size?: number
-    ): void;
+    ): undefined;
     setVertexBuffer(
       slot: number,
       buffer: GPUBuffer,
       offset?: number,
       size?: number
-    ): void;
+    ): undefined;
     draw(
       vertexCount: number,
       instanceCount?: number,
       firstVertex?: number,
       firstInstance?: number
-    ): void;
+    ): undefined;
     drawIndexed(
       indexCount: number,
       instanceCount?: number,
       firstIndex?: number,
       baseVertex?: number,
       firstInstance?: number
-    ): void;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+    ): undefined;
+    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
     drawIndexedIndirect(
       indirectBuffer: GPUBuffer,
       indirectOffset: number
-    ): void;
+    ): undefined;
   }
   class GPURenderPassEncoder
     implements GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
@@ -772,43 +772,43 @@ declare global {
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsets?: Iterable<number>
-    ): void;
+    ): undefined;
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsetsData: Uint32Array,
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
-    ): void;
-    popDebugGroup(): void;
-    pushDebugGroup(groupLabel: string): void;
-    insertDebugMarker(markerLabel: string): void;
-    setPipeline(pipeline: GPURenderPipeline): void;
+    ): undefined;
+    popDebugGroup(): undefined;
+    pushDebugGroup(groupLabel: string): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
+    setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
       buffer: GPUBuffer,
       indexFormat: GPUIndexFormat,
       offset?: number,
       size?: number
-    ): void;
-    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): void;
+    ): undefined;
+    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): undefined;
     draw(
       vertexCount: number,
       instanceCount?: number,
       firstVertex?: number,
       firstInstance?: number
-    ): void;
+    ): undefined;
     drawIndexed(
       indexCount: number,
       instanceCount?: number,
       firstIndex?: number,
       baseVertex?: number,
       firstInstance?: number
-    ): void;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+    ): undefined;
+    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
     drawIndexedIndirect(
       indirectBuffer: GPUBuffer,
       indirectOffset: number
-    ): void;
+    ): undefined;
     setViewport(
       x: number,
       y: number,
@@ -816,20 +816,20 @@ declare global {
       height: number,
       minDepth: number,
       maxDepth: number
-    ): void;
-    setScissorRect(x: number, y: number, width: number, height: number): void;
-    setBlendColor(color: GPUColor): void;
-    setStencilReference(reference: number): void;
-    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): void;
-    beginOcclusionQuery(queryIndex: number): void;
-    endOcclusionQuery(): void;
+    ): undefined;
+    setScissorRect(x: number, y: number, width: number, height: number): undefined;
+    setBlendColor(color: GPUColor): undefined;
+    setStencilReference(reference: number): undefined;
+    writeTimestamp(querySet: GPUQuerySet, queryIndex: number): undefined;
+    beginOcclusionQuery(queryIndex: number): undefined;
+    endOcclusionQuery(): undefined;
     beginPipelineStatisticsQuery(
       querySet: GPUQuerySet,
       queryIndex: number
-    ): void;
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): void;
-    executeBundles(bundles: Iterable<GPURenderBundle>): void;
-    endPass(): void;
+    ): undefined;
+    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    executeBundles(bundles: Iterable<GPURenderBundle>): undefined;
+    endPass(): undefined;
   }
   interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
     colorAttachments: Iterable<GPURenderPassColorAttachmentDescriptor>;
@@ -865,48 +865,48 @@ declare global {
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsets?: Iterable<number>
-    ): void;
+    ): undefined;
     setBindGroup(
       index: number,
       bindGroup: GPUBindGroup,
       dynamicOffsetsData: Uint32Array,
       dynamicOffsetsDataStart: number,
       dynamicOffsetsDataLength: number
-    ): void;
-    popDebugGroup(): void;
-    pushDebugGroup(groupLabel: string): void;
-    insertDebugMarker(markerLabel: string): void;
-    setPipeline(pipeline: GPURenderPipeline): void;
+    ): undefined;
+    popDebugGroup(): undefined;
+    pushDebugGroup(groupLabel: string): undefined;
+    insertDebugMarker(markerLabel: string): undefined;
+    setPipeline(pipeline: GPURenderPipeline): undefined;
     setIndexBuffer(
       buffer: GPUBuffer,
       indexFormat: GPUIndexFormat,
       offset?: number,
       size?: number
-    ): void;
+    ): undefined;
     setVertexBuffer(
       slot: number,
       buffer: GPUBuffer,
       offset?: number,
       size?: number
-    ): void;
+    ): undefined;
     draw(
       vertexCount: number,
       instanceCount?: number,
       firstVertex?: number,
       firstInstance?: number
-    ): void;
+    ): undefined;
     drawIndexed(
       indexCount: number,
       instanceCount?: number,
       firstIndex?: number,
       baseVertex?: number,
       firstInstance?: number
-    ): void;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): void;
+    ): undefined;
+    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
     drawIndexedIndirect(
       indirectBuffer: GPUBuffer,
       indirectOffset: number
-    ): void;
+    ): undefined;
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
   }
   interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
@@ -917,8 +917,8 @@ declare global {
   class GPUQueue implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
-    signal(fence: GPUFence, signalValue: number): void;
-    submit(commandBuffers: Iterable<GPUCommandBuffer>): void;
+    signal(fence: GPUFence, signalValue: number): undefined;
+    submit(commandBuffers: Iterable<GPUCommandBuffer>): undefined;
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
     writeBuffer(
       buffer: GPUBuffer,
@@ -926,23 +926,23 @@ declare global {
       data: BufferSource | SharedArrayBuffer,
       dataOffset?: number,
       size?: number
-    ): void;
+    ): undefined;
     writeTexture(
       destination: GPUTextureCopyView,
       data: BufferSource | SharedArrayBuffer,
       dataLayout: GPUTextureDataLayout,
       size: GPUExtent3DStrict
-    ): void;
+    ): undefined;
     copyImageBitmapToTexture(
       source: GPUImageBitmapCopyView,
       destination: GPUTextureCopyView,
       copySize: GPUExtent3DStrict
-    ): void;
+    ): undefined;
   }
   class GPUQuerySet implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
-    destroy(): void;
+    destroy(): undefined;
   }
   interface GPUQuerySetDescriptor extends GPUObjectDescriptorBase {
     type: GPUQueryType;
@@ -1091,7 +1091,7 @@ declare global {
     private __brand: void;
     label: string | undefined;
     getCompletedValue(): number;
-    onCompletion(completionValue: number): Promise<void>;
+    onCompletion(completionValue: number): Promise<undefined>;
   }
 }
 export {};
