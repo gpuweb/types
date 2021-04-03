@@ -22,6 +22,7 @@
 // - plus #1322+#1469: rename vertex formats
 // - plus #1352: refactor GPURenderPipelineDescriptor
 // - plus #1185: update getSwapChainPreferredFormat
+// - plus #1336: createReady*Pipeline -> create*PipelineAsync
 
 declare global {
 
@@ -116,9 +117,17 @@ declare global {
     createRenderPipeline(
       descriptor: GPURenderPipelineDescriptor
     ): GPURenderPipeline;
+    createComputePipelineAsync(
+      descriptor: GPUComputePipelineDescriptor
+    ): Promise<GPUComputePipeline>;
+    /** @deprecated */
     createReadyComputePipeline(
       descriptor: GPUComputePipelineDescriptor
     ): Promise<GPUComputePipeline>;
+    createRenderPipelineAsync(
+      descriptor: GPURenderPipelineDescriptor
+    ): Promise<GPURenderPipeline>;
+    /** @deprecated */
     createReadyRenderPipeline(
       descriptor: GPURenderPipelineDescriptor
     ): Promise<GPURenderPipeline>;
