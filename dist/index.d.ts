@@ -142,7 +142,7 @@ declare global {
     readonly lost: Promise<GPUDeviceLostInfo>;
     pushErrorScope(filter: GPUErrorFilter): undefined;
     popErrorScope(): Promise<GPUError | null>;
-    onuncapturederror: EventHandler | null;
+    onuncapturederror: ((this: GPUDevice, ev: GPUUncapturedErrorEvent) => any) | null;
   }
   class GPUBuffer implements GPUObjectBase {
     private __brand: void;
