@@ -832,17 +832,21 @@ declare global {
     endPass(): undefined;
   }
   interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
-    colorAttachments: Iterable<GPURenderPassColorAttachmentDescriptor>;
-    depthStencilAttachment?: GPURenderPassDepthStencilAttachmentDescriptor;
+    colorAttachments: Iterable<GPURenderPassColorAttachment>;
+    depthStencilAttachment?: GPURenderPassDepthStencilAttachment;
     occlusionQuerySet?: GPUQuerySet;
   }
-  interface GPURenderPassColorAttachmentDescriptor {
+  /** @deprecated */
+  type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
+  interface GPURenderPassColorAttachment {
     attachment: GPUTextureView;
     resolveTarget?: GPUTextureView;
     loadValue: GPULoadOp | GPUColor;
     storeOp?: GPUStoreOp;
   }
-  interface GPURenderPassDepthStencilAttachmentDescriptor {
+  /** @deprecated */
+  type GPURenderPassDepthStencilAttachmentDescriptor = GPURenderPassDepthStencilAttachment;
+  interface GPURenderPassDepthStencilAttachment {
     attachment: GPUTextureView;
     depthLoadValue: GPULoadOp | number;
     depthStoreOp: GPUStoreOp;
