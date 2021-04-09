@@ -64,6 +64,9 @@ declare global {
   interface Navigator {
     readonly gpu: GPU | undefined;
   }
+  interface WorkerNavigator {
+    readonly gpu: GPU | undefined;
+  }
   class GPU {
     private __brand: void;
     requestAdapter(
