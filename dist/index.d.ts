@@ -97,8 +97,9 @@ declare global {
   class GPUDevice extends EventTarget implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
+    /** @deprecated */
     readonly adapter: GPUAdapter;
-    readonly extensions: GPUExtensionName[];
+    readonly extensions: ReadonlyArray<GPUExtensionName>;
     readonly limits: Required<GPULimits>;
     readonly queue: GPUQueue;
     createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
@@ -403,7 +404,7 @@ declare global {
   }
   class GPUCompilationInfo {
     private __brand: void;
-    readonly messages: readonly GPUCompilationMessage[];
+    readonly messages: ReadonlyArray<GPUCompilationMessage>;
   }
   class GPUShaderModule implements GPUObjectBase {
     private __brand: void;
