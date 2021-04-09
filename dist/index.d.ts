@@ -437,7 +437,15 @@ declare global {
     label: string | undefined;
     getBindGroupLayout(index: number): GPUBindGroupLayout;
   }
-  interface GPUComputePipelineDescriptor extends GPUPipelineDescriptorBase {
+  type GPUComputePipelineDescriptor =
+    | GPUComputePipelineDescriptorNew
+    | GPUComputePipelineDescriptorOld;
+  interface GPUComputePipelineDescriptorNew extends GPUPipelineDescriptorBase {
+    compute: GPUProgrammableStage;
+  }
+  /** @deprecated */
+  interface GPUComputePipelineDescriptorOld extends GPUPipelineDescriptorBase {
+    /** @deprecated */
     computeStage: GPUProgrammableStage;
   }
   class GPURenderPipeline implements GPUObjectBase, GPUPipelineBase {
