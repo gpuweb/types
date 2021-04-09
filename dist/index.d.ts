@@ -1003,8 +1003,10 @@ declare global {
     label: string | undefined;
     getCurrentTexture(): GPUTexture;
   }
+  type GPUDeviceLostReason = "destroyed";
   class GPUDeviceLostInfo {
     private __brand: void;
+    readonly reason: GPUDeviceLostReason | undefined;
     readonly message: string;
   }
   type GPUErrorFilter = "out-of-memory" | "validation";
