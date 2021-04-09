@@ -83,7 +83,7 @@ declare global {
     readonly name: string;
     readonly extensions: GPUExtensionName[];
     readonly limits: Required<GPULimits>;
-    requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice | null>;
+    requestDevice(descriptor?: GPUDeviceDescriptor): Promise<GPUDevice>;
   }
   interface GPUDeviceDescriptor extends GPUObjectDescriptorBase {
     extensions?: Iterable<GPUExtensionName>;
