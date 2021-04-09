@@ -944,8 +944,11 @@ declare global {
   class GPUQueue implements GPUObjectBase {
     private __brand: void;
     label: string | undefined;
-    signal(fence: GPUFence, signalValue: number): undefined;
     submit(commandBuffers: Iterable<GPUCommandBuffer>): undefined;
+    onSubmittedWorkDone(): Promise<undefined>;
+    /** @deprecated */
+    signal(fence: GPUFence, signalValue: number): undefined;
+    /** @deprecated */
     createFence(descriptor?: GPUFenceDescriptor): GPUFence;
     writeBuffer(
       buffer: GPUBuffer,
