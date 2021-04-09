@@ -25,7 +25,6 @@
 // - plus #1336: createReady*Pipeline -> create*PipelineAsync
 
 declare global {
-
   // *********************************************************************************************
   // Manually-written
   // *********************************************************************************************
@@ -143,7 +142,9 @@ declare global {
     readonly lost: Promise<GPUDeviceLostInfo>;
     pushErrorScope(filter: GPUErrorFilter): undefined;
     popErrorScope(): Promise<GPUError | null>;
-    onuncapturederror: ((this: GPUDevice, ev: GPUUncapturedErrorEvent) => any) | null;
+    onuncapturederror:
+      | ((this: GPUDevice, ev: GPUUncapturedErrorEvent) => any)
+      | null;
   }
   class GPUBuffer implements GPUObjectBase {
     private __brand: void;
@@ -699,7 +700,10 @@ declare global {
       queryIndex: GPUSize32
     ): undefined;
     // TODO: Wrong args
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    endPipelineStatisticsQuery(
+      querySet: GPUQuerySet,
+      queryIndex: number
+    ): undefined;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: GPUSize32): undefined;
     endPass(): undefined;
 
@@ -784,7 +788,10 @@ declare global {
       queryIndex: GPUSize32
     ): undefined;
     // TODO: wrong args
-    endPipelineStatisticsQuery(querySet: GPUQuerySet, queryIndex: number): undefined;
+    endPipelineStatisticsQuery(
+      querySet: GPUQuerySet,
+      queryIndex: number
+    ): undefined;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: GPUSize32): undefined;
     executeBundles(bundles: Iterable<GPURenderBundle>): undefined;
     endPass(): undefined;
@@ -814,7 +821,11 @@ declare global {
       offset?: number,
       size?: number
     ): undefined;
-    setVertexBuffer(slot: number, buffer: GPUBuffer, offset?: number): undefined;
+    setVertexBuffer(
+      slot: number,
+      buffer: GPUBuffer,
+      offset?: number
+    ): undefined;
     draw(
       vertexCount: number,
       instanceCount?: number,
@@ -886,7 +897,8 @@ declare global {
     label: string | undefined;
   }
   interface GPURenderBundleDescriptor extends GPUObjectDescriptorBase {}
-  class GPURenderBundleEncoder implements GPUProgrammablePassEncoder, GPURenderEncoderBase {
+  class GPURenderBundleEncoder
+    implements GPUProgrammablePassEncoder, GPURenderEncoderBase {
     private __brand: void;
     label: string | undefined;
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
