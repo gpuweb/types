@@ -104,6 +104,7 @@ declare global {
     readonly extensions: ReadonlyArray<GPUExtensionName>;
     readonly limits: Required<GPULimits>;
     readonly queue: GPUQueue;
+    destroy(): undefined;
     createBuffer(descriptor: GPUBufferDescriptor): GPUBuffer;
     createTexture(descriptor: GPUTextureDescriptor): GPUTexture;
     createSampler(descriptor?: GPUSamplerDescriptor): GPUSampler;
