@@ -164,21 +164,21 @@ declare global {
   }
   type GPUBufferUsageFlags = number;
   const GPUBufferUsage: {
-    MAP_READ: 0x0001;
-    MAP_WRITE: 0x0002;
-    COPY_SRC: 0x0004;
-    COPY_DST: 0x0008;
-    INDEX: 0x0010;
-    VERTEX: 0x0020;
-    UNIFORM: 0x0040;
-    STORAGE: 0x0080;
-    INDIRECT: 0x0100;
-    QUERY_RESOLVE: 0x0200;
+    readonly MAP_READ: GPUFlagsConstant;
+    readonly MAP_WRITE: GPUFlagsConstant;
+    readonly COPY_SRC: GPUFlagsConstant;
+    readonly COPY_DST: GPUFlagsConstant;
+    readonly INDEX: GPUFlagsConstant;
+    readonly VERTEX: GPUFlagsConstant;
+    readonly UNIFORM: GPUFlagsConstant;
+    readonly STORAGE: GPUFlagsConstant;
+    readonly INDIRECT: GPUFlagsConstant;
+    readonly QUERY_RESOLVE: GPUFlagsConstant;
   };
   type GPUMapModeFlags = number;
   const GPUMapMode: {
-    READ: 0x1;
-    WRITE: 0x2;
+    readonly READ: GPUFlagsConstant;
+    readonly WRITE: GPUFlagsConstant;
   };
   class GPUTexture implements GPUObjectBase {
     private __brand: void;
@@ -197,11 +197,11 @@ declare global {
   type GPUTextureDimension = "1d" | "2d" | "3d";
   type GPUTextureUsageFlags = number;
   const GPUTextureUsage: {
-    COPY_SRC: 0x01;
-    COPY_DST: 0x02;
-    SAMPLED: 0x04;
-    STORAGE: 0x08;
-    RENDER_ATTACHMENT: 0x10;
+    readonly COPY_SRC: GPUFlagsConstant;
+    readonly COPY_DST: GPUFlagsConstant;
+    readonly SAMPLED: GPUFlagsConstant;
+    readonly STORAGE: GPUFlagsConstant;
+    readonly RENDER_ATTACHMENT: GPUFlagsConstant;
   };
   class GPUTextureView implements GPUObjectBase {
     private __brand: void;
@@ -318,9 +318,9 @@ declare global {
   }
   type GPUShaderStageFlags = number;
   const GPUShaderStage: {
-    VERTEX: 0x1;
-    FRAGMENT: 0x2;
-    COMPUTE: 0x4;
+    readonly VERTEX: GPUFlagsConstant;
+    readonly FRAGMENT: GPUFlagsConstant;
+    readonly COMPUTE: GPUFlagsConstant;
   };
   interface GPUBindGroupLayoutEntry {
     binding: GPUIndex32;
@@ -483,11 +483,11 @@ declare global {
   }
   type GPUColorWriteFlags = number;
   const GPUColorWrite: {
-    RED: 0x1;
-    GREEN: 0x2;
-    BLUE: 0x4;
-    ALPHA: 0x8;
-    ALL: 0xf;
+    readonly RED: GPUFlagsConstant;
+    readonly GREEN: GPUFlagsConstant;
+    readonly BLUE: GPUFlagsConstant;
+    readonly ALPHA: GPUFlagsConstant;
+    readonly ALL: GPUFlagsConstant;
   };
   interface GPUBlendComponent {
     srcFactor?: GPUBlendFactor;
