@@ -67,8 +67,14 @@ declare global {
   interface WorkerNavigator {
     readonly gpu: GPU | undefined;
   }
-  class GPU {
-    private __brand: void;
+  var GPU: { readonly prototype: GPU; new (): never };
+  interface GPU {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPU";
     requestAdapter(
       options?: GPURequestAdapterOptions
     ): Promise<GPUAdapter | null>;
@@ -77,9 +83,14 @@ declare global {
     powerPreference?: GPUPowerPreference;
   }
   type GPUPowerPreference = "low-power" | "high-performance";
-  class GPUAdapter {
-    // https://michalzalecki.com/nominal-typing-in-typescript/#approach-1-class-with-a-private-property
-    private __brand: void;
+  var GPUAdapter: { readonly prototype: GPUAdapter; new (): never };
+  interface GPUAdapter {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUAdapter";
     readonly name: string;
     readonly extensions: GPUExtensionName[];
     readonly limits: Required<GPULimits>;
@@ -96,9 +107,14 @@ declare global {
     | "pipeline-statistics-query"
     | "texture-compression-bc"
     | "timestamp-query";
-  class GPUDevice extends EventTarget implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUDevice: { readonly prototype: GPUDevice; new (): never };
+  interface GPUDevice extends EventTarget, GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUDevice";
     /** @deprecated */
     readonly adapter: GPUAdapter;
     readonly extensions: ReadonlyArray<GPUExtensionName>;
@@ -150,9 +166,14 @@ declare global {
       | ((this: GPUDevice, ev: GPUUncapturedErrorEvent) => any)
       | null;
   }
-  class GPUBuffer implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUBuffer: { readonly prototype: GPUBuffer; new (): never };
+  interface GPUBuffer extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUBuffer";
     mapAsync(
       mode: GPUMapModeFlags,
       offset?: GPUSize64,
@@ -168,7 +189,7 @@ declare global {
     mappedAtCreation?: boolean;
   }
   type GPUBufferUsageFlags = number;
-  const GPUBufferUsage: {
+  var GPUBufferUsage: {
     readonly MAP_READ: GPUFlagsConstant;
     readonly MAP_WRITE: GPUFlagsConstant;
     readonly COPY_SRC: GPUFlagsConstant;
@@ -181,13 +202,18 @@ declare global {
     readonly QUERY_RESOLVE: GPUFlagsConstant;
   };
   type GPUMapModeFlags = number;
-  const GPUMapMode: {
+  var GPUMapMode: {
     readonly READ: GPUFlagsConstant;
     readonly WRITE: GPUFlagsConstant;
   };
-  class GPUTexture implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUTexture: { readonly prototype: GPUTexture; new (): never };
+  interface GPUTexture extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUTexture";
     createView(descriptor?: GPUTextureViewDescriptor): GPUTextureView;
     destroy(): undefined;
   }
@@ -201,16 +227,21 @@ declare global {
   }
   type GPUTextureDimension = "1d" | "2d" | "3d";
   type GPUTextureUsageFlags = number;
-  const GPUTextureUsage: {
+  var GPUTextureUsage: {
     readonly COPY_SRC: GPUFlagsConstant;
     readonly COPY_DST: GPUFlagsConstant;
     readonly SAMPLED: GPUFlagsConstant;
     readonly STORAGE: GPUFlagsConstant;
     readonly RENDER_ATTACHMENT: GPUFlagsConstant;
   };
-  class GPUTextureView implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUTextureView: { readonly prototype: GPUTextureView; new (): never };
+  interface GPUTextureView extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUTextureView";
   }
   interface GPUTextureViewDescriptor extends GPUObjectDescriptorBase {
     format?: GPUTextureFormat;
@@ -287,9 +318,14 @@ declare global {
     | "bc7-rgba-unorm-srgb"
     | "depth24unorm-stencil8"
     | "depth32float-stencil8";
-  class GPUSampler implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUSampler: { readonly prototype: GPUSampler; new (): never };
+  interface GPUSampler extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUSampler";
   }
   interface GPUSamplerDescriptor extends GPUObjectDescriptorBase {
     addressModeU?: GPUAddressMode;
@@ -314,15 +350,23 @@ declare global {
     | "not-equal"
     | "greater-equal"
     | "always";
-  class GPUBindGroupLayout implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUBindGroupLayout: {
+    readonly prototype: GPUBindGroupLayout;
+    new (): never;
+  };
+  interface GPUBindGroupLayout extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUBindGroupLayout";
   }
   interface GPUBindGroupLayoutDescriptor extends GPUObjectDescriptorBase {
     entries: Iterable<GPUBindGroupLayoutEntry>;
   }
   type GPUShaderStageFlags = number;
-  const GPUShaderStage: {
+  var GPUShaderStage: {
     readonly VERTEX: GPUFlagsConstant;
     readonly FRAGMENT: GPUFlagsConstant;
     readonly COMPUTE: GPUFlagsConstant;
@@ -374,9 +418,14 @@ declare global {
     format: GPUTextureFormat;
     viewDimension?: GPUTextureViewDimension;
   }
-  class GPUBindGroup implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUBindGroup: { readonly prototype: GPUBindGroup; new (): never };
+  interface GPUBindGroup extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUBindGroup";
   }
   interface GPUBindGroupDescriptor extends GPUObjectDescriptorBase {
     layout: GPUBindGroupLayout;
@@ -392,28 +441,59 @@ declare global {
     offset?: GPUSize64;
     size?: GPUSize64;
   }
-  class GPUPipelineLayout implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUPipelineLayout: {
+    readonly prototype: GPUPipelineLayout;
+    new (): never;
+  };
+  interface GPUPipelineLayout extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUPipelineLayout";
   }
   interface GPUPipelineLayoutDescriptor extends GPUObjectDescriptorBase {
     bindGroupLayouts: Iterable<GPUBindGroupLayout>;
   }
   type GPUCompilationMessageType = "error" | "warning" | "info";
-  class GPUCompilationMessage {
-    private __brand: void;
+  var GPUCompilationMessage: {
+    readonly prototype: GPUCompilationMessage;
+    new (): never;
+  };
+  interface GPUCompilationMessage {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUCompilationMessage";
     readonly message: string;
     readonly type: GPUCompilationMessageType;
     readonly lineNum: number;
     readonly linePos: number;
   }
-  class GPUCompilationInfo {
-    private __brand: void;
+  var GPUCompilationInfo: {
+    readonly prototype: GPUCompilationInfo;
+    new (): never;
+  };
+  interface GPUCompilationInfo {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUCompilationInfo";
     readonly messages: ReadonlyArray<GPUCompilationMessage>;
   }
-  class GPUShaderModule implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUShaderModule: { readonly prototype: GPUShaderModule; new (): never };
+  interface GPUShaderModule extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUShaderModule";
     compilationInfo(): Promise<GPUCompilationInfo>;
   }
   type GPUShaderModuleDescriptor =
@@ -440,10 +520,17 @@ declare global {
     module: GPUShaderModule;
     entryPoint: string;
   }
-  class GPUComputePipeline implements GPUObjectBase, GPUPipelineBase {
-    private __brand: void;
-    label: string | undefined;
-    getBindGroupLayout(index: number): GPUBindGroupLayout;
+  var GPUComputePipeline: {
+    readonly prototype: GPUComputePipeline;
+    new (): never;
+  };
+  interface GPUComputePipeline extends GPUObjectBase, GPUPipelineBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUComputePipeline";
   }
   type GPUComputePipelineDescriptor =
     | GPUComputePipelineDescriptorNew
@@ -456,10 +543,17 @@ declare global {
     /** @deprecated */
     computeStage: GPUProgrammableStage;
   }
-  class GPURenderPipeline implements GPUObjectBase, GPUPipelineBase {
-    private __brand: void;
-    label: string | undefined;
-    getBindGroupLayout(index: number): GPUBindGroupLayout;
+  var GPURenderPipeline: {
+    readonly prototype: GPURenderPipeline;
+    new (): never;
+  };
+  interface GPURenderPipeline extends GPUObjectBase, GPUPipelineBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPURenderPipeline";
   }
   type GPURenderPipelineDescriptor =
     | GPURenderPipelineDescriptorNew
@@ -503,7 +597,7 @@ declare global {
     alpha: GPUBlendComponent;
   }
   type GPUColorWriteFlags = number;
-  const GPUColorWrite: {
+  var GPUColorWrite: {
     readonly RED: GPUFlagsConstant;
     readonly GREEN: GPUFlagsConstant;
     readonly BLUE: GPUFlagsConstant;
@@ -613,15 +707,28 @@ declare global {
     offset: GPUSize64;
     shaderLocation: GPUIndex32;
   }
-  class GPUCommandBuffer implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUCommandBuffer: { readonly prototype: GPUCommandBuffer; new (): never };
+  interface GPUCommandBuffer extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUCommandBuffer";
     readonly executionTime: Promise<number>;
   }
-  interface GPUCommandBufferDescriptor extends GPUObjectDescriptorBase {}
-  class GPUCommandEncoder implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  type GPUCommandBufferDescriptor = GPUObjectDescriptorBase;
+  var GPUCommandEncoder: {
+    readonly prototype: GPUCommandEncoder;
+    new (): never;
+  };
+  interface GPUCommandEncoder extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUCommandEncoder";
     beginComputePass(
       descriptor?: GPUComputePassDescriptor
     ): GPUComputePassEncoder;
@@ -705,10 +812,19 @@ declare global {
     popDebugGroup(): undefined;
     insertDebugMarker(markerLabel: string): undefined;
   }
-  class GPUComputePassEncoder
-    implements GPUObjectBase, GPUProgrammablePassEncoder {
-    private __brand: void;
-    label: string | undefined;
+  var GPUComputePassEncoder: {
+    readonly prototype: GPUComputePassEncoder;
+    new (): never;
+  };
+  interface GPUComputePassEncoder
+    extends GPUObjectBase,
+      GPUProgrammablePassEncoder {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUComputePassEncoder";
     setPipeline(pipeline: GPUComputePipeline): undefined;
     dispatch(x: GPUSize32, y?: GPUSize32, z?: GPUSize32): undefined;
     dispatchIndirect(
@@ -719,30 +835,9 @@ declare global {
       querySet: GPUQuerySet,
       queryIndex: GPUSize32
     ): undefined;
-    // TODO: Wrong args
-    endPipelineStatisticsQuery(
-      querySet: GPUQuerySet,
-      queryIndex: number
-    ): undefined;
+    endPipelineStatisticsQuery(): undefined;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: GPUSize32): undefined;
     endPass(): undefined;
-
-    // GPUProgrammablePassEncoder
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsets?: Iterable<number>
-    ): undefined;
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsetsData: Uint32Array,
-      dynamicOffsetsDataStart: number,
-      dynamicOffsetsDataLength: number
-    ): undefined;
-    pushDebugGroup(groupLabel: string): undefined;
-    popDebugGroup(): undefined;
-    insertDebugMarker(markerLabel: string): undefined;
   }
   type GPUComputePassDescriptor = GPUObjectDescriptorBase;
   interface GPURenderEncoderBase {
@@ -781,10 +876,20 @@ declare global {
       indirectOffset: GPUSize64
     ): undefined;
   }
-  class GPURenderPassEncoder
-    implements GPUObjectBase, GPUProgrammablePassEncoder, GPURenderEncoderBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPURenderPassEncoder: {
+    readonly prototype: GPURenderPassEncoder;
+    new (): never;
+  };
+  interface GPURenderPassEncoder
+    extends GPUObjectBase,
+      GPUProgrammablePassEncoder,
+      GPURenderEncoderBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPURenderPassEncoder";
     setViewport(
       x: number,
       y: number,
@@ -807,63 +912,10 @@ declare global {
       querySet: GPUQuerySet,
       queryIndex: GPUSize32
     ): undefined;
-    // TODO: wrong args
-    endPipelineStatisticsQuery(
-      querySet: GPUQuerySet,
-      queryIndex: number
-    ): undefined;
+    endPipelineStatisticsQuery(): undefined;
     writeTimestamp(querySet: GPUQuerySet, queryIndex: GPUSize32): undefined;
     executeBundles(bundles: Iterable<GPURenderBundle>): undefined;
     endPass(): undefined;
-
-    // GPUProgrammablePassEncoder
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsets?: Iterable<number>
-    ): undefined;
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsetsData: Uint32Array,
-      dynamicOffsetsDataStart: number,
-      dynamicOffsetsDataLength: number
-    ): undefined;
-    popDebugGroup(): undefined;
-    pushDebugGroup(groupLabel: string): undefined;
-    insertDebugMarker(markerLabel: string): undefined;
-
-    // GPURenderEncoderBase
-    setPipeline(pipeline: GPURenderPipeline): undefined;
-    setIndexBuffer(
-      buffer: GPUBuffer,
-      indexFormat: GPUIndexFormat,
-      offset?: number,
-      size?: number
-    ): undefined;
-    setVertexBuffer(
-      slot: number,
-      buffer: GPUBuffer,
-      offset?: number
-    ): undefined;
-    draw(
-      vertexCount: number,
-      instanceCount?: number,
-      firstVertex?: number,
-      firstInstance?: number
-    ): undefined;
-    drawIndexed(
-      indexCount: number,
-      instanceCount?: number,
-      firstIndex?: number,
-      baseVertex?: number,
-      firstInstance?: number
-    ): undefined;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
-    drawIndexedIndirect(
-      indirectBuffer: GPUBuffer,
-      indirectOffset: number
-    ): undefined;
   }
   interface GPURenderPassDescriptor extends GPUObjectDescriptorBase {
     colorAttachments: Iterable<GPURenderPassColorAttachment>;
@@ -912,73 +964,45 @@ declare global {
   }
   type GPULoadOp = "load";
   type GPUStoreOp = "store" | "clear";
-  class GPURenderBundle implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPURenderBundle: { readonly prototype: GPURenderBundle; new (): never };
+  interface GPURenderBundle extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPURenderBundle";
   }
-  interface GPURenderBundleDescriptor extends GPUObjectDescriptorBase {}
-  class GPURenderBundleEncoder
-    implements GPUProgrammablePassEncoder, GPURenderEncoderBase {
-    private __brand: void;
-    label: string | undefined;
+  type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
+  var GPURenderBundleEncoder: {
+    readonly prototype: GPURenderBundleEncoder;
+    new (): never;
+  };
+  interface GPURenderBundleEncoder
+    extends GPUObjectBase,
+      GPUProgrammablePassEncoder,
+      GPURenderEncoderBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPURenderBundleEncoder";
     finish(descriptor?: GPURenderBundleDescriptor): GPURenderBundle;
-    // GPUProgrammablePassEncoder
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsets?: Iterable<number>
-    ): undefined;
-    setBindGroup(
-      index: number,
-      bindGroup: GPUBindGroup,
-      dynamicOffsetsData: Uint32Array,
-      dynamicOffsetsDataStart: number,
-      dynamicOffsetsDataLength: number
-    ): undefined;
-    popDebugGroup(): undefined;
-    pushDebugGroup(groupLabel: string): undefined;
-    insertDebugMarker(markerLabel: string): undefined;
-    // GPURenderEncoderBase
-    setPipeline(pipeline: GPURenderPipeline): undefined;
-    setIndexBuffer(
-      buffer: GPUBuffer,
-      indexFormat: GPUIndexFormat,
-      offset?: number,
-      size?: number
-    ): undefined;
-    setVertexBuffer(
-      slot: number,
-      buffer: GPUBuffer,
-      offset?: number,
-      size?: number
-    ): undefined;
-    draw(
-      vertexCount: number,
-      instanceCount?: number,
-      firstVertex?: number,
-      firstInstance?: number
-    ): undefined;
-    drawIndexed(
-      indexCount: number,
-      instanceCount?: number,
-      firstIndex?: number,
-      baseVertex?: number,
-      firstInstance?: number
-    ): undefined;
-    drawIndirect(indirectBuffer: GPUBuffer, indirectOffset: number): undefined;
-    drawIndexedIndirect(
-      indirectBuffer: GPUBuffer,
-      indirectOffset: number
-    ): undefined;
   }
   interface GPURenderBundleEncoderDescriptor extends GPUObjectDescriptorBase {
     colorFormats: Iterable<GPUTextureFormat>;
     depthStencilFormat?: GPUTextureFormat;
     sampleCount?: GPUSize32;
   }
-  class GPUQueue implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUQueue: { readonly prototype: GPUQueue; new (): never };
+  interface GPUQueue extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUQueue";
     submit(commandBuffers: Iterable<GPUCommandBuffer>): undefined;
     onSubmittedWorkDone(): Promise<undefined>;
     /** @deprecated */
@@ -1004,9 +1028,14 @@ declare global {
       copySize: GPUExtent3DStrict
     ): undefined;
   }
-  class GPUQuerySet implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUQuerySet: { readonly prototype: GPUQuerySet; new (): never };
+  interface GPUQuerySet extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUQuerySet";
     destroy(): undefined;
   }
   interface GPUQuerySetDescriptor extends GPUObjectDescriptorBase {
@@ -1021,8 +1050,14 @@ declare global {
     | "clipper-primitives-out"
     | "fragment-shader-invocations"
     | "compute-shader-invocations";
-  class GPUCanvasContext {
-    private __brand: void;
+  var GPUCanvasContext: { readonly prototype: GPUCanvasContext; new (): never };
+  interface GPUCanvasContext {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUCanvasContext";
     configureSwapChain(descriptor: GPUSwapChainDescriptor): GPUSwapChain;
     getSwapChainPreferredFormat(adapter: GPUAdapter): GPUTextureFormat;
     /** @deprecated */
@@ -1033,34 +1068,72 @@ declare global {
     format: GPUTextureFormat;
     usage?: GPUTextureUsageFlags;
   }
-  class GPUSwapChain implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUSwapChain: { readonly prototype: GPUSwapChain; new (): never };
+  interface GPUSwapChain extends GPUObjectBase {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUSwapChain";
     getCurrentTexture(): GPUTexture;
   }
   type GPUDeviceLostReason = "destroyed";
-  class GPUDeviceLostInfo {
-    private __brand: void;
+  var GPUDeviceLostInfo: {
+    readonly prototype: GPUDeviceLostInfo;
+    new (): never;
+  };
+  interface GPUDeviceLostInfo {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUDeviceLostInfo";
     readonly reason: GPUDeviceLostReason | undefined;
     readonly message: string;
   }
   type GPUErrorFilter = "out-of-memory" | "validation";
-  class GPUOutOfMemoryError {
-    private __brand: void;
-    constructor();
+  var GPUOutOfMemoryError: {
+    readonly prototype: GPUOutOfMemoryError;
+    new (): GPUOutOfMemoryError;
+  };
+  interface GPUOutOfMemoryError {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUOutOfMemoryError";
   }
-  class GPUValidationError {
-    private __brand: void;
-    constructor(message: string);
+  var GPUValidationError: {
+    readonly prototype: GPUValidationError;
+    new (message: string): GPUValidationError;
+  };
+  interface GPUValidationError {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUValidationError";
     readonly message: string;
   }
   type GPUError = GPUOutOfMemoryError | GPUValidationError;
-  class GPUUncapturedErrorEvent extends Event {
-    private __brand: void;
-    constructor(
+  var GPUUncapturedErrorEvent: {
+    readonly prototype: GPUUncapturedErrorEvent;
+    new (
       type: string,
       gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
-    );
+    ): GPUUncapturedErrorEvent;
+  };
+  interface GPUUncapturedErrorEvent extends Event {
+    /**
+     * Nominal type branding.
+     * https://github.com/microsoft/TypeScript/pull/33038
+     * @internal
+     */
+    readonly __brand: "GPUUncapturedErrorEvent";
     readonly error: GPUError;
   }
   interface GPUUncapturedErrorEventInit extends EventInit {
@@ -1174,7 +1247,6 @@ declare global {
   /** @deprecated */
   interface GPUFenceDescriptor extends GPUObjectDescriptorBase {
     initialValue?: number;
-    label?: string;
     signalQueue?: GPUQueue;
   }
   /** @deprecated */
@@ -1194,9 +1266,9 @@ declare global {
   /** @deprecated */
   type GPUStencilStateFaceDescriptor = GPUStencilFaceState;
   /** @deprecated */
-  class GPUFence implements GPUObjectBase {
-    private __brand: void;
-    label: string | undefined;
+  var GPUFence: { readonly prototype: GPUFence; new (): never };
+  /** @deprecated */
+  interface GPUFence extends GPUObjectBase {
     getCompletedValue(): number;
     onCompletion(completionValue: number): Promise<undefined>;
   }
