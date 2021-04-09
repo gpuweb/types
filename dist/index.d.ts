@@ -836,13 +836,38 @@ declare global {
     depthStencilAttachment?: GPURenderPassDepthStencilAttachment;
     occlusionQuerySet?: GPUQuerySet;
   }
-  interface GPURenderPassColorAttachment {
+  type GPURenderPassColorAttachment =
+    | GPURenderPassColorAttachmentNew
+    | GPURenderPassColorAttachmentOld;
+  interface GPURenderPassColorAttachmentNew {
+    view: GPUTextureView;
+    resolveTarget?: GPUTextureView;
+    loadValue: GPULoadOp | GPUColor;
+    storeOp?: GPUStoreOp;
+  }
+  /** @deprecated */
+  interface GPURenderPassColorAttachmentOld {
+    /** @deprecated */
     attachment: GPUTextureView;
     resolveTarget?: GPUTextureView;
     loadValue: GPULoadOp | GPUColor;
     storeOp?: GPUStoreOp;
   }
-  interface GPURenderPassDepthStencilAttachment {
+  type GPURenderPassDepthStencilAttachment =
+    | GPURenderPassDepthStencilAttachmentNew
+    | GPURenderPassDepthStencilAttachmentOld;
+  interface GPURenderPassDepthStencilAttachmentNew {
+    view: GPUTextureView;
+    depthLoadValue: GPULoadOp | number;
+    depthStoreOp: GPUStoreOp;
+    depthReadOnly?: boolean;
+    stencilLoadValue: GPULoadOp | GPUStencilValue;
+    stencilStoreOp: GPUStoreOp;
+    stencilReadOnly?: boolean;
+  }
+  /** @deprecated */
+  interface GPURenderPassDepthStencilAttachmentOld {
+    /** @deprecated */
     attachment: GPUTextureView;
     depthLoadValue: GPULoadOp | number;
     depthStoreOp: GPUStoreOp;
