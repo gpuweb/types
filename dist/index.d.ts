@@ -50,10 +50,10 @@ declare global {
     maxUniformBufferBindingSize?: number;
   }
   interface Navigator {
-    readonly gpu: GPU | undefined;
+    readonly gpu: GPU;
   }
   interface WorkerNavigator {
-    readonly gpu: GPU | undefined;
+    readonly gpu: GPU;
   }
   var GPU: { readonly prototype: GPU; new (): never };
   interface GPU {
