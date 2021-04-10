@@ -55,7 +55,47 @@ In `webpack.config.js` add:
 
 Please contribute a PR to add instructions for other setups or improve existing instructions. :)
 
-## How to publish a new npm package version
+
+## How to update these types
+
+- Make sure the submodule is checked out: `git submodule update --init`
+- Generate `generated/index.d.ts`: `npm run generate`
+- Autoformat `generate/index.d.ts`
+    (TODO: automate this; previously I used vscode to autoformat to the rules from gpuweb/cts (I think).)
+- **temporary two step process until generator issues are fixed**
+    - Open a diff between `generated/index.d.ts` and `generated/edited.d.ts`.
+        Update the latter according to changes from the former. See below for intentional differences.
+    - Open a diff between `generate/edited.d.ts` and `dist/index.d.ts`.
+        Update the latter according to changes from the former. See below for intentional differences.
+
+### Intentional differences between generator output and final result
+
+Most or all of these should be fixed in the generator over time.
+
+- `| null` added for nullable types.
+- `__brand` removed for partial interfaces.
+- `__brand` removed for WebIDL `dictionary`s.
+- `var`s added for WebIDL `interface`s.
+- `Array` changed to `Iterable` for WebIDL `sequence`s.
+- `any` changed to `object` for WebIDL `object`.
+- `interface` changed to `var` for WebIDL `interface`s with (only) `const` members.
+    (TODO: this isn't quite the right translation either.)
+- `new ()` moved from `interface` to `var` for constructible WebIDL `interface`s.
+- `| SharedArrayBuffer` added for `[AllowShared] BufferSource`.
+
+The following differences are TODO: should be changed in the final result.
+
+- Deprecated items should be removed.
+- Features/limits related changes should be applied.
+- Color/origin/extent types should be changed to `Iterable<>`.
+
+The following differences will remain.
+
+- `onuncapturederror` strongly typed.
+- `getContext` definitions.
+- `GPUExtent3DStrict` (and similar).
+
+### Publish a new npm package version
 
 (only for people who have npm publish access)
 
