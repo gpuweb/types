@@ -42,7 +42,7 @@ declare global {
   // *********************************************************************************************
 
   interface GPUObjectBase {
-    label: string | undefined;
+    label: string | null;
   }
   interface GPUObjectDescriptorBase {
     label?: string;
