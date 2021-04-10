@@ -640,7 +640,6 @@ declare global {
     finish(descriptor?: GPUCommandBufferDescriptor): GPUCommandBuffer;
   }
   interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
-    label?: string;
     measureExecutionTime?: boolean;
   }
   /** @deprecated */
