@@ -416,9 +416,17 @@ declare global {
     label: string | undefined;
     compilationInfo(): Promise<GPUCompilationInfo>;
   }
-  interface GPUShaderModuleDescriptor extends GPUObjectDescriptorBase {
-    code: Uint32Array | string;
+  type GPUShaderModuleDescriptor =
+    | GPUShaderModuleDescriptorWGSL
+    | GPUShaderModuleDescriptorSPIRV;
+  interface GPUShaderModuleDescriptorWGSL extends GPUObjectDescriptorBase {
+    code: string;
     sourceMap?: object;
+  }
+  /** @deprecated */
+  interface GPUShaderModuleDescriptorSPIRV extends GPUObjectDescriptorBase {
+    /** @deprecated */
+    code: Uint32Array;
   }
   interface GPUPipelineDescriptorBase extends GPUObjectDescriptorBase {
     layout?: GPUPipelineLayout;
