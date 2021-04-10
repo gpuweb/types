@@ -644,9 +644,9 @@ declare global {
   }
   interface GPUStencilFaceState {
     compare?: GPUCompareFunction;
+    failOp?: GPUStencilOperation;
     depthFailOp?: GPUStencilOperation;
     passOp?: GPUStencilOperation;
-    failOp?: GPUStencilOperation;
   }
   type GPUStencilOperation =
     | "keep"
@@ -693,15 +693,11 @@ declare global {
   interface GPUVertexState extends GPUProgrammableStage {
     buffers?: Iterable<GPUVertexBufferLayout>;
   }
-  /** @deprecated */
-  type GPUVertexBufferLayoutDescriptor = GPUVertexBufferLayout;
   interface GPUVertexBufferLayout {
     arrayStride: GPUSize64;
     stepMode?: GPUInputStepMode;
     attributes: Iterable<GPUVertexAttribute>;
   }
-  /** @deprecated */
-  type GPUVertexAttributeDescriptor = GPUVertexAttribute;
   interface GPUVertexAttribute {
     format: GPUVertexFormat;
     offset: GPUSize64;
@@ -729,10 +725,10 @@ declare global {
      * @internal
      */
     readonly __brand: "GPUCommandEncoder";
+    beginRenderPass(descriptor: GPURenderPassDescriptor): GPURenderPassEncoder;
     beginComputePass(
       descriptor?: GPUComputePassDescriptor
     ): GPUComputePassEncoder;
-    beginRenderPass(descriptor: GPURenderPassDescriptor): GPURenderPassEncoder;
     copyBufferToBuffer(
       source: GPUBuffer,
       sourceOffset: GPUSize64,
@@ -1187,6 +1183,11 @@ declare global {
   type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
   /** @deprecated */
   type GPURenderPassDepthStencilAttachmentDescriptor = GPURenderPassDepthStencilAttachment;
+
+  /** @deprecated */
+  type GPUVertexBufferLayoutDescriptor = GPUVertexBufferLayout;
+  /** @deprecated */
+  type GPUVertexAttributeDescriptor = GPUVertexAttribute;
 
   /** @deprecated use GPURenderPipelineDescriptor instead */
   interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
