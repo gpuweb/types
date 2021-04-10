@@ -1,3 +1,7 @@
+// Manually-edited version of the generator output. Fixes numerous issues. Temporarily used as an
+// intermediate step between `index.d.ts` and the generator output. This file should go away once
+// the generator fixes these issues.
+
 declare global {
   interface GPUObjectBase {
     /**
