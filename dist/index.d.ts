@@ -767,27 +767,21 @@ declare global {
   interface GPUCommandEncoderDescriptor extends GPUObjectDescriptorBase {
     measureExecutionTime?: boolean;
   }
-  /** @deprecated */
-  type GPUTextureDataLayout = GPUImageDataLayout;
   interface GPUImageDataLayout {
     offset?: GPUSize64;
     bytesPerRow?: GPUSize32;
     rowsPerImage?: GPUSize32;
   }
-  /** @deprecated */
-  type GPUBufferCopyView = GPUImageCopyBuffer;
   interface GPUImageCopyBuffer extends GPUImageDataLayout {
     buffer: GPUBuffer;
   }
-  /** @deprecated */
-  type GPUTextureCopyView = GPUImageCopyTexture;
   interface GPUImageCopyTexture {
     texture: GPUTexture;
     mipLevel?: GPUIntegerCoordinate;
     origin?: GPUOrigin3D;
     aspect?: GPUTextureAspect;
   }
-  interface GPUImageBitmapCopyView {
+  interface GPUImageCopyImageBitmap {
     imageBitmap: ImageBitmap;
     origin?: GPUOrigin2D;
   }
@@ -1015,11 +1009,11 @@ declare global {
     writeTexture(
       destination: GPUImageCopyTexture,
       data: BufferSource | SharedArrayBuffer,
-      dataLayout: GPUTextureDataLayout,
+      dataLayout: GPUImageDataLayout,
       size: GPUExtent3DStrict
     ): undefined;
     copyImageBitmapToTexture(
-      source: GPUImageBitmapCopyView,
+      source: GPUImageCopyImageBitmap,
       destination: GPUImageCopyTexture,
       copySize: GPUExtent3DStrict
     ): undefined;
@@ -1188,6 +1182,15 @@ declare global {
   type GPUVertexBufferLayoutDescriptor = GPUVertexBufferLayout;
   /** @deprecated */
   type GPUVertexAttributeDescriptor = GPUVertexAttribute;
+
+  /** @deprecated */
+  type GPUTextureDataLayout = GPUImageDataLayout;
+  /** @deprecated */
+  type GPUBufferCopyView = GPUImageCopyBuffer;
+  /** @deprecated */
+  type GPUTextureCopyView = GPUImageCopyTexture;
+  /** @deprecated */
+  type GPUImageBitmapCopyView = GPUImageCopyImageBitmap;
 
   /** @deprecated use GPURenderPipelineDescriptor instead */
   interface GPURenderPipelineDescriptorOld extends GPUPipelineDescriptorBase {
