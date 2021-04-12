@@ -49,12 +49,11 @@ declare global {
     maxUniformBuffersPerShaderStage?: number;
     maxUniformBufferBindingSize?: number;
   }
-  interface Navigator {
+  interface NavigatorGPU {
     readonly gpu: GPU;
   }
-  interface WorkerNavigator {
-    readonly gpu: GPU;
-  }
+  interface Navigator extends NavigatorGPU {}
+  interface WorkerNavigator extends NavigatorGPU {}
   var GPU: { readonly prototype: GPU; new (): never };
   interface GPU {
     /**
@@ -763,6 +762,7 @@ declare global {
     stripIndexFormat?: GPUIndexFormat;
     frontFace?: GPUFrontFace;
     cullMode?: GPUCullMode;
+    clampDepth?: boolean;
   }
   type GPUFrontFace = "ccw" | "cw";
   type GPUCullMode = "none" | "front" | "back";
@@ -827,6 +827,7 @@ declare global {
     depthBias?: GPUDepthBias;
     depthBiasSlopeScale?: number;
     depthBiasClamp?: number;
+    /** @deprecated use GPUPrimitiveState.clampDepth */
     clampDepth?: boolean;
   }
   interface GPUStencilFaceState {
@@ -1139,6 +1140,7 @@ declare global {
     setPipeline(pipeline: GPUComputePipeline): undefined;
     /**
      * Dispatch work to be performed with the current {@link GPUComputePipeline}.
+     * See [[#computing-operations]] for the detailed specification.
      * @param x - X dimension of the grid of workgroups to dispatch.
      * @param y - Y dimension of the grid of workgroups to dispatch.
      * @param z - Z dimension of the grid of workgroups to dispatch.
@@ -1147,14 +1149,9 @@ declare global {
     /**
      * Dispatch work to be performed with the current {@link GPUComputePipeline} using parameters read
      * from a {@link GPUBuffer}.
+     * See [[#computing-operations]] for the detailed specification.
      * packed block of **three 32-bit unsigned integer values (12 bytes total)**, given in the same
      * order as the arguments for {@link GPUComputePassEncoder#dispatch}. For example:
-     * ```js
-     * let dispatchIndirectParameters = new Uint32Array(3);
-     * dispatchIndirectParameters[0] = x;
-     * dispatchIndirectParameters[1] = y;
-     * dispatchIndirectParameters[2] = z;
-     * ```
      * @param indirectBuffer - Buffer containing the indirect dispatch parameters.
      * @param indirectOffset - Offset in bytes into `indirectBuffer` where the dispatch data begins.
      */
@@ -1221,6 +1218,7 @@ declare global {
     ): undefined;
     /**
      * Draws primitives.
+     * See [[#rendering-operations]] for the detailed specification.
      * @param vertexCount - The number of vertices to draw.
      * @param instanceCount - The number of instances to draw.
      * @param firstVertex - Offset into the vertex buffers, in vertices, to begin drawing from.
@@ -1234,6 +1232,7 @@ declare global {
     ): undefined;
     /**
      * Draws indexed primitives.
+     * See [[#rendering-operations]] for the detailed specification.
      * @param indexCount - The number of indices to draw.
      * @param instanceCount - The number of instances to draw.
      * @param firstIndex - Offset into the index buffer, in indices, begin drawing from.
@@ -1249,15 +1248,9 @@ declare global {
     ): undefined;
     /**
      * Draws primitives using parameters read from a {@link GPUBuffer}.
+     * See [[#rendering-operations]] for the detailed specification.
      * packed block of **four 32-bit unsigned integer values (16 bytes total)**, given in the same
      * order as the arguments for {@link GPURenderEncoderBase#draw}. For example:
-     * ```js
-     * let drawIndirectParameters = new Uint32Array(4);
-     * drawIndirectParameters[0] = vertexCount;
-     * drawIndirectParameters[1] = instanceCount;
-     * drawIndirectParameters[2] = firstVertex;
-     * drawIndirectParameters[3] = firstInstance;
-     * ```
      * @param indirectBuffer - Buffer containing the indirect draw parameters.
      * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
      */
@@ -1267,16 +1260,9 @@ declare global {
     ): undefined;
     /**
      * Draws indexed primitives using parameters read from a {@link GPUBuffer}.
+     * See [[#rendering-operations]] for the detailed specification.
      * tightly packed block of **five 32-bit unsigned integer values (20 bytes total)**, given in
      * the same order as the arguments for {@link GPURenderEncoderBase#drawIndexed}. For example:
-     * ```js
-     * let drawIndexedIndirectParameters = new Uint32Array(5);
-     * drawIndexedIndirectParameters[0] = indexCount;
-     * drawIndexedIndirectParameters[1] = instanceCount;
-     * drawIndexedIndirectParameters[2] = firstIndex;
-     * drawIndexedIndirectParameters[3] = baseVertex;
-     * drawIndexedIndirectParameters[4] = firstInstance;
-     * ```
      * @param indirectBuffer - Buffer containing the indirect drawIndexed parameters.
      * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
      */
@@ -1345,7 +1331,7 @@ declare global {
      */
     setStencilReference(reference: GPUStencilValue): undefined;
     /**
-     * 	queryIndex:
+     * @param queryIndex - The index of the query in the query set.
      */
     beginOcclusionQuery(queryIndex: GPUSize32): undefined;
     /**
@@ -1419,13 +1405,14 @@ declare global {
      * {@link GPURenderPassColorAttachment#view} prior to executing the render pass.
      * If a {@link GPUColor}, indicates the value to clear {@link GPURenderPassColorAttachment#view}
      * to prior to executing the render pass.
+     * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
      */
     loadValue: GPULoadOp | GPUColor;
     /**
      * The store operation to perform on {@link GPURenderPassColorAttachment#view}
      * after executing the render pass.
      */
-    storeOp?: GPUStoreOp;
+    storeOp: GPUStoreOp;
   }
   /** @deprecated */
   interface GPURenderPassColorAttachmentOld {
@@ -1450,11 +1437,13 @@ declare global {
      * executing the render pass.
      * If a `float`, indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s
      * depth component to prior to executing the render pass.
+     * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
      */
     depthLoadValue: GPULoadOp | number;
     /**
      * The store operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
      * depth component after executing the render pass.
+     * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
      */
     depthStoreOp: GPUStoreOp;
     /**
