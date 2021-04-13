@@ -11,9 +11,11 @@
     "dist/**/*"
   ],
   "scripts": {
-    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal"
+    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && prettier -w generated/index.d.ts",
+    "format": "prettier -w dist/index.d.ts generated/edited.d.ts"
   },
   "devDependencies": {
-    "bikeshed-to-ts": "^1.1.2"
+    "bikeshed-to-ts": "^1.2.0",
+    "prettier": "^2.2.1"
   }
 }

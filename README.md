@@ -59,6 +59,7 @@ Please contribute a PR to add instructions for other setups or improve existing 
 ## How to update these types
 
 - Make sure the submodule is checked out: `git submodule update --init`
+- Install dependencies: `npm ci`
 - Generate `generated/index.d.ts`: `npm run generate`
 - Autoformat `generate/index.d.ts`
     (TODO: automate this; previously I used vscode to autoformat to the rules from gpuweb/cts (I think).)
