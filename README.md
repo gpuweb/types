@@ -73,7 +73,6 @@ Please contribute a PR to add instructions for other setups or improve existing 
 
 Most or all of these should be fixed in the generator over time.
 
-- `| null` added for nullable types.
 - `__brand` removed for partial interfaces.
 - `__brand` removed for WebIDL `dictionary`s.
 - `var`s added for WebIDL `interface`s.

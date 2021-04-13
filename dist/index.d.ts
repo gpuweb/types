@@ -854,7 +854,7 @@ interface GPUVertexBufferLayout {
 
 interface GPUVertexState
   extends GPUProgrammableStage {
-  buffers?: Iterable<GPUVertexBufferLayout>;
+  buffers?: Iterable<GPUVertexBufferLayout | null>;
 }
 
 interface GPUObjectBase {
