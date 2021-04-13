@@ -1092,7 +1092,27 @@ declare var GPUBuffer: {
   new (): never;
 };
 
+interface GPUBufferUsage {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUBufferUsage";
+  readonly MAP_READ: GPUFlagsConstant;
+  readonly MAP_WRITE: GPUFlagsConstant;
+  readonly COPY_SRC: GPUFlagsConstant;
+  readonly COPY_DST: GPUFlagsConstant;
+  readonly INDEX: GPUFlagsConstant;
+  readonly VERTEX: GPUFlagsConstant;
+  readonly UNIFORM: GPUFlagsConstant;
+  readonly STORAGE: GPUFlagsConstant;
+  readonly INDIRECT: GPUFlagsConstant;
+  readonly QUERY_RESOLVE: GPUFlagsConstant;
+}
+
 declare var GPUBufferUsage: {
+  prototype: GPUBufferUsage;
   readonly MAP_READ: GPUFlagsConstant;
   readonly MAP_WRITE: GPUFlagsConstant;
   readonly COPY_SRC: GPUFlagsConstant;
@@ -1137,7 +1157,22 @@ declare var GPUCanvasContext: {
   new (): never;
 };
 
+interface GPUColorWrite {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUColorWrite";
+  readonly RED: GPUFlagsConstant;
+  readonly GREEN: GPUFlagsConstant;
+  readonly BLUE: GPUFlagsConstant;
+  readonly ALPHA: GPUFlagsConstant;
+  readonly ALL: GPUFlagsConstant;
+}
+
 declare var GPUColorWrite: {
+  prototype: GPUColorWrite;
   readonly RED: GPUFlagsConstant;
   readonly GREEN: GPUFlagsConstant;
   readonly BLUE: GPUFlagsConstant;
@@ -1613,7 +1648,19 @@ declare var GPUDeviceLostInfo: {
   new (): never;
 };
 
+interface GPUMapMode {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUMapMode";
+  readonly READ: GPUFlagsConstant;
+  readonly WRITE: GPUFlagsConstant;
+}
+
 declare var GPUMapMode: {
+  prototype: GPUMapMode;
   new (): never;
   readonly READ: GPUFlagsConstant;
   readonly WRITE: GPUFlagsConstant;
@@ -1939,7 +1986,20 @@ declare var GPUShaderModule: {
   new (): never;
 };
 
+interface GPUShaderStage {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUShaderStage";
+  readonly VERTEX: GPUFlagsConstant;
+  readonly FRAGMENT: GPUFlagsConstant;
+  readonly COMPUTE: GPUFlagsConstant;
+}
+
 declare var GPUShaderStage: {
+  prototype: GPUShaderStage;
   readonly VERTEX: GPUFlagsConstant;
   readonly FRAGMENT: GPUFlagsConstant;
   readonly COMPUTE: GPUFlagsConstant;
@@ -1994,7 +2054,22 @@ declare var GPUTexture: {
   new (): never;
 };
 
+interface GPUTextureUsage {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUTextureUsage";
+  readonly COPY_SRC: GPUFlagsConstant;
+  readonly COPY_DST: GPUFlagsConstant;
+  readonly SAMPLED: GPUFlagsConstant;
+  readonly STORAGE: GPUFlagsConstant;
+  readonly RENDER_ATTACHMENT: GPUFlagsConstant;
+}
+
 declare var GPUTextureUsage: {
+  prototype: GPUTextureUsage;
   readonly COPY_SRC: GPUFlagsConstant;
   readonly COPY_DST: GPUFlagsConstant;
   readonly SAMPLED: GPUFlagsConstant;
