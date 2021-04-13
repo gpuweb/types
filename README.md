@@ -73,14 +73,10 @@ Please contribute a PR to add instructions for other setups or improve existing 
 
 Most or all of these should be fixed in the generator over time.
 
-- `__brand` removed for partial interfaces.
-- `__brand` removed for WebIDL `dictionary`s.
-- `var`s added for WebIDL `interface`s.
-- `Array` changed to `Iterable` for WebIDL `sequence`s.
+- `Array` changed to `Iterable` for WebIDL `sequence`s in argument positions.
 - `any` changed to `object` for WebIDL `object`.
 - `interface` changed to `var` for WebIDL `interface`s with (only) `const` members.
     (TODO: this isn't quite the right translation either.)
-- `new ()` moved from `interface` to `var` for constructible WebIDL `interface`s.
 - `| SharedArrayBuffer` added for `[AllowShared] BufferSource`.
 
 The following differences are TODO: should be changed in the final result.
