@@ -11,6 +11,7 @@ interface HTMLCanvasElement {
     contextId: "gpupresent"
   ): GPUCanvasContext | null;
 }
+
 interface OffscreenCanvas {
   getContext(
     contextId: "gpupresent"
@@ -22,6 +23,7 @@ interface GPUExtent3DDictStrict
   /** @deprecated */
   depth?: undefined;
 }
+
 type GPUExtent3DStrict =
   | GPUIntegerCoordinate[]
   | GPUExtent3DDictStrict;
@@ -281,19 +283,23 @@ type GPUVertexFormat =
   | "sint32x2"
   | "sint32x3"
   | "sint32x4";
+
 interface GPUBindGroupDescriptor
   extends GPUObjectDescriptorBase {
   layout: GPUBindGroupLayout;
   entries: Iterable<GPUBindGroupEntry>;
 }
+
 interface GPUBindGroupEntry {
   binding: GPUIndex32;
   resource: GPUBindingResource;
 }
+
 interface GPUBindGroupLayoutDescriptor
   extends GPUObjectDescriptorBase {
   entries: Iterable<GPUBindGroupLayoutEntry>;
 }
+
 interface GPUBindGroupLayoutEntry {
   /**
    * A unique identifier for a resource binding within a
@@ -340,20 +346,24 @@ interface GPUBindGroupLayoutEntry {
   /** @deprecated */
   storageTextureFormat?: GPUTextureFormat;
 }
+
 interface GPUBlendComponent {
   srcFactor?: GPUBlendFactor;
   dstFactor?: GPUBlendFactor;
   operation?: GPUBlendOperation;
 }
+
 interface GPUBlendState {
   color: GPUBlendComponent;
   alpha: GPUBlendComponent;
 }
+
 interface GPUBufferBinding {
   buffer: GPUBuffer;
   offset?: GPUSize64;
   size?: GPUSize64;
 }
+
 interface GPUBufferBindingLayout {
   /**
    * Indicates the type required for buffers bound to this bindings.
@@ -368,24 +378,29 @@ interface GPUBufferBindingLayout {
    */
   minBindingSize?: GPUSize64;
 }
+
 interface GPUBufferDescriptor
   extends GPUObjectDescriptorBase {
   size: GPUSize64;
   usage: GPUBufferUsageFlags;
   mappedAtCreation?: boolean;
 }
+
 interface GPUColorDict {
   r: number;
   g: number;
   b: number;
   a: number;
 }
+
 interface GPUColorTargetState {
   format: GPUTextureFormat;
   blend?: GPUBlendState;
   writeMask?: GPUColorWriteFlags;
 }
+
 type GPUCommandBufferDescriptor = GPUObjectDescriptorBase;
+
 interface GPUCommandEncoderDescriptor
   extends GPUObjectDescriptorBase {
   /**
@@ -393,7 +408,9 @@ interface GPUCommandEncoderDescriptor
    */
   measureExecutionTime?: boolean;
 }
+
 type GPUComputePassDescriptor = GPUObjectDescriptorBase;
+
 type GPUComputePipelineDescriptor =
   | GPUComputePipelineDescriptorNew
   | GPUComputePipelineDescriptorOld;
@@ -401,11 +418,13 @@ interface GPUComputePipelineDescriptorNew
   extends GPUPipelineDescriptorBase {
   compute: GPUProgrammableStage;
 }
+
 /** @deprecated */
 interface GPUComputePipelineDescriptorOld
   extends GPUPipelineDescriptorBase {
   /** @deprecated */ computeStage: GPUProgrammableStage;
 }
+
 interface GPUDepthStencilState {
   format: GPUTextureFormat;
   depthWriteEnabled?: boolean;
@@ -420,38 +439,46 @@ interface GPUDepthStencilState {
   /** @deprecated use GPUPrimitiveState.clampDepth */
   clampDepth?: boolean;
 }
+
 interface GPUDeviceDescriptor
   extends GPUObjectDescriptorBase {
   extensions?: Iterable<GPUExtensionName>;
   limits?: GPULimits;
 }
+
 interface GPUExtent3DDict {
   width: GPUIntegerCoordinate;
   height?: GPUIntegerCoordinate;
   depthOrArrayLayers?: GPUIntegerCoordinate;
 }
+
 interface GPUExtent3DDictStrict
   extends GPUExtent3DDict {
   /** @deprecated */ depth?: undefined;
 }
+
 interface GPUFragmentState
   extends GPUProgrammableStage {
   targets: Iterable<GPUColorTargetState>;
 }
+
 interface GPUImageCopyBuffer
   extends GPUImageDataLayout {
   buffer: GPUBuffer;
 }
+
 interface GPUImageCopyImageBitmap {
   imageBitmap: ImageBitmap;
   origin?: GPUOrigin2D;
 }
+
 interface GPUImageCopyTexture {
   texture: GPUTexture;
   mipLevel?: GPUIntegerCoordinate;
   origin?: GPUOrigin3D;
   aspect?: GPUTextureAspect;
 }
+
 interface GPUImageDataLayout {
   offset?: GPUSize64;
   /**
@@ -467,6 +494,7 @@ interface GPUImageDataLayout {
    */
   rowsPerImage?: GPUSize32;
 }
+
 interface GPULimits {
   maxTextureDimension1D?: number;
   maxTextureDimension2D?: number;
@@ -482,34 +510,41 @@ interface GPULimits {
   maxUniformBuffersPerShaderStage?: number;
   maxUniformBufferBindingSize?: number;
 }
+
 interface GPUMultisampleState {
   count?: GPUSize32;
   mask?: GPUSampleMask;
   alphaToCoverageEnabled?: boolean;
 }
+
 interface GPUObjectDescriptorBase {
   /**
    * The initial value of {@link GPUObjectBase#label|GPUObjectBase.label}.
    */
   label?: string;
 }
+
 interface GPUOrigin2DDict {
   x?: GPUIntegerCoordinate;
   y?: GPUIntegerCoordinate;
 }
+
 interface GPUOrigin3DDict {
   x?: GPUIntegerCoordinate;
   y?: GPUIntegerCoordinate;
   z?: GPUIntegerCoordinate;
 }
+
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
   layout?: GPUPipelineLayout;
 }
+
 interface GPUPipelineLayoutDescriptor
   extends GPUObjectDescriptorBase {
   bindGroupLayouts: Iterable<GPUBindGroupLayout>;
 }
+
 interface GPUPrimitiveState {
   topology?: GPUPrimitiveTopology;
   stripIndexFormat?: GPUIndexFormat;
@@ -517,10 +552,12 @@ interface GPUPrimitiveState {
   cullMode?: GPUCullMode;
   clampDepth?: boolean;
 }
+
 interface GPUProgrammableStage {
   module: GPUShaderModule;
   entryPoint: string;
 }
+
 interface GPUQuerySetDescriptor
   extends GPUObjectDescriptorBase {
   /**
@@ -536,13 +573,16 @@ interface GPUQuerySetDescriptor
    */
   pipelineStatistics?: Iterable<GPUPipelineStatisticName>;
 }
+
 type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
+
 interface GPURenderBundleEncoderDescriptor
   extends GPUObjectDescriptorBase {
   colorFormats: Iterable<GPUTextureFormat>;
   depthStencilFormat?: GPUTextureFormat;
   sampleCount?: GPUSize32;
 }
+
 type GPURenderPassColorAttachment =
   | GPURenderPassColorAttachmentNew
   | GPURenderPassColorAttachmentOld;
@@ -574,6 +614,7 @@ interface GPURenderPassColorAttachmentNew {
    */
   storeOp: GPUStoreOp;
 }
+
 interface GPURenderPassColorAttachmentOld {
   /** @deprecated */ attachment: GPUTextureView;
   resolveTarget?: GPUTextureView;
@@ -582,6 +623,7 @@ interface GPURenderPassColorAttachmentOld {
     | GPUColor;
   storeOp?: GPUStoreOp;
 }
+
 type GPURenderPassDepthStencilAttachment =
   | GPURenderPassDepthStencilAttachmentNew
   | GPURenderPassDepthStencilAttachmentOld;
@@ -635,6 +677,7 @@ interface GPURenderPassDepthStencilAttachmentNew {
    */
   stencilReadOnly?: boolean;
 }
+
 interface GPURenderPassDepthStencilAttachmentOld {
   /** @deprecated */ attachment: GPUTextureView;
   depthLoadValue:
@@ -648,6 +691,7 @@ interface GPURenderPassDepthStencilAttachmentOld {
   stencilStoreOp: GPUStoreOp;
   stencilReadOnly?: boolean;
 }
+
 interface GPURenderPassDescriptor
   extends GPUObjectDescriptorBase {
   /**
@@ -665,6 +709,7 @@ interface GPURenderPassDescriptor
    */
   occlusionQuerySet?: GPUQuerySet;
 }
+
 type GPURenderPipelineDescriptor =
   | GPURenderPipelineDescriptorNew
   | GPURenderPipelineDescriptorOld;
@@ -676,15 +721,18 @@ interface GPURenderPipelineDescriptorNew
   multisample?: GPUMultisampleState;
   fragment?: GPUFragmentState;
 }
+
 interface GPURequestAdapterOptions {
   powerPreference?: GPUPowerPreference;
 }
+
 interface GPUSamplerBindingLayout {
   /**
    * Indicates the required type of a sampler bound to this bindings.
    */
   type?: GPUSamplerBindingType;
 }
+
 interface GPUSamplerDescriptor
   extends GPUObjectDescriptorBase {
   addressModeU?: GPUAddressMode;
@@ -698,6 +746,7 @@ interface GPUSamplerDescriptor
   compare?: GPUCompareFunction;
   maxAnisotropy?: number;
 }
+
 type GPUShaderModuleDescriptor =
   | GPUShaderModuleDescriptorWGSL
   | GPUShaderModuleDescriptorSPIRV;
@@ -706,16 +755,19 @@ interface GPUShaderModuleDescriptorWGSL
   code: string;
   sourceMap?: object;
 }
+
 interface GPUStencilFaceState {
   compare?: GPUCompareFunction;
   failOp?: GPUStencilOperation;
   depthFailOp?: GPUStencilOperation;
   passOp?: GPUStencilOperation;
 }
+
 interface GPUShaderModuleDescriptorSPIRV
   extends GPUObjectDescriptorBase {
   /** @deprecated */ code: Uint32Array;
 }
+
 interface GPUStorageTextureBindingLayout {
   /**
    * Indicates whether texture views bound to this binding will be bound for read-only or
@@ -735,12 +787,14 @@ interface GPUStorageTextureBindingLayout {
    */
   viewDimension?: GPUTextureViewDimension;
 }
+
 interface GPUSwapChainDescriptor
   extends GPUObjectDescriptorBase {
   device: GPUDevice;
   format: GPUTextureFormat;
   usage?: GPUTextureUsageFlags;
 }
+
 interface GPUTextureBindingLayout {
   /**
    * Indicates the type required for texture views bound to this binding.
@@ -759,6 +813,7 @@ interface GPUTextureBindingLayout {
    */
   multisampled?: boolean;
 }
+
 interface GPUTextureDescriptor
   extends GPUObjectDescriptorBase {
   size: GPUExtent3DStrict;
@@ -768,6 +823,7 @@ interface GPUTextureDescriptor
   format: GPUTextureFormat;
   usage: GPUTextureUsageFlags;
 }
+
 interface GPUTextureViewDescriptor
   extends GPUObjectDescriptorBase {
   format?: GPUTextureFormat;
@@ -778,24 +834,29 @@ interface GPUTextureViewDescriptor
   baseArrayLayer?: GPUIntegerCoordinate;
   arrayLayerCount?: GPUIntegerCoordinate;
 }
+
 interface GPUUncapturedErrorEventInit
   extends EventInit {
   error: GPUError;
 }
+
 interface GPUVertexAttribute {
   format: GPUVertexFormat;
   offset: GPUSize64;
   shaderLocation: GPUIndex32;
 }
+
 interface GPUVertexBufferLayout {
   arrayStride: GPUSize64;
   stepMode?: GPUInputStepMode;
   attributes: Iterable<GPUVertexAttribute>;
 }
+
 interface GPUVertexState
   extends GPUProgrammableStage {
   buffers?: Iterable<GPUVertexBufferLayout>;
 }
+
 interface GPUObjectBase {
   /**
    * A label which can be used by development tools (such as error/warning messages,
@@ -808,6 +869,7 @@ interface GPUObjectBase {
     | string
     | null;
 }
+
 interface GPUPipelineBase {
   /**
    * Gets a {@link GPUBindGroupLayout} that is compatible with the {@link GPUPipelineBase}'s
@@ -819,6 +881,7 @@ interface GPUPipelineBase {
     index: number
   ): GPUBindGroupLayout;
 }
+
 interface GPUProgrammablePassEncoder {
   /**
    * Sets the current {@link GPUBindGroup} for the given index.
@@ -872,6 +935,7 @@ interface GPUProgrammablePassEncoder {
     markerLabel: string
   ): undefined;
 }
+
 interface GPURenderEncoderBase {
   /**
    * Sets the current {@link GPURenderPipeline}.
@@ -963,9 +1027,11 @@ interface GPURenderEncoderBase {
     indirectOffset: GPUSize64
   ): undefined;
 }
+
 interface NavigatorGPU {
   readonly gpu: GPU;
 }
+
 interface GPU {
   /**
    * Nominal type branding.
@@ -983,10 +1049,12 @@ interface GPU {
     options?: GPURequestAdapterOptions
   ): Promise<GPUAdapter | null>;
 }
+
 declare var GPU: {
   readonly prototype: GPU;
   new (): never;
 };
+
 interface GPUAdapter {
   /**
    * Nominal type branding.
@@ -1009,10 +1077,12 @@ interface GPUAdapter {
     descriptor?: GPUDeviceDescriptor
   ): Promise<GPUDevice>;
 }
+
 declare var GPUAdapter: {
   readonly prototype: GPUAdapter;
   new (): never;
 };
+
 interface GPUBindGroup
   extends GPUObjectBase {
   /**
@@ -1022,10 +1092,12 @@ interface GPUBindGroup
    */
   readonly __brand: "GPUBindGroup";
 }
+
 declare var GPUBindGroup: {
   readonly prototype: GPUBindGroup;
   new (): never;
 };
+
 interface GPUBindGroupLayout
   extends GPUObjectBase {
   /**
@@ -1035,10 +1107,12 @@ interface GPUBindGroupLayout
    */
   readonly __brand: "GPUBindGroupLayout";
 }
+
 declare var GPUBindGroupLayout: {
   readonly prototype: GPUBindGroupLayout;
   new (): never;
 };
+
 interface GPUBuffer
   extends GPUObjectBase {
   /**
@@ -1078,10 +1152,12 @@ interface GPUBuffer
    */
   destroy(): undefined;
 }
+
 declare var GPUBuffer: {
   readonly prototype: GPUBuffer;
   new (): never;
 };
+
 declare var GPUBufferUsage: {
   readonly MAP_READ: GPUFlagsConstant;
   readonly MAP_WRITE: GPUFlagsConstant;
@@ -1094,6 +1170,7 @@ declare var GPUBufferUsage: {
   readonly INDIRECT: GPUFlagsConstant;
   readonly QUERY_RESOLVE: GPUFlagsConstant;
 };
+
 interface GPUCanvasContext {
   /**
    * Nominal type branding.
@@ -1124,10 +1201,12 @@ interface GPUCanvasContext {
     device: GPUDevice
   ): Promise<GPUTextureFormat>;
 }
+
 declare var GPUCanvasContext: {
   readonly prototype: GPUCanvasContext;
   new (): never;
 };
+
 declare var GPUColorWrite: {
   readonly RED: GPUFlagsConstant;
   readonly GREEN: GPUFlagsConstant;
@@ -1135,6 +1214,7 @@ declare var GPUColorWrite: {
   readonly ALPHA: GPUFlagsConstant;
   readonly ALL: GPUFlagsConstant;
 };
+
 interface GPUCommandBuffer
   extends GPUObjectBase {
   /**
@@ -1164,10 +1244,12 @@ interface GPUCommandBuffer
    */
   readonly executionTime: Promise<number>;
 }
+
 declare var GPUCommandBuffer: {
   readonly prototype: GPUCommandBuffer;
   new (): never;
 };
+
 interface GPUCommandEncoder
   extends GPUObjectBase {
   /**
@@ -1292,10 +1374,12 @@ interface GPUCommandEncoder
     descriptor?: GPUCommandBufferDescriptor
   ): GPUCommandBuffer;
 }
+
 declare var GPUCommandEncoder: {
   readonly prototype: GPUCommandEncoder;
   new (): never;
 };
+
 interface GPUCompilationInfo {
   /**
    * Nominal type branding.
@@ -1305,10 +1389,12 @@ interface GPUCompilationInfo {
   readonly __brand: "GPUCompilationInfo";
   readonly messages: ReadonlyArray<GPUCompilationMessage>;
 }
+
 declare var GPUCompilationInfo: {
   readonly prototype: GPUCompilationInfo;
   new (): never;
 };
+
 interface GPUCompilationMessage {
   /**
    * Nominal type branding.
@@ -1321,10 +1407,12 @@ interface GPUCompilationMessage {
   readonly lineNum: number;
   readonly linePos: number;
 }
+
 declare var GPUCompilationMessage: {
   readonly prototype: GPUCompilationMessage;
   new (): never;
 };
+
 interface GPUComputePassEncoder
   extends GPUObjectBase,
     GPUProgrammablePassEncoder {
@@ -1391,10 +1479,12 @@ interface GPUComputePassEncoder
    */
   endPass(): undefined;
 }
+
 declare var GPUComputePassEncoder: {
   readonly prototype: GPUComputePassEncoder;
   new (): never;
 };
+
 interface GPUComputePipeline
   extends GPUObjectBase,
     GPUPipelineBase {
@@ -1405,10 +1495,12 @@ interface GPUComputePipeline
    */
   readonly __brand: "GPUComputePipeline";
 }
+
 declare var GPUComputePipeline: {
   readonly prototype: GPUComputePipeline;
   new (): never;
 };
+
 interface GPUDevice
   extends EventTarget,
     GPUObjectBase {
@@ -1571,10 +1663,12 @@ interface GPUDevice
       ) => any)
     | null;
 }
+
 declare var GPUDevice: {
   readonly prototype: GPUDevice;
   new (): never;
 };
+
 interface GPUDeviceLostInfo {
   /**
    * Nominal type branding.
@@ -1587,15 +1681,18 @@ interface GPUDeviceLostInfo {
     | undefined;
   readonly message: string;
 }
+
 declare var GPUDeviceLostInfo: {
   readonly prototype: GPUDeviceLostInfo;
   new (): never;
 };
+
 declare var GPUMapMode: {
   new (): never;
   readonly READ: GPUFlagsConstant;
   readonly WRITE: GPUFlagsConstant;
 };
+
 interface GPUOutOfMemoryError {
   /**
    * Nominal type branding.
@@ -1604,10 +1701,12 @@ interface GPUOutOfMemoryError {
    */
   readonly __brand: "GPUOutOfMemoryError";
 }
+
 declare var GPUOutOfMemoryError: {
   readonly prototype: GPUOutOfMemoryError;
   new (): GPUOutOfMemoryError;
 };
+
 interface GPUPipelineLayout
   extends GPUObjectBase {
   /**
@@ -1617,10 +1716,12 @@ interface GPUPipelineLayout
    */
   readonly __brand: "GPUPipelineLayout";
 }
+
 declare var GPUPipelineLayout: {
   readonly prototype: GPUPipelineLayout;
   new (): never;
 };
+
 interface GPUQuerySet
   extends GPUObjectBase {
   /**
@@ -1634,10 +1735,12 @@ interface GPUQuerySet
    */
   destroy(): undefined;
 }
+
 declare var GPUQuerySet: {
   readonly prototype: GPUQuerySet;
   new (): never;
 };
+
 interface GPUQueue
   extends GPUObjectBase {
   /**
@@ -1713,10 +1816,12 @@ interface GPUQueue
     copySize: GPUExtent3DStrict
   ): undefined;
 }
+
 declare var GPUQueue: {
   readonly prototype: GPUQueue;
   new (): never;
 };
+
 interface GPURenderBundle
   extends GPUObjectBase {
   /**
@@ -1726,10 +1831,12 @@ interface GPURenderBundle
    */
   readonly __brand: "GPURenderBundle";
 }
+
 declare var GPURenderBundle: {
   readonly prototype: GPURenderBundle;
   new (): never;
 };
+
 interface GPURenderBundleEncoder
   extends GPUObjectBase,
     GPUProgrammablePassEncoder,
@@ -1748,10 +1855,12 @@ interface GPURenderBundleEncoder
     descriptor?: GPURenderBundleDescriptor
   ): GPURenderBundle;
 }
+
 declare var GPURenderBundleEncoder: {
   readonly prototype: GPURenderBundleEncoder;
   new (): never;
 };
+
 interface GPURenderPassEncoder
   extends GPUObjectBase,
     GPUProgrammablePassEncoder,
@@ -1857,10 +1966,12 @@ interface GPURenderPassEncoder
    */
   endPass(): undefined;
 }
+
 declare var GPURenderPassEncoder: {
   readonly prototype: GPURenderPassEncoder;
   new (): never;
 };
+
 interface GPURenderPipeline
   extends GPUObjectBase,
     GPUPipelineBase {
@@ -1871,10 +1982,12 @@ interface GPURenderPipeline
    */
   readonly __brand: "GPURenderPipeline";
 }
+
 declare var GPURenderPipeline: {
   readonly prototype: GPURenderPipeline;
   new (): never;
 };
+
 interface GPUSampler
   extends GPUObjectBase {
   /**
@@ -1884,10 +1997,12 @@ interface GPUSampler
    */
   readonly __brand: "GPUSampler";
 }
+
 declare var GPUSampler: {
   readonly prototype: GPUSampler;
   new (): never;
 };
+
 interface GPUShaderModule
   extends GPUObjectBase {
   /**
@@ -1901,15 +2016,18 @@ interface GPUShaderModule
    */
   compilationInfo(): Promise<GPUCompilationInfo>;
 }
+
 declare var GPUShaderModule: {
   readonly prototype: GPUShaderModule;
   new (): never;
 };
+
 declare var GPUShaderStage: {
   readonly VERTEX: GPUFlagsConstant;
   readonly FRAGMENT: GPUFlagsConstant;
   readonly COMPUTE: GPUFlagsConstant;
 };
+
 interface GPUSwapChain
   extends GPUObjectBase {
   /**
@@ -1927,10 +2045,12 @@ interface GPUSwapChain
    */
   getCurrentTexture(): GPUTexture;
 }
+
 declare var GPUSwapChain: {
   readonly prototype: GPUSwapChain;
   new (): never;
 };
+
 interface GPUTexture
   extends GPUObjectBase {
   /**
@@ -1951,10 +2071,12 @@ interface GPUTexture
    */
   destroy(): undefined;
 }
+
 declare var GPUTexture: {
   readonly prototype: GPUTexture;
   new (): never;
 };
+
 declare var GPUTextureUsage: {
   readonly COPY_SRC: GPUFlagsConstant;
   readonly COPY_DST: GPUFlagsConstant;
@@ -1962,6 +2084,7 @@ declare var GPUTextureUsage: {
   readonly STORAGE: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 };
+
 interface GPUTextureView
   extends GPUObjectBase {
   /**
@@ -1971,10 +2094,12 @@ interface GPUTextureView
    */
   readonly __brand: "GPUTextureView";
 }
+
 declare var GPUTextureView: {
   readonly prototype: GPUTextureView;
   new (): never;
 };
+
 interface GPUUncapturedErrorEvent
   extends Event {
   /**
@@ -1985,6 +2110,7 @@ interface GPUUncapturedErrorEvent
   readonly __brand: "GPUUncapturedErrorEvent";
   readonly error: GPUError;
 }
+
 declare var GPUUncapturedErrorEvent: {
   readonly prototype: GPUUncapturedErrorEvent;
   new (
@@ -1992,6 +2118,7 @@ declare var GPUUncapturedErrorEvent: {
     gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
   ): GPUUncapturedErrorEvent;
 };
+
 interface GPUValidationError {
   /**
    * Nominal type branding.
@@ -2001,14 +2128,17 @@ interface GPUValidationError {
   readonly __brand: "GPUValidationError";
   readonly message: string;
 }
+
 declare var GPUValidationError: {
   readonly prototype: GPUValidationError;
   new (
     message: string
   ): GPUValidationError;
 };
+
 interface Navigator
   extends NavigatorGPU {}
+
 interface WorkerNavigator
   extends NavigatorGPU {}
 
@@ -2058,6 +2188,7 @@ interface GPURenderPipelineDescriptorOld
   /** @deprecated */
   alphaToCoverageEnabled?: boolean;
 }
+
 /** @deprecated */
 type GPUProgrammableStageDescriptor = GPUProgrammableStage;
 
@@ -2087,6 +2218,7 @@ interface GPUColorStateDescriptor {
   colorBlend?: GPUBlendDescriptor;
   writeMask?: GPUColorWriteFlags;
 }
+
 /** @deprecated */
 interface GPUDepthStencilStateDescriptor {
   format: GPUTextureFormat;
@@ -2097,17 +2229,20 @@ interface GPUDepthStencilStateDescriptor {
   stencilReadMask?: number;
   stencilWriteMask?: number;
 }
+
 /** @deprecated */
 interface GPUFenceDescriptor
   extends GPUObjectDescriptorBase {
   initialValue?: number;
   signalQueue?: GPUQueue;
 }
+
 /** @deprecated */
 interface GPUVertexStateDescriptor {
   indexFormat?: GPUIndexFormat;
   vertexBuffers?: Iterable<GPUVertexBufferLayoutDescriptor>;
 }
+
 /** @deprecated */
 interface GPURasterizationStateDescriptor {
   frontFace?: GPUFrontFace;
@@ -2117,6 +2252,7 @@ interface GPURasterizationStateDescriptor {
   depthBiasSlopeScale?: number;
   depthBiasClamp?: number;
 }
+
 /** @deprecated */
 type GPUStencilStateFaceDescriptor = GPUStencilFaceState;
 /** @deprecated */
@@ -2124,6 +2260,7 @@ declare var GPUFence: {
   readonly prototype: GPUFence;
   new (): never;
 };
+
 /** @deprecated */
 interface GPUFence
   extends GPUObjectBase {
