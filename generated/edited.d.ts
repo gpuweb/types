@@ -1017,6 +1017,10 @@ interface GPUAdapterLimits {
   readonly maxVertexBufferArrayStride: number;
 }
 
+declare var GPUAdapterLimits: {
+  prototype: GPUAdapterLimits;
+};
+
 interface GPUBindGroup
   extends GPUObjectBase {
   /**
