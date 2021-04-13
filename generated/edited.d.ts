@@ -951,7 +951,7 @@ interface GPU {
 }
 
 declare var GPU: {
-  readonly prototype: GPU;
+  prototype: GPU;
   new (): never;
 };
 
@@ -985,7 +985,7 @@ interface GPUAdapter {
 }
 
 declare var GPUAdapter: {
-  readonly prototype: GPUAdapter;
+  prototype: GPUAdapter;
   new (): never;
 };
 
@@ -1028,7 +1028,7 @@ interface GPUBindGroup
 }
 
 declare var GPUBindGroup: {
-  readonly prototype: GPUBindGroup;
+  prototype: GPUBindGroup;
   new (): never;
 };
 
@@ -1043,7 +1043,7 @@ interface GPUBindGroupLayout
 }
 
 declare var GPUBindGroupLayout: {
-  readonly prototype: GPUBindGroupLayout;
+  prototype: GPUBindGroupLayout;
   new (): never;
 };
 
@@ -1088,7 +1088,7 @@ interface GPUBuffer
 }
 
 declare var GPUBuffer: {
-  readonly prototype: GPUBuffer;
+  prototype: GPUBuffer;
   new (): never;
 };
 
@@ -1133,7 +1133,7 @@ interface GPUCanvasContext {
 }
 
 declare var GPUCanvasContext: {
-  readonly prototype: GPUCanvasContext;
+  prototype: GPUCanvasContext;
   new (): never;
 };
 
@@ -1176,7 +1176,7 @@ interface GPUCommandBuffer
 }
 
 declare var GPUCommandBuffer: {
-  readonly prototype: GPUCommandBuffer;
+  prototype: GPUCommandBuffer;
   new (): never;
 };
 
@@ -1306,7 +1306,7 @@ interface GPUCommandEncoder
 }
 
 declare var GPUCommandEncoder: {
-  readonly prototype: GPUCommandEncoder;
+  prototype: GPUCommandEncoder;
   new (): never;
 };
 
@@ -1321,7 +1321,7 @@ interface GPUCompilationInfo {
 }
 
 declare var GPUCompilationInfo: {
-  readonly prototype: GPUCompilationInfo;
+  prototype: GPUCompilationInfo;
   new (): never;
 };
 
@@ -1339,7 +1339,7 @@ interface GPUCompilationMessage {
 }
 
 declare var GPUCompilationMessage: {
-  readonly prototype: GPUCompilationMessage;
+  prototype: GPUCompilationMessage;
   new (): never;
 };
 
@@ -1411,7 +1411,7 @@ interface GPUComputePassEncoder
 }
 
 declare var GPUComputePassEncoder: {
-  readonly prototype: GPUComputePassEncoder;
+  prototype: GPUComputePassEncoder;
   new (): never;
 };
 
@@ -1427,7 +1427,7 @@ interface GPUComputePipeline
 }
 
 declare var GPUComputePipeline: {
-  readonly prototype: GPUComputePipeline;
+  prototype: GPUComputePipeline;
   new (): never;
 };
 
@@ -1587,16 +1587,11 @@ interface GPUDevice
    * - There are no error scopes on the stack.
    */
   popErrorScope(): Promise<GPUError | null>;
-  onuncapturederror:
-    | ((
-        this: GPUDevice,
-        ev: GPUUncapturedErrorEvent
-      ) => any)
-    | null;
+  onuncapturederror: EventHandler;
 }
 
 declare var GPUDevice: {
-  readonly prototype: GPUDevice;
+  prototype: GPUDevice;
   new (): never;
 };
 
@@ -1614,7 +1609,7 @@ interface GPUDeviceLostInfo {
 }
 
 declare var GPUDeviceLostInfo: {
-  readonly prototype: GPUDeviceLostInfo;
+  prototype: GPUDeviceLostInfo;
   new (): never;
 };
 
@@ -1634,7 +1629,7 @@ interface GPUOutOfMemoryError {
 }
 
 declare var GPUOutOfMemoryError: {
-  readonly prototype: GPUOutOfMemoryError;
+  prototype: GPUOutOfMemoryError;
   new (): GPUOutOfMemoryError;
 };
 
@@ -1649,7 +1644,7 @@ interface GPUPipelineLayout
 }
 
 declare var GPUPipelineLayout: {
-  readonly prototype: GPUPipelineLayout;
+  prototype: GPUPipelineLayout;
   new (): never;
 };
 
@@ -1668,7 +1663,7 @@ interface GPUQuerySet
 }
 
 declare var GPUQuerySet: {
-  readonly prototype: GPUQuerySet;
+  prototype: GPUQuerySet;
   new (): never;
 };
 
@@ -1740,7 +1735,7 @@ interface GPUQueue
 }
 
 declare var GPUQueue: {
-  readonly prototype: GPUQueue;
+  prototype: GPUQueue;
   new (): never;
 };
 
@@ -1755,7 +1750,7 @@ interface GPURenderBundle
 }
 
 declare var GPURenderBundle: {
-  readonly prototype: GPURenderBundle;
+  prototype: GPURenderBundle;
   new (): never;
 };
 
@@ -1779,7 +1774,7 @@ interface GPURenderBundleEncoder
 }
 
 declare var GPURenderBundleEncoder: {
-  readonly prototype: GPURenderBundleEncoder;
+  prototype: GPURenderBundleEncoder;
   new (): never;
 };
 
@@ -1890,7 +1885,7 @@ interface GPURenderPassEncoder
 }
 
 declare var GPURenderPassEncoder: {
-  readonly prototype: GPURenderPassEncoder;
+  prototype: GPURenderPassEncoder;
   new (): never;
 };
 
@@ -1906,7 +1901,7 @@ interface GPURenderPipeline
 }
 
 declare var GPURenderPipeline: {
-  readonly prototype: GPURenderPipeline;
+  prototype: GPURenderPipeline;
   new (): never;
 };
 
@@ -1921,7 +1916,7 @@ interface GPUSampler
 }
 
 declare var GPUSampler: {
-  readonly prototype: GPUSampler;
+  prototype: GPUSampler;
   new (): never;
 };
 
@@ -1940,7 +1935,7 @@ interface GPUShaderModule
 }
 
 declare var GPUShaderModule: {
-  readonly prototype: GPUShaderModule;
+  prototype: GPUShaderModule;
   new (): never;
 };
 
@@ -1969,7 +1964,7 @@ interface GPUSwapChain
 }
 
 declare var GPUSwapChain: {
-  readonly prototype: GPUSwapChain;
+  prototype: GPUSwapChain;
   new (): never;
 };
 
@@ -1995,7 +1990,7 @@ interface GPUTexture
 }
 
 declare var GPUTexture: {
-  readonly prototype: GPUTexture;
+  prototype: GPUTexture;
   new (): never;
 };
 
@@ -2018,7 +2013,7 @@ interface GPUTextureView
 }
 
 declare var GPUTextureView: {
-  readonly prototype: GPUTextureView;
+  prototype: GPUTextureView;
   new (): never;
 };
 
@@ -2034,7 +2029,7 @@ interface GPUUncapturedErrorEvent
 }
 
 declare var GPUUncapturedErrorEvent: {
-  readonly prototype: GPUUncapturedErrorEvent;
+  prototype: GPUUncapturedErrorEvent;
   new (
     type: string,
     gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
@@ -2052,7 +2047,7 @@ interface GPUValidationError {
 }
 
 declare var GPUValidationError: {
-  readonly prototype: GPUValidationError;
+  prototype: GPUValidationError;
   new (
     message: string
   ): GPUValidationError;
