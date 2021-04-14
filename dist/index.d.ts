@@ -441,7 +441,26 @@ interface GPUDepthStencilState {
 
 interface GPUDeviceDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The set of {@link GPUFeatureName} values in this sequence defines the exact set of
+   * features that must be enabled on the device.
+   */
+  nonGuaranteedFeatures?: Iterable<GPUFeatureName>;
+  /** @deprecated */
   extensions?: Iterable<GPUFeatureName>;
+  /**
+   * Defines the exact limits that must be enabled on the device.
+   * Each key must be the name of a member of supported limits.
+   * <!-- If we ever need limit types other than GPUSize32, we can change the value type to
+   * `double` or `any` in the future and write out the type conversion explicitly (by reference
+   * to WebIDL spec). Or change the entire type to `any` and add back a `dictionary GPULimits`
+   * and define the conversion of the whole object by reference to WebIDL. -->
+   */
+  nonGuaranteedLimits?: Record<
+    string,
+    GPUSize32
+  >;
+  /** @deprecated */
   limits?: GPULimits;
 }
 
@@ -491,22 +510,6 @@ interface GPUImageDataLayout {
    * Required if there are multiple images (i.e. the depth is more than one).
    */
   rowsPerImage?: GPUSize32;
-}
-
-interface GPULimits {
-  maxTextureDimension1D?: number;
-  maxTextureDimension2D?: number;
-  maxTextureDimension3D?: number;
-  maxTextureArrayLayers?: number;
-  maxBindGroups?: number;
-  maxDynamicUniformBuffersPerPipelineLayout?: number;
-  maxDynamicStorageBuffersPerPipelineLayout?: number;
-  maxSampledTexturesPerShaderStage?: number;
-  maxSamplersPerShaderStage?: number;
-  maxStorageBuffersPerShaderStage?: number;
-  maxStorageTexturesPerShaderStage?: number;
-  maxUniformBuffersPerShaderStage?: number;
-  maxUniformBufferBindingSize?: number;
 }
 
 interface GPUMultisampleState {
@@ -1065,8 +1068,16 @@ interface GPUAdapter {
    * The contents are implementation-defined.
    */
   readonly name: string;
+  /**
+   * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
+   */
+  readonly features: GPUSupportedFeatures;
+  /** @deprecated */
   readonly extensions: GPUFeatureName[];
-  readonly limits: Required<GPULimits>;
+  /**
+   * The limits in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[limits]]}.
+   */
+  readonly limits: GPUAdapterLimits;
   /**
    * Requests a device from the adapter.
    * @param descriptor - Description of the {@link GPUDevice} to request.
@@ -1079,6 +1090,36 @@ interface GPUAdapter {
 declare var GPUAdapter: {
   prototype: GPUAdapter;
   new (): never;
+};
+
+interface GPUAdapterLimits {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUAdapterLimits";
+  readonly maxTextureDimension1D: number;
+  readonly maxTextureDimension2D: number;
+  readonly maxTextureDimension3D: number;
+  readonly maxTextureArrayLayers: number;
+  readonly maxBindGroups: number;
+  readonly maxDynamicUniformBuffersPerPipelineLayout: number;
+  readonly maxDynamicStorageBuffersPerPipelineLayout: number;
+  readonly maxSampledTexturesPerShaderStage: number;
+  readonly maxSamplersPerShaderStage: number;
+  readonly maxStorageBuffersPerShaderStage: number;
+  readonly maxStorageTexturesPerShaderStage: number;
+  readonly maxUniformBuffersPerShaderStage: number;
+  readonly maxUniformBufferBindingSize: number;
+  readonly maxStorageBufferBindingSize: number;
+  readonly maxVertexBuffers: number;
+  readonly maxVertexAttributes: number;
+  readonly maxVertexBufferArrayStride: number;
+}
+
+declare var GPUAdapterLimits: {
+  prototype: GPUAdapterLimits;
 };
 
 interface GPUBindGroup
@@ -1545,8 +1586,19 @@ interface GPUDevice
   readonly __brand: "GPUDevice";
   /** @deprecated */
   readonly adapter: GPUAdapter;
+  /**
+   * A set containing the {@link GPUFeatureName} values of the features
+   * supported by the device (i.e. the ones with which it was created).
+   */
+  readonly features: GPUSupportedFeatures;
+  /** @deprecated */
   readonly extensions: ReadonlyArray<GPUFeatureName>;
-  readonly limits: Required<GPULimits>;
+  /**
+   * Exposes the limits supported by the device
+   * (which are exactly the ones with which it was created).
+   * Issue: Should this be an `interface GPUSupportedLimits`?
+   */
+  readonly limits: Record<GPUFeatureName, number>;
   /**
    * The primary {@link GPUQueue} for this device.
    */
@@ -2090,6 +2142,8 @@ declare var GPUShaderStage: {
   readonly COMPUTE: GPUFlagsConstant;
 };
 
+type GPUSupportedFeatures = ReadonlySet<GPUFeatureName>;
+
 interface GPUSwapChain
   extends GPUObjectBase {
   /**
@@ -2225,6 +2279,22 @@ interface WorkerNavigator
 
 /** @deprecated */
 type GPUExtensionName = GPUFeatureName;
+/** @deprecated */
+interface GPULimits {
+  maxTextureDimension1D?: number;
+  maxTextureDimension2D?: number;
+  maxTextureDimension3D?: number;
+  maxTextureArrayLayers?: number;
+  maxBindGroups?: number;
+  maxDynamicUniformBuffersPerPipelineLayout?: number;
+  maxDynamicStorageBuffersPerPipelineLayout?: number;
+  maxSampledTexturesPerShaderStage?: number;
+  maxSamplersPerShaderStage?: number;
+  maxStorageBuffersPerShaderStage?: number;
+  maxStorageTexturesPerShaderStage?: number;
+  maxUniformBuffersPerShaderStage?: number;
+  maxUniformBufferBindingSize?: number;
+}
 
 /** @deprecated */
 type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
