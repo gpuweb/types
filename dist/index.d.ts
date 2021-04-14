@@ -115,7 +115,7 @@ type GPUDeviceLostReason = "destroyed";
 type GPUErrorFilter =
   | "out-of-memory"
   | "validation";
-type GPUExtensionName =
+type GPUFeatureName =
   | "depth-clamping"
   | "depth24unorm-stencil8"
   | "depth32float-stencil8"
@@ -441,7 +441,7 @@ interface GPUDepthStencilState {
 
 interface GPUDeviceDescriptor
   extends GPUObjectDescriptorBase {
-  extensions?: Iterable<GPUExtensionName>;
+  extensions?: Iterable<GPUFeatureName>;
   limits?: GPULimits;
 }
 
@@ -1065,7 +1065,7 @@ interface GPUAdapter {
    * The contents are implementation-defined.
    */
   readonly name: string;
-  readonly extensions: GPUExtensionName[];
+  readonly extensions: GPUFeatureName[];
   readonly limits: Required<GPULimits>;
   /**
    * Requests a device from the adapter.
@@ -1545,7 +1545,7 @@ interface GPUDevice
   readonly __brand: "GPUDevice";
   /** @deprecated */
   readonly adapter: GPUAdapter;
-  readonly extensions: ReadonlyArray<GPUExtensionName>;
+  readonly extensions: ReadonlyArray<GPUFeatureName>;
   readonly limits: Required<GPULimits>;
   /**
    * The primary {@link GPUQueue} for this device.
@@ -2218,6 +2218,9 @@ interface WorkerNavigator
 // *********************************************************************************************
 // Deprecated
 // *********************************************************************************************
+
+/** @deprecated */
+type GPUExtensionName = GPUFeatureName;
 
 /** @deprecated */
 type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
