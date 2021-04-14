@@ -59,15 +59,13 @@ Please contribute a PR to add instructions for other setups or improve existing 
 ## How to update these types
 
 - Make sure the submodule is checked out: `git submodule update --init`
+- Pull `gpuweb` changes: in `gpuweb/`, switch to and pull the `main` branch
 - Install dependencies: `npm ci`
 - Generate `generated/index.d.ts`: `npm run generate`
-- Autoformat `generate/index.d.ts`
-    (TODO: automate this; previously I used vscode to autoformat to the rules from gpuweb/cts (I think).)
-- **temporary two step process until generator issues are fixed**
-    - Open a diff between `generated/index.d.ts` and `generated/edited.d.ts`.
-        Update the latter according to changes from the former. See below for intentional differences.
-    - Open a diff between `generate/edited.d.ts` and `dist/index.d.ts`.
-        Update the latter according to changes from the former. See below for intentional differences.
+- Open a diff between `generated/index.d.ts` and `dist/index.d.ts`.
+    The generated file is tracked by Git so you can see what has changed.
+    Update the latter according to changes from the former. See below for intentional differences.
+- Format the result: `npm run format`
 
 ### Intentional differences between generator output and final result
 
@@ -80,7 +78,6 @@ Most or all of these should be fixed in the generator over time.
 The following differences are TODO: should be changed in the final result.
 
 - Deprecated items should be removed.
-- Features/limits related changes should be applied.
 - Color/origin/extent types should be changed to `Iterable<>`.
 
 The following differences will remain.
