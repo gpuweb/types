@@ -1612,7 +1612,7 @@ interface GPUDevice
    * Issue: Should this be an `interface GPUSupportedLimits`?
    */
   readonly limits: Record<
-    GPUFeatureName,
+    string,
     number
   >;
   /**
