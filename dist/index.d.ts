@@ -1552,11 +1552,11 @@ interface GPUDevice
    */
   readonly queue: GPUQueue;
   /**
-   * Destroys the device.
+   * Destroys the device, preventing further operations on it.
+   * Outstanding asynchronous operations will fail.
    * Note:
-   * This prevents any further operations on the device.
-   * Implementations can free resource allocations immediately.
-   * Outstanding asynchronous operations will fail, so implementations can abort them early.
+   * Since no further operations can occur on this device, implementations can free resource
+   * allocations and abort outstanding asynchronous operations immediately.
    */
   destroy(): undefined;
   /**
@@ -1950,10 +1950,14 @@ interface GPURenderPassEncoder
     height: GPUIntegerCoordinate
   ): undefined;
   /**
-   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"blend-color"}
-   * and {@link GPUBlendFactor#"one-minus-blend-color"} {@link GPUBlendFactor}s.
+   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant-component"}
+   * and {@link GPUBlendFactor#"one-minus-constant-component"} {@link GPUBlendFactor}s.
    * @param color - The color to use when blending.
    */
+  setBlendConstant(
+    color: GPUColor
+  ): undefined;
+  /** @deprecated */
   setBlendColor(
     color: GPUColor
   ): undefined;

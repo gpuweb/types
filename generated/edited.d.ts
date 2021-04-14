@@ -970,7 +970,7 @@ interface GPUAdapter {
   /**
    * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
    */
-  readonly features: GPUAdapterFeatures;
+  readonly features: GPUSupportedFeatures;
   /**
    * The limits in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[limits]]}.
    */
@@ -988,8 +988,6 @@ declare var GPUAdapter: {
   prototype: GPUAdapter;
   new (): never;
 };
-
-type GPUAdapterFeatures = ReadonlySet<GPUFeatureName>;
 
 interface GPUAdapterLimits {
   /**
@@ -1480,12 +1478,10 @@ interface GPUDevice
    */
   readonly __brand: "GPUDevice";
   /**
-   * A sequence containing the {@link GPUFeatureName} values of the features
+   * A set containing the {@link GPUFeatureName} values of the features
    * supported by the device (i.e. the ones with which it was created).
-   * Issue: Should this be {@link GPUAdapterFeatures} (which would be renamed to
-   * GPUSupportedFeatures)?
    */
-  readonly features: ReadonlyArray<GPUFeatureName>;
+  readonly features: GPUSupportedFeatures;
   /**
    * Exposes the limits supported by the device
    * (which are exactly the ones with which it was created).
@@ -1497,11 +1493,11 @@ interface GPUDevice
    */
   readonly queue: GPUQueue;
   /**
-   * Destroys the device.
+   * Destroys the device, preventing further operations on it.
+   * Outstanding asynchronous operations will fail.
    * Note:
-   * This prevents any further operations on the device.
-   * Implementations can free resource allocations immediately.
-   * Outstanding asynchronous operations will fail, so implementations can abort them early.
+   * Since no further operations can occur on this device, implementations can free resource
+   * allocations and abort outstanding asynchronous operations immediately.
    */
   destroy(): undefined;
   /**
@@ -1873,11 +1869,11 @@ interface GPURenderPassEncoder
     height: GPUIntegerCoordinate
   ): undefined;
   /**
-   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"blend-color"}
-   * and {@link GPUBlendFactor#"one-minus-blend-color"} {@link GPUBlendFactor}s.
+   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant-component"}
+   * and {@link GPUBlendFactor#"one-minus-constant-component"} {@link GPUBlendFactor}s.
    * @param color - The color to use when blending.
    */
-  setBlendColor(
+  setBlendConstant(
     color: GPUColor
   ): undefined;
   /**
@@ -2008,6 +2004,8 @@ declare var GPUShaderStage: {
   readonly FRAGMENT: GPUFlagsConstant;
   readonly COMPUTE: GPUFlagsConstant;
 };
+
+type GPUSupportedFeatures = ReadonlySet<GPUFeatureName>;
 
 interface GPUSwapChain
   extends GPUObjectBase {
