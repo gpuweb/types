@@ -418,7 +418,6 @@ interface GPUComputePipelineDescriptorNew
   extends GPUPipelineDescriptorBase {
   compute: GPUProgrammableStage;
 }
-
 /** @deprecated */
 interface GPUComputePipelineDescriptorOld
   extends GPUPipelineDescriptorBase {
@@ -451,7 +450,6 @@ interface GPUExtent3DDict {
   height?: GPUIntegerCoordinate;
   depthOrArrayLayers?: GPUIntegerCoordinate;
 }
-
 interface GPUExtent3DDictStrict
   extends GPUExtent3DDict {
   /** @deprecated */ depth?: undefined;
@@ -614,7 +612,7 @@ interface GPURenderPassColorAttachmentNew {
    */
   storeOp: GPUStoreOp;
 }
-
+/** @deprecated */
 interface GPURenderPassColorAttachmentOld {
   /** @deprecated */ attachment: GPUTextureView;
   resolveTarget?: GPUTextureView;
@@ -677,7 +675,7 @@ interface GPURenderPassDepthStencilAttachmentNew {
    */
   stencilReadOnly?: boolean;
 }
-
+/** @deprecated */
 interface GPURenderPassDepthStencilAttachmentOld {
   /** @deprecated */ attachment: GPUTextureView;
   depthLoadValue:
@@ -755,17 +753,17 @@ interface GPUShaderModuleDescriptorWGSL
   code: string;
   sourceMap?: object;
 }
+/** @deprecated */
+interface GPUShaderModuleDescriptorSPIRV
+  extends GPUObjectDescriptorBase {
+  /** @deprecated */ code: Uint32Array;
+}
 
 interface GPUStencilFaceState {
   compare?: GPUCompareFunction;
   failOp?: GPUStencilOperation;
   depthFailOp?: GPUStencilOperation;
   passOp?: GPUStencilOperation;
-}
-
-interface GPUShaderModuleDescriptorSPIRV
-  extends GPUObjectDescriptorBase {
-  /** @deprecated */ code: Uint32Array;
 }
 
 interface GPUStorageTextureBindingLayout {
