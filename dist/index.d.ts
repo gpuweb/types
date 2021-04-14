@@ -71,6 +71,24 @@ type GPUAddressMode =
   | "repeat"
   | "mirror-repeat";
 type GPUBlendFactor =
+  | GPUBlendFactorNew
+  | GPUBlendFactorOld;
+type GPUBlendFactorNew =
+  | "zero"
+  | "one"
+  | "src"
+  | "one-minus-src"
+  | "src-alpha"
+  | "one-minus-src-alpha"
+  | "dst"
+  | "one-minus-dst"
+  | "dst-alpha"
+  | "one-minus-dst-alpha"
+  | "src-alpha-saturated"
+  | "constant"
+  | "one-minus-constant";
+/** @deprecated */
+type GPUBlendFactorOld =
   | "zero"
   | "one"
   | "src-color"
@@ -1598,7 +1616,10 @@ interface GPUDevice
    * (which are exactly the ones with which it was created).
    * Issue: Should this be an `interface GPUSupportedLimits`?
    */
-  readonly limits: Record<GPUFeatureName, number>;
+  readonly limits: Record<
+    GPUFeatureName,
+    number
+  >;
   /**
    * The primary {@link GPUQueue} for this device.
    */
@@ -2002,8 +2023,8 @@ interface GPURenderPassEncoder
     height: GPUIntegerCoordinate
   ): undefined;
   /**
-   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant-component"}
-   * and {@link GPUBlendFactor#"one-minus-constant-component"} {@link GPUBlendFactor}s.
+   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant"}
+   * and {@link GPUBlendFactor#"one-minus-constant"} {@link GPUBlendFactor}s.
    * @param color - The color to use when blending.
    */
   setBlendConstant(
