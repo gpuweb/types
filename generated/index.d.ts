@@ -1,6 +1,3 @@
-// Manually-edited version of the generator output. Fixes numerous issues. Temporarily used as an
-// intermediate step between `index.d.ts` and the generator output. This file should go away once
-// the generator fixes these issues.
 type GPUBindingResource =
   | GPUSampler
   | GPUTextureView
@@ -42,17 +39,17 @@ type GPUAddressMode =
 type GPUBlendFactor =
   | "zero"
   | "one"
-  | "src-color"
-  | "one-minus-src-color"
+  | "src-component"
+  | "one-minus-src-component"
   | "src-alpha"
   | "one-minus-src-alpha"
-  | "dst-color"
-  | "one-minus-dst-color"
+  | "dst-component"
+  | "one-minus-dst-component"
   | "dst-alpha"
   | "one-minus-dst-alpha"
   | "src-alpha-saturated"
-  | "blend-color"
-  | "one-minus-blend-color";
+  | "constant-component"
+  | "one-minus-constant-component";
 type GPUBlendOperation =
   | "add"
   | "subtract"
@@ -256,7 +253,7 @@ type GPUVertexFormat =
 interface GPUBindGroupDescriptor
   extends GPUObjectDescriptorBase {
   layout: GPUBindGroupLayout;
-  entries: Iterable<GPUBindGroupEntry>;
+  entries: Array<GPUBindGroupEntry>;
 }
 
 interface GPUBindGroupEntry {
@@ -266,7 +263,7 @@ interface GPUBindGroupEntry {
 
 interface GPUBindGroupLayoutDescriptor
   extends GPUObjectDescriptorBase {
-  entries: Iterable<GPUBindGroupLayoutEntry>;
+  entries: Array<GPUBindGroupLayoutEntry>;
 }
 
 interface GPUBindGroupLayoutEntry {
@@ -392,7 +389,7 @@ interface GPUDeviceDescriptor
    * The set of {@link GPUFeatureName} values in this sequence defines the exact set of
    * features that must be enabled on the device.
    */
-  nonGuaranteedFeatures?: Iterable<GPUFeatureName>;
+  nonGuaranteedFeatures?: Array<GPUFeatureName>;
   /**
    * Defines the exact limits that must be enabled on the device.
    * Each key must be the name of a member of supported limits.
@@ -415,7 +412,7 @@ interface GPUExtent3DDict {
 
 interface GPUFragmentState
   extends GPUProgrammableStage {
-  targets: Iterable<GPUColorTargetState>;
+  targets: Array<GPUColorTargetState>;
 }
 
 interface GPUImageCopyBuffer
@@ -482,7 +479,7 @@ interface GPUPipelineDescriptorBase
 
 interface GPUPipelineLayoutDescriptor
   extends GPUObjectDescriptorBase {
-  bindGroupLayouts: Iterable<GPUBindGroupLayout>;
+  bindGroupLayouts: Array<GPUBindGroupLayout>;
 }
 
 interface GPUPrimitiveState {
@@ -511,14 +508,14 @@ interface GPUQuerySetDescriptor
   /**
    * The set of {@link GPUPipelineStatisticName} values in this sequence defines which pipeline statistics will be returned in the new query set.
    */
-  pipelineStatistics?: Iterable<GPUPipelineStatisticName>;
+  pipelineStatistics?: Array<GPUPipelineStatisticName>;
 }
 
 type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
 
 interface GPURenderBundleEncoderDescriptor
   extends GPUObjectDescriptorBase {
-  colorFormats: Iterable<GPUTextureFormat>;
+  colorFormats: Array<GPUTextureFormat>;
   depthStencilFormat?: GPUTextureFormat;
   sampleCount?: GPUSize32;
 }
@@ -609,7 +606,7 @@ interface GPURenderPassDescriptor
    * The set of {@link GPURenderPassColorAttachment} values in this sequence defines which
    * color attachments will be output to when executing this render pass.
    */
-  colorAttachments: Iterable<GPURenderPassColorAttachment>;
+  colorAttachments: Array<GPURenderPassColorAttachment>;
   /**
    * The {@link GPURenderPassDepthStencilAttachment} value that defines the depth/stencil
    * attachment that will be output to and tested against when executing this render pass.
@@ -658,7 +655,7 @@ interface GPUSamplerDescriptor
 interface GPUShaderModuleDescriptor
   extends GPUObjectDescriptorBase {
   code: string;
-  sourceMap?: object;
+  sourceMap?: any;
 }
 
 interface GPUStencilFaceState {
@@ -749,12 +746,12 @@ interface GPUVertexAttribute {
 interface GPUVertexBufferLayout {
   arrayStride: GPUSize64;
   stepMode?: GPUInputStepMode;
-  attributes: Iterable<GPUVertexAttribute>;
+  attributes: Array<GPUVertexAttribute>;
 }
 
 interface GPUVertexState
   extends GPUProgrammableStage {
-  buffers?: Iterable<GPUVertexBufferLayout | null>;
+  buffers?: Array<GPUVertexBufferLayout | null>;
 }
 
 interface GPUObjectBase {
@@ -796,7 +793,7 @@ interface GPUProgrammablePassEncoder {
   setBindGroup(
     index: GPUIndex32,
     bindGroup: GPUBindGroup,
-    dynamicOffsets?: Iterable<GPUBufferDynamicOffset>
+    dynamicOffsets?: Array<GPUBufferDynamicOffset>
   ): undefined;
   /**
    * Sets the current {@link GPUBindGroup} for the given index, specifying dynamic offsets as a subset
@@ -952,7 +949,6 @@ interface GPU {
 
 declare var GPU: {
   prototype: GPU;
-  new (): never;
 };
 
 interface GPUAdapter {
@@ -986,7 +982,6 @@ interface GPUAdapter {
 
 declare var GPUAdapter: {
   prototype: GPUAdapter;
-  new (): never;
 };
 
 interface GPUAdapterLimits {
@@ -1031,7 +1026,6 @@ interface GPUBindGroup
 
 declare var GPUBindGroup: {
   prototype: GPUBindGroup;
-  new (): never;
 };
 
 interface GPUBindGroupLayout
@@ -1046,7 +1040,6 @@ interface GPUBindGroupLayout
 
 declare var GPUBindGroupLayout: {
   prototype: GPUBindGroupLayout;
-  new (): never;
 };
 
 interface GPUBuffer
@@ -1091,7 +1084,6 @@ interface GPUBuffer
 
 declare var GPUBuffer: {
   prototype: GPUBuffer;
-  new (): never;
 };
 
 interface GPUBufferUsage {
@@ -1156,7 +1148,6 @@ interface GPUCanvasContext {
 
 declare var GPUCanvasContext: {
   prototype: GPUCanvasContext;
-  new (): never;
 };
 
 interface GPUColorWrite {
@@ -1214,7 +1205,6 @@ interface GPUCommandBuffer
 
 declare var GPUCommandBuffer: {
   prototype: GPUCommandBuffer;
-  new (): never;
 };
 
 interface GPUCommandEncoder
@@ -1344,7 +1334,6 @@ interface GPUCommandEncoder
 
 declare var GPUCommandEncoder: {
   prototype: GPUCommandEncoder;
-  new (): never;
 };
 
 interface GPUCompilationInfo {
@@ -1359,7 +1348,6 @@ interface GPUCompilationInfo {
 
 declare var GPUCompilationInfo: {
   prototype: GPUCompilationInfo;
-  new (): never;
 };
 
 interface GPUCompilationMessage {
@@ -1377,7 +1365,6 @@ interface GPUCompilationMessage {
 
 declare var GPUCompilationMessage: {
   prototype: GPUCompilationMessage;
-  new (): never;
 };
 
 interface GPUComputePassEncoder
@@ -1449,7 +1436,6 @@ interface GPUComputePassEncoder
 
 declare var GPUComputePassEncoder: {
   prototype: GPUComputePassEncoder;
-  new (): never;
 };
 
 interface GPUComputePipeline
@@ -1465,7 +1451,6 @@ interface GPUComputePipeline
 
 declare var GPUComputePipeline: {
   prototype: GPUComputePipeline;
-  new (): never;
 };
 
 interface GPUDevice
@@ -1487,7 +1472,7 @@ interface GPUDevice
    * (which are exactly the ones with which it was created).
    * Issue: Should this be an `interface GPUSupportedLimits`?
    */
-  readonly limits: object;
+  readonly limits: any;
   /**
    * The primary {@link GPUQueue} for this device.
    */
@@ -1627,7 +1612,6 @@ interface GPUDevice
 
 declare var GPUDevice: {
   prototype: GPUDevice;
-  new (): never;
 };
 
 interface GPUDeviceLostInfo {
@@ -1645,7 +1629,6 @@ interface GPUDeviceLostInfo {
 
 declare var GPUDeviceLostInfo: {
   prototype: GPUDeviceLostInfo;
-  new (): never;
 };
 
 interface GPUMapMode {
@@ -1661,7 +1644,6 @@ interface GPUMapMode {
 
 declare var GPUMapMode: {
   prototype: GPUMapMode;
-  new (): never;
   readonly READ: GPUFlagsConstant;
   readonly WRITE: GPUFlagsConstant;
 };
@@ -1677,7 +1659,7 @@ interface GPUOutOfMemoryError {
 
 declare var GPUOutOfMemoryError: {
   prototype: GPUOutOfMemoryError;
-  new (): GPUOutOfMemoryError;
+  new ();
 };
 
 interface GPUPipelineLayout
@@ -1692,7 +1674,6 @@ interface GPUPipelineLayout
 
 declare var GPUPipelineLayout: {
   prototype: GPUPipelineLayout;
-  new (): never;
 };
 
 interface GPUQuerySet
@@ -1711,7 +1692,6 @@ interface GPUQuerySet
 
 declare var GPUQuerySet: {
   prototype: GPUQuerySet;
-  new (): never;
 };
 
 interface GPUQueue
@@ -1727,7 +1707,7 @@ interface GPUQueue
    * 	`commandBuffers`:
    */
   submit(
-    commandBuffers: Iterable<GPUCommandBuffer>
+    commandBuffers: Array<GPUCommandBuffer>
   ): undefined;
   /**
    * Returns a {@link Promise} that resolves once this queue finishes processing all the work submitted
@@ -1747,9 +1727,7 @@ interface GPUQueue
   writeBuffer(
     buffer: GPUBuffer,
     bufferOffset: GPUSize64,
-    data:
-      | BufferSource
-      | SharedArrayBuffer,
+    data: BufferSource,
     dataOffset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -1762,9 +1740,7 @@ interface GPUQueue
    */
   writeTexture(
     destination: GPUImageCopyTexture,
-    data:
-      | BufferSource
-      | SharedArrayBuffer,
+    data: BufferSource,
     dataLayout: GPUImageDataLayout,
     size: GPUExtent3D
   ): undefined;
@@ -1783,7 +1759,6 @@ interface GPUQueue
 
 declare var GPUQueue: {
   prototype: GPUQueue;
-  new (): never;
 };
 
 interface GPURenderBundle
@@ -1798,7 +1773,6 @@ interface GPURenderBundle
 
 declare var GPURenderBundle: {
   prototype: GPURenderBundle;
-  new (): never;
 };
 
 interface GPURenderBundleEncoder
@@ -1822,7 +1796,6 @@ interface GPURenderBundleEncoder
 
 declare var GPURenderBundleEncoder: {
   prototype: GPURenderBundleEncoder;
-  new (): never;
 };
 
 interface GPURenderPassEncoder
@@ -1923,7 +1896,7 @@ interface GPURenderPassEncoder
    * @param bundles - List of render bundles to execute.
    */
   executeBundles(
-    bundles: Iterable<GPURenderBundle>
+    bundles: Array<GPURenderBundle>
   ): undefined;
   /**
    * Completes recording of the render pass commands sequence.
@@ -1933,7 +1906,6 @@ interface GPURenderPassEncoder
 
 declare var GPURenderPassEncoder: {
   prototype: GPURenderPassEncoder;
-  new (): never;
 };
 
 interface GPURenderPipeline
@@ -1949,7 +1921,6 @@ interface GPURenderPipeline
 
 declare var GPURenderPipeline: {
   prototype: GPURenderPipeline;
-  new (): never;
 };
 
 interface GPUSampler
@@ -1964,7 +1935,6 @@ interface GPUSampler
 
 declare var GPUSampler: {
   prototype: GPUSampler;
-  new (): never;
 };
 
 interface GPUShaderModule
@@ -1983,7 +1953,6 @@ interface GPUShaderModule
 
 declare var GPUShaderModule: {
   prototype: GPUShaderModule;
-  new (): never;
 };
 
 interface GPUShaderStage {
@@ -2027,7 +1996,6 @@ interface GPUSwapChain
 
 declare var GPUSwapChain: {
   prototype: GPUSwapChain;
-  new (): never;
 };
 
 interface GPUTexture
@@ -2053,7 +2021,6 @@ interface GPUTexture
 
 declare var GPUTexture: {
   prototype: GPUTexture;
-  new (): never;
 };
 
 interface GPUTextureUsage {
@@ -2091,7 +2058,6 @@ interface GPUTextureView
 
 declare var GPUTextureView: {
   prototype: GPUTextureView;
-  new (): never;
 };
 
 interface GPUUncapturedErrorEvent
@@ -2110,7 +2076,7 @@ declare var GPUUncapturedErrorEvent: {
   new (
     type: string,
     gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
-  ): GPUUncapturedErrorEvent;
+  );
 };
 
 interface GPUValidationError {
@@ -2127,7 +2093,7 @@ declare var GPUValidationError: {
   prototype: GPUValidationError;
   new (
     message: string
-  ): GPUValidationError;
+  );
 };
 
 interface Navigator

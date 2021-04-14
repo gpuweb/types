@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && prettier -w generated/index.d.ts",
-    "format": "prettier -w dist/index.d.ts generated/edited.d.ts"
+    "format": "prettier -w dist/index.d.ts"
   },
   "devDependencies": {
     "bikeshed-to-ts": "^1.2.0",
