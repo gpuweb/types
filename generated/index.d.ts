@@ -39,17 +39,17 @@ type GPUAddressMode =
 type GPUBlendFactor =
   | "zero"
   | "one"
-  | "src-component"
-  | "one-minus-src-component"
+  | "src"
+  | "one-minus-src"
   | "src-alpha"
   | "one-minus-src-alpha"
-  | "dst-component"
-  | "one-minus-dst-component"
+  | "dst"
+  | "one-minus-dst"
   | "dst-alpha"
   | "one-minus-dst-alpha"
   | "src-alpha-saturated"
-  | "constant-component"
-  | "one-minus-constant-component";
+  | "constant"
+  | "one-minus-constant";
 type GPUBlendOperation =
   | "add"
   | "subtract"
@@ -1842,8 +1842,8 @@ interface GPURenderPassEncoder
     height: GPUIntegerCoordinate
   ): undefined;
   /**
-   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant-component"}
-   * and {@link GPUBlendFactor#"one-minus-constant-component"} {@link GPUBlendFactor}s.
+   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant"}
+   * and {@link GPUBlendFactor#"one-minus-constant"} {@link GPUBlendFactor}s.
    * @param color - The color to use when blending.
    */
   setBlendConstant(
