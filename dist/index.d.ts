@@ -500,7 +500,13 @@ interface GPUImageCopyBuffer
   buffer: GPUBuffer;
 }
 
+/** @deprecated */
 interface GPUImageCopyImageBitmap {
+  imageBitmap: ImageBitmap;
+  origin?: GPUOrigin2D;
+}
+
+interface GPUImageCopyExternalImage {
   /**
    * The source of the image copy. The copy source data is captured at the moment that
    * {@link GPUQueue#copyExternalImageToTexture} is issued.
