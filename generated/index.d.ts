@@ -60,6 +60,9 @@ type GPUBufferBindingType =
   | "uniform"
   | "storage"
   | "read-only-storage";
+type GPUCanvasCompositingAlphaMode =
+  | "opaque"
+  | "premultiplied";
 type GPUCompareFunction =
   | "never"
   | "less"
@@ -420,15 +423,39 @@ interface GPUImageCopyBuffer
   buffer: GPUBuffer;
 }
 
-interface GPUImageCopyImageBitmap {
-  imageBitmap: ImageBitmap;
+interface GPUImageCopyExternalImage {
+  /**
+   * The source of the image copy. The copy source data is captured at the moment that
+   * {@link GPUQueue#copyExternalImageToTexture} is issued.
+   */
+  source:
+    | ImageBitmap
+    | HTMLCanvasElement
+    | OffscreenCanvas;
+  /**
+   * Defines the origin of the copy - the minimum corner of the source sub-region to copy from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
   origin?: GPUOrigin2D;
 }
 
 interface GPUImageCopyTexture {
+  /**
+   * Texture to copy to/from.
+   */
   texture: GPUTexture;
+  /**
+   * Mip-map level of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
   mipLevel?: GPUIntegerCoordinate;
+  /**
+   * Defines the origin of the copy - the minimum corner of the texture sub-region to copy to/from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
   origin?: GPUOrigin3D;
+  /**
+   * Defines which aspects of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
   aspect?: GPUTextureAspect;
 }
 
@@ -690,6 +717,7 @@ interface GPUSwapChainDescriptor
   device: GPUDevice;
   format: GPUTextureFormat;
   usage?: GPUTextureUsageFlags;
+  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
 }
 
 interface GPUTextureBindingLayout {
@@ -1294,7 +1322,7 @@ interface GPUCommandEncoder
    */
   popDebugGroup(): undefined;
   /**
-   * Marks the end of a labeled group of commands for the {@link GPUCommandEncoder}.
+   * Marks a point in a stream of commands with a label string.
    * @param markerLabel - The label to insert.
    */
   insertDebugMarker(
@@ -1357,10 +1385,50 @@ interface GPUCompilationMessage {
    * @internal
    */
   readonly __brand: "GPUCompilationMessage";
+  /**
+   * A human-readable string containing the message generated during the shader compilation.
+   *
+   */
   readonly message: string;
+  /**
+   * The severity level of the message.
+   */
   readonly type: GPUCompilationMessageType;
+  /**
+   * The line number in the shader {@link GPUShaderModuleDescriptor#code} the
+   * {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a lineNum of
+   * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}.
+   *
+   * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
+   * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   * Issue: Reference WGSL spec when it [defines what a line is](https://gpuweb.github.io/gpuweb/wgsl/#comments).
+   */
   readonly lineNum: number;
+  /**
+   * The offset, in UTF-16 code units, from the beginning of line {@link GPUCompilationMessage#lineNum}
+   * of the shader {@link GPUShaderModuleDescriptor#code} to the point or beginning of the substring
+   * that the {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a
+   * {@link GPUCompilationMessage#linePos} of `1` indicates the first character of the line.
+   * If {@link GPUCompilationMessage#message} corresponds to a substring this points to the
+   * first UTF-16 code unit of the substring. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   */
   readonly linePos: number;
+  /**
+   * The offset from the beginning of the shader {@link GPUShaderModuleDescriptor#code} in UTF-16
+   * code units to the point or beginning of the substring that {@link GPUCompilationMessage#message}
+   * corresponds to. Must reference the same position as {@link GPUCompilationMessage#lineNum} and
+   * {@link GPUCompilationMessage#linePos}. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   */
+  readonly offset: number;
+  /**
+   * The number of UTF-16 code units in the substring that {@link GPUCompilationMessage#message}
+   * corresponds to. If the message does not correspond with a substring then
+   * {@link GPUCompilationMessage#length} must be 0.
+   */
+  readonly length: number;
 }
 
 declare var GPUCompilationMessage: {
@@ -1745,13 +1813,14 @@ interface GPUQueue
     size: GPUExtent3D
   ): undefined;
   /**
-   * Schedules a copy operation of the contents of an image bitmap into the destination texture.
-   * @param source - {@link ImageBitmap} and origin to copy to `destination`.
+   * Issues a copy operation of the contents of a platform image/canvas
+   * into the destination texture.
+   * @param source - source image and origin to copy to `destination`.
    * @param destination - The texture subresource and origin to write to.
    * @param copySize - Extents of the content to write from `source` to `destination`.
    */
-  copyImageBitmapToTexture(
-    source: GPUImageCopyImageBitmap,
+  copyExternalImageToTexture(
+    source: GPUImageCopyExternalImage,
     destination: GPUImageCopyTexture,
     copySize: GPUExtent3D
   ): undefined;
@@ -1974,7 +2043,7 @@ declare var GPUShaderStage: {
   readonly COMPUTE: GPUFlagsConstant;
 };
 
-type GPUSupportedFeatures = ReadonlySet<GPUFeatureName>;
+type GPUSupportedFeatures = ReadonlySet<string>;
 
 interface GPUSwapChain
   extends GPUObjectBase {
