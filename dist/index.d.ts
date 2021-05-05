@@ -1995,7 +1995,14 @@ interface GPUQueue
   copyExternalImageToTexture(
     source: GPUImageCopyExternalImage,
     destination: GPUImageCopyTexture,
-    copySize: GPUExtent3D
+    copySize: GPUExtent3DStrict
+  ): undefined;
+
+  /** @deprecated use copyExternalImageToTexture instead */
+  copyImageBitmapToTexture(
+    source: GPUImageCopyImageBitmap,
+    destination: GPUImageCopyTexture,
+    copySize: GPUExtent3DStrict
   ): undefined;
 }
 
