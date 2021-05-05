@@ -502,7 +502,9 @@ interface GPUImageCopyBuffer
 
 /** @deprecated */
 interface GPUImageCopyImageBitmap {
+  /** @deprecated */
   imageBitmap: ImageBitmap;
+  /** @deprecated */
   origin?: GPUOrigin2D;
 }
 
