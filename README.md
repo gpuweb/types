@@ -59,12 +59,14 @@ Please contribute a PR to add instructions for other setups or improve existing 
 ## How to update these types
 
 - Make sure the submodule is checked out: `git submodule update --init`
-- Pull `gpuweb` changes: in `gpuweb/`, switch to and pull the `main` branch
+- Pull `gpuweb` changes: `pushd gpuweb && git checkout main && git pull && popd`
 - Install dependencies: `npm ci`
 - Generate `generated/index.d.ts`: `npm run generate`
 - Open a diff between `generated/index.d.ts` and `dist/index.d.ts`.
     The generated file is tracked by Git so you can see what has changed.
-    Update the latter according to changes from the former. See below for intentional differences.
+    Update the latter according to changes from the former.
+    Note the `generated/` and `dist/` files are not the same.
+    See below for intentional differences.
 - Format the result: `npm run format`
 
 ### Intentional differences between generator output and final result
