@@ -9,21 +9,31 @@
 interface HTMLCanvasElement {
   getContext(
     contextId: "gpupresent"
-  ): GPUCanvasContext | null;
+  ):
+    | (GPUPresentationContext &
+        GPUCanvasContext)
+    | null;
 }
 
 interface OffscreenCanvas {
   getContext(
     contextId: "gpupresent"
-  ): GPUCanvasContext | null;
+  ):
+    | (GPUPresentationContext &
+        GPUCanvasContext)
+    | null;
 }
 
 type GPUExtent3DStrict =
   | Iterable<GPUIntegerCoordinate>
   | GPUExtent3DDictStrict;
+
+// GPUExtent3DDictStrict is defined to help developers catch a common class of errors.
+// This interface defines depth as an undefined, which will cause a type check failure if someone
+// attempts to set depth rather than depthOrArrayLayers on a GPUExtent3D (an easy mistake to make.)
 interface GPUExtent3DDictStrict
   extends GPUExtent3DDict {
-  /** @deprecated */
+  /** @deprecated use depthOrArrayLayers instead */
   depth?: undefined;
 }
 
@@ -34,7 +44,8 @@ interface GPUExtent3DDictStrict
 type GPUBindingResource =
   | GPUSampler
   | GPUTextureView
-  | GPUBufferBinding;
+  | GPUBufferBinding
+  | GPUExternalTexture;
 type GPUBufferDynamicOffset = number;
 type GPUBufferUsageFlags = number;
 type GPUColor =
@@ -58,6 +69,7 @@ type GPUOrigin2D =
 type GPUOrigin3D =
   | Iterable<GPUIntegerCoordinate>
   | GPUOrigin3DDict;
+type GPUPipelineConstantValue = number;
 type GPUSampleMask = number;
 type GPUShaderStageFlags = number;
 type GPUSignedOffset32 = number;
@@ -70,9 +82,6 @@ type GPUAddressMode =
   | "repeat"
   | "mirror-repeat";
 type GPUBlendFactor =
-  | GPUBlendFactorNew
-  | GPUBlendFactorOld;
-type GPUBlendFactorNew =
   | "zero"
   | "one"
   | "src"
@@ -86,21 +95,6 @@ type GPUBlendFactorNew =
   | "src-alpha-saturated"
   | "constant"
   | "one-minus-constant";
-/** @deprecated */
-type GPUBlendFactorOld =
-  | "zero"
-  | "one"
-  | "src-color"
-  | "one-minus-src-color"
-  | "src-alpha"
-  | "one-minus-src-alpha"
-  | "dst-color"
-  | "one-minus-dst-color"
-  | "dst-alpha"
-  | "one-minus-dst-alpha"
-  | "src-alpha-saturated"
-  | "blend-color"
-  | "one-minus-blend-color";
 type GPUBlendOperation =
   | "add"
   | "subtract"
@@ -164,6 +158,7 @@ type GPUPipelineStatisticName =
 type GPUPowerPreference =
   | "low-power"
   | "high-performance";
+type GPUPredefinedColorSpace = "srgb";
 type GPUPrimitiveTopology =
   | "point-list"
   | "line-list"
@@ -191,6 +186,13 @@ type GPUStorageTextureAccess =
   | "read-only"
   | "write-only";
 type GPUStoreOp =
+  | GPUStoreOpNew
+  | GPUStoreOpOld;
+type GPUStoreOpNew =
+  | "store"
+  | "discard";
+/** @deprecated */
+type GPUStoreOpOld =
   | "store"
   | "clear";
 type GPUTextureAspect =
@@ -334,37 +336,30 @@ interface GPUBindGroupLayoutEntry {
    */
   visibility: GPUShaderStageFlags;
   /**
-   * When not `undefined` indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUBufferBinding}.
    */
   buffer?: GPUBufferBindingLayout;
   /**
-   * When not `undefined` indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUSampler}.
    */
   sampler?: GPUSamplerBindingLayout;
   /**
-   * When not `undefined` indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUTextureView}.
    */
   texture?: GPUTextureBindingLayout;
   /**
-   * When not `undefined` indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUTextureView}.
    */
   storageTexture?: GPUStorageTextureBindingLayout;
-  /** @deprecated */
-  type?: GPUBindingType;
-  /** @deprecated */
-  hasDynamicOffset?: boolean;
-  /** @deprecated */
-  minBufferBindingSize?: number;
-  /** @deprecated */
-  viewDimension?: GPUTextureViewDimension;
-  /** @deprecated */
-  textureComponentType?: GPUTextureComponentType;
-  /** @deprecated */
-  storageTextureFormat?: GPUTextureFormat;
+  /**
+   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * is {@link GPUExternalTexture}.
+   */
+  externalTexture?: GPUExternalTextureBindingLayout;
 }
 
 interface GPUBlendComponent {
@@ -431,17 +426,9 @@ interface GPUCommandEncoderDescriptor
 
 type GPUComputePassDescriptor = GPUObjectDescriptorBase;
 
-type GPUComputePipelineDescriptor =
-  | GPUComputePipelineDescriptorNew
-  | GPUComputePipelineDescriptorOld;
-interface GPUComputePipelineDescriptorNew
+interface GPUComputePipelineDescriptor
   extends GPUPipelineDescriptorBase {
   compute: GPUProgrammableStage;
-}
-/** @deprecated */
-interface GPUComputePipelineDescriptorOld
-  extends GPUPipelineDescriptorBase {
-  /** @deprecated */ computeStage: GPUProgrammableStage;
 }
 
 interface GPUDepthStencilState {
@@ -455,39 +442,53 @@ interface GPUDepthStencilState {
   depthBias?: GPUDepthBias;
   depthBiasSlopeScale?: number;
   depthBiasClamp?: number;
-  /** @deprecated use GPUPrimitiveState.clampDepth */
-  clampDepth?: boolean;
 }
 
 interface GPUDeviceDescriptor
   extends GPUObjectDescriptorBase {
   /**
-   * The set of {@link GPUFeatureName} values in this sequence defines the exact set of
-   * features that must be enabled on the device.
+   * Specifies the features that are required by the device request.
+   * The request will fail if the adapter cannot provide these features.
+   * Exactly the specified set of features, and no more or less, will be allowed in validation
+   * of API calls on the resulting device.
    */
-  nonGuaranteedFeatures?: Iterable<GPUFeatureName>;
+  requiredFeatures?: Iterable<GPUFeatureName>;
   /** @deprecated */
-  extensions?: Iterable<GPUFeatureName>;
+  nonGuaranteedFeatures?: Iterable<GPUFeatureName>;
   /**
-   * Defines the exact limits that must be enabled on the device.
+   * Specifies the limits that are required by the device request.
+   * The request will fail if the adapter cannot provide these limits.
    * Each key must be the name of a member of supported limits.
+   * Exactly the specified limits, and no limit/better or worse,
+   * will be allowed in validation of API calls on the resulting device.
    * <!-- If we ever need limit types other than GPUSize32, we can change the value type to
    * `double` or `any` in the future and write out the type conversion explicitly (by reference
    * to WebIDL spec). Or change the entire type to `any` and add back a `dictionary GPULimits`
    * and define the conversion of the whole object by reference to WebIDL. -->
    */
-  nonGuaranteedLimits?: Record<
+  requiredLimits?: Record<
     string,
     GPUSize32
   >;
   /** @deprecated */
-  limits?: GPULimits;
+  nonGuaranteedLimits?: Record<
+    string,
+    GPUSize32
+  >;
 }
 
 interface GPUExtent3DDict {
   width: GPUIntegerCoordinate;
   height?: GPUIntegerCoordinate;
   depthOrArrayLayers?: GPUIntegerCoordinate;
+}
+
+interface GPUExternalTextureBindingLayout {}
+
+interface GPUExternalTextureDescriptor
+  extends GPUObjectDescriptorBase {
+  source: HTMLVideoElement;
+  colorSpace?: GPUPredefinedColorSpace;
 }
 
 interface GPUFragmentState
@@ -498,14 +499,6 @@ interface GPUFragmentState
 interface GPUImageCopyBuffer
   extends GPUImageDataLayout {
   buffer: GPUBuffer;
-}
-
-/** @deprecated */
-interface GPUImageCopyImageBitmap {
-  /** @deprecated */
-  imageBitmap: ImageBitmap;
-  /** @deprecated */
-  origin?: GPUOrigin2D;
 }
 
 interface GPUImageCopyExternalImage {
@@ -542,6 +535,30 @@ interface GPUImageCopyTexture {
    * Defines which aspects of the {@link GPUImageCopyTexture#texture} to copy to/from.
    */
   aspect?: GPUTextureAspect;
+}
+
+interface GPUImageCopyTextureTagged
+  extends GPUImageCopyTexture {
+  /**
+   * Describes the color space and encoding used to encode data into the destination texture.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image, no conversion occurs.
+   * {@link ImageBitmap} color space tagging and conversion can be controlled via {@link ImageBitmapOptions}.
+   */
+  colorSpace?: GPUPredefinedColorSpace;
+  /**
+   * Describes whether the data written into the texture should be have its RGB channels
+   * premultiplied by the alpha channel, or not.
+   * If this option is set to `true` and the {@link GPUImageCopyExternalImage#source} is also
+   * premultiplied, the source RGB values must be preserved even if they exceed their
+   * corresponding alpha values.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#premultipliedAlpha} matches the source image, no conversion occurs.
+   * 2d canvases are [[html#premultiplied-alpha-and-the-2d-rendering-context|always premultiplied]],
+   * while WebGL canvases can be controlled via <l spec=html>WebGLContextAttributes</l>.
+   * {@link ImageBitmap} premultiplication can be controlled via {@link ImageBitmapOptions}.
+   */
+  premultipliedAlpha?: boolean;
 }
 
 interface GPUImageDataLayout {
@@ -594,6 +611,15 @@ interface GPUPipelineLayoutDescriptor
   bindGroupLayouts: Iterable<GPUBindGroupLayout>;
 }
 
+interface GPUPresentationConfiguration
+  extends GPUObjectDescriptorBase {
+  device: GPUDevice;
+  format: GPUTextureFormat;
+  usage?: GPUTextureUsageFlags;
+  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
+  size?: GPUExtent3DStrict;
+}
+
 interface GPUPrimitiveState {
   topology?: GPUPrimitiveTopology;
   stripIndexFormat?: GPUIndexFormat;
@@ -605,6 +631,10 @@ interface GPUPrimitiveState {
 interface GPUProgrammableStage {
   module: GPUShaderModule;
   entryPoint: string;
+  constants?: Record<
+    string,
+    GPUPipelineConstantValue
+  >;
 }
 
 interface GPUQuerySetDescriptor
@@ -632,10 +662,7 @@ interface GPURenderBundleEncoderDescriptor
   sampleCount?: GPUSize32;
 }
 
-type GPURenderPassColorAttachment =
-  | GPURenderPassColorAttachmentNew
-  | GPURenderPassColorAttachmentOld;
-interface GPURenderPassColorAttachmentNew {
+interface GPURenderPassColorAttachment {
   /**
    * A {@link GPUTextureView} describing the texture subresource that will be output to for this
    * color attachment.
@@ -663,20 +690,8 @@ interface GPURenderPassColorAttachmentNew {
    */
   storeOp: GPUStoreOp;
 }
-/** @deprecated */
-interface GPURenderPassColorAttachmentOld {
-  /** @deprecated */ attachment: GPUTextureView;
-  resolveTarget?: GPUTextureView;
-  loadValue:
-    | GPULoadOp
-    | GPUColor;
-  storeOp?: GPUStoreOp;
-}
 
-type GPURenderPassDepthStencilAttachment =
-  | GPURenderPassDepthStencilAttachmentNew
-  | GPURenderPassDepthStencilAttachmentOld;
-interface GPURenderPassDepthStencilAttachmentNew {
+interface GPURenderPassDepthStencilAttachment {
   /**
    * A {@link GPUTextureView} describing the texture subresource that will be output to
    * and read from for this depth/stencil attachment.
@@ -726,20 +741,6 @@ interface GPURenderPassDepthStencilAttachmentNew {
    */
   stencilReadOnly?: boolean;
 }
-/** @deprecated */
-interface GPURenderPassDepthStencilAttachmentOld {
-  /** @deprecated */ attachment: GPUTextureView;
-  depthLoadValue:
-    | GPULoadOp
-    | number;
-  depthStoreOp: GPUStoreOp;
-  depthReadOnly?: boolean;
-  stencilLoadValue:
-    | GPULoadOp
-    | GPUStencilValue;
-  stencilStoreOp: GPUStoreOp;
-  stencilReadOnly?: boolean;
-}
 
 interface GPURenderPassDescriptor
   extends GPUObjectDescriptorBase {
@@ -759,10 +760,7 @@ interface GPURenderPassDescriptor
   occlusionQuerySet?: GPUQuerySet;
 }
 
-type GPURenderPipelineDescriptor =
-  | GPURenderPipelineDescriptorNew
-  | GPURenderPipelineDescriptorOld;
-interface GPURenderPipelineDescriptorNew
+interface GPURenderPipelineDescriptor
   extends GPUPipelineDescriptorBase {
   vertex: GPUVertexState;
   primitive?: GPUPrimitiveState;
@@ -773,6 +771,7 @@ interface GPURenderPipelineDescriptorNew
 
 interface GPURequestAdapterOptions {
   powerPreference?: GPUPowerPreference;
+  forceSoftware?: boolean;
 }
 
 interface GPUSamplerBindingLayout {
@@ -835,14 +834,6 @@ interface GPUStorageTextureBindingLayout {
    * `MTLArgumentBuffer` objects that are more efficient to bind at run-time.
    */
   viewDimension?: GPUTextureViewDimension;
-}
-
-interface GPUSwapChainDescriptor
-  extends GPUObjectDescriptorBase {
-  device: GPUDevice;
-  format: GPUTextureFormat;
-  usage?: GPUTextureUsageFlags;
-  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
 }
 
 interface GPUTextureBindingLayout {
@@ -1121,12 +1112,14 @@ interface GPUAdapter {
    * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
    */
   readonly features: GPUSupportedFeatures;
-  /** @deprecated */
-  readonly extensions: GPUFeatureName[];
   /**
    * The limits in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[limits]]}.
    */
-  readonly limits: GPUAdapterLimits;
+  readonly limits: GPUSupportedLimits;
+  /**
+   * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[software]]}.
+   */
+  readonly isSoftware: boolean;
   /**
    * Requests a device from the adapter.
    * @param descriptor - Description of the {@link GPUDevice} to request.
@@ -1139,36 +1132,6 @@ interface GPUAdapter {
 declare var GPUAdapter: {
   prototype: GPUAdapter;
   new (): never;
-};
-
-interface GPUAdapterLimits {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUAdapterLimits";
-  readonly maxTextureDimension1D: number;
-  readonly maxTextureDimension2D: number;
-  readonly maxTextureDimension3D: number;
-  readonly maxTextureArrayLayers: number;
-  readonly maxBindGroups: number;
-  readonly maxDynamicUniformBuffersPerPipelineLayout: number;
-  readonly maxDynamicStorageBuffersPerPipelineLayout: number;
-  readonly maxSampledTexturesPerShaderStage: number;
-  readonly maxSamplersPerShaderStage: number;
-  readonly maxStorageBuffersPerShaderStage: number;
-  readonly maxStorageTexturesPerShaderStage: number;
-  readonly maxUniformBuffersPerShaderStage: number;
-  readonly maxUniformBufferBindingSize: number;
-  readonly maxStorageBufferBindingSize: number;
-  readonly maxVertexBuffers: number;
-  readonly maxVertexAttributes: number;
-  readonly maxVertexBufferArrayStride: number;
-}
-
-declare var GPUAdapterLimits: {
-  prototype: GPUAdapterLimits;
 };
 
 interface GPUBindGroup
@@ -1277,42 +1240,6 @@ declare var GPUBufferUsage: {
   readonly STORAGE: GPUFlagsConstant;
   readonly INDIRECT: GPUFlagsConstant;
   readonly QUERY_RESOLVE: GPUFlagsConstant;
-};
-
-interface GPUCanvasContext {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUCanvasContext";
-  /**
-   * Configures the swap chain for this canvas, and returns a new
-   * {@link GPUSwapChain} object representing it. Destroys any swapchain
-   * previously returned by `configureSwapChain`, including all of the
-   * textures it has produced.
-   * @param descriptor - Description of the {@link GPUSwapChain} to configure.
-   */
-  configureSwapChain(
-    descriptor: GPUSwapChainDescriptor
-  ): GPUSwapChain;
-  /**
-   * Returns an optimal {@link GPUTextureFormat} to use for swap chains with this context and the
-   * given device.
-   * @param adapter - Adapter the swap chain format should be queried for.
-   */
-  getSwapChainPreferredFormat(
-    adapter: GPUAdapter
-  ): GPUTextureFormat;
-  /** @deprecated */
-  getSwapChainPreferredFormat(
-    device: GPUDevice
-  ): Promise<GPUTextureFormat>;
-}
-
-declare var GPUCanvasContext: {
-  prototype: GPUCanvasContext;
-  new (): never;
 };
 
 interface GPUColorWrite {
@@ -1673,24 +1600,16 @@ interface GPUDevice
    * @internal
    */
   readonly __brand: "GPUDevice";
-  /** @deprecated */
-  readonly adapter: GPUAdapter;
   /**
    * A set containing the {@link GPUFeatureName} values of the features
    * supported by the device (i.e. the ones with which it was created).
    */
   readonly features: GPUSupportedFeatures;
-  /** @deprecated */
-  readonly extensions: ReadonlyArray<GPUFeatureName>;
   /**
    * Exposes the limits supported by the device
    * (which are exactly the ones with which it was created).
-   * Issue: Should this be an `interface GPUSupportedLimits`?
    */
-  readonly limits: Record<
-    string,
-    number
-  >;
+  readonly limits: GPUSupportedLimits;
   /**
    * The primary {@link GPUQueue} for this device.
    */
@@ -1724,6 +1643,13 @@ interface GPUDevice
   createSampler(
     descriptor?: GPUSamplerDescriptor
   ): GPUSampler;
+  /**
+   * Creates a {@link GPUExternalTexture} wrapping the provided image source.
+   * @param descriptor - Provides the external image source object (and any creation options).
+   */
+  importExternalTexture(
+    descriptor: GPUExternalTextureDescriptor
+  ): GPUExternalTexture;
   /**
    * Creates a {@link GPUBindGroupLayout}.
    * @param descriptor - Description of the {@link GPUBindGroupLayout} to create.
@@ -1769,8 +1695,7 @@ interface GPUDevice
   /**
    * Creates a {@link GPUComputePipeline}. The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} resolves to an invalid
-   * {@link GPUComputePipeline} object.
+   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link OperationError}.
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPUComputePipeline} to create.
@@ -1778,24 +1703,15 @@ interface GPUDevice
   createComputePipelineAsync(
     descriptor: GPUComputePipelineDescriptor
   ): Promise<GPUComputePipeline>;
-  /** @deprecated */
-  createReadyComputePipeline(
-    descriptor: GPUComputePipelineDescriptor
-  ): Promise<GPUComputePipeline>;
   /**
    * Creates a {@link GPURenderPipeline}. The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} resolves to an invalid
-   * {@link GPURenderPipeline} object.
+   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link OperationError}.
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPURenderPipeline} to create.
    */
   createRenderPipelineAsync(
-    descriptor: GPURenderPipelineDescriptor
-  ): Promise<GPURenderPipeline>;
-  /** @deprecated */
-  createReadyRenderPipeline(
     descriptor: GPURenderPipelineDescriptor
   ): Promise<GPURenderPipeline>;
   /**
@@ -1864,6 +1780,21 @@ declare var GPUDeviceLostInfo: {
   new (): never;
 };
 
+interface GPUExternalTexture
+  extends GPUObjectBase {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUExternalTexture";
+}
+
+declare var GPUExternalTexture: {
+  prototype: GPUExternalTexture;
+  new (): never;
+};
+
 interface GPUMapMode {
   /**
    * Nominal type branding.
@@ -1911,6 +1842,48 @@ declare var GPUPipelineLayout: {
   new (): never;
 };
 
+interface GPUPresentationContext {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUPresentationContext";
+  /**
+   * Configures the presentation context for this canvas. Destroys any textures produced with a
+   * previous configuration.
+   * @param configuration - Desired configuration for the presentation context.
+   */
+  configure(
+    configuration: GPUPresentationConfiguration
+  ): undefined;
+  /**
+   * Removes the presentation context configuration. Destroys any textures produced while configured.
+   */
+  unconfigure(): undefined;
+  /**
+   * Returns an optimal {@link GPUTextureFormat} to use with this presentation context and devices
+   * created from the given adapter.
+   * @param adapter - Adapter the format should be queried for.
+   */
+  getPreferredFormat(
+    adapter: GPUAdapter
+  ): GPUTextureFormat;
+  /**
+   * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUPresentationContext}
+   * next.
+   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
+   * call to {@link GPUPresentationContext#getCurrentTexture} made within the same frame (i.e. between
+   * invocations of Update the rendering) unless {@link GPUPresentationContext#configure} is called.
+   */
+  getCurrentTexture(): GPUTexture;
+}
+
+declare var GPUPresentationContext: {
+  prototype: GPUPresentationContext;
+  new (): never;
+};
+
 interface GPUQuerySet
   extends GPUObjectBase {
   /**
@@ -1950,15 +1923,6 @@ interface GPUQueue
    * up to this moment.
    */
   onSubmittedWorkDone(): Promise<undefined>;
-  /** @deprecated */
-  signal(
-    fence: GPUFence,
-    signalValue: number
-  ): undefined;
-  /** @deprecated */
-  createFence(
-    descriptor?: GPUFenceDescriptor
-  ): GPUFence;
   /**
    * Issues a write operation of the provided data into a {@link GPUBuffer}.
    * @param buffer - The buffer to write to.
@@ -1997,12 +1961,12 @@ interface GPUQueue
    * Issues a copy operation of the contents of a platform image/canvas
    * into the destination texture.
    * @param source - source image and origin to copy to `destination`.
-   * @param destination - The texture subresource and origin to write to.
+   * @param destination - The texture subresource and origin to write to, and its encoding metadata.
    * @param copySize - Extents of the content to write from `source` to `destination`.
    */
   copyExternalImageToTexture(
     source: GPUImageCopyExternalImage,
-    destination: GPUImageCopyTexture,
+    destination: GPUImageCopyTextureTagged,
     copySize: GPUExtent3DStrict
   ): undefined;
 
@@ -2107,10 +2071,6 @@ interface GPURenderPassEncoder
    * @param color - The color to use when blending.
    */
   setBlendConstant(
-    color: GPUColor
-  ): undefined;
-  /** @deprecated */
-  setBlendColor(
     color: GPUColor
   ): undefined;
   /**
@@ -2244,27 +2204,34 @@ declare var GPUShaderStage: {
 
 type GPUSupportedFeatures = ReadonlySet<string>;
 
-interface GPUSwapChain
-  extends GPUObjectBase {
+interface GPUSupportedLimits {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
    * @internal
    */
-  readonly __brand: "GPUSwapChain";
-  /**
-   * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
-   * that created this swap chain next.
-   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
-   * call to {@link GPUSwapChain#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of Update the rendering).
-   */
-  getCurrentTexture(): GPUTexture;
+  readonly __brand: "GPUSupportedLimits";
+  readonly maxTextureDimension1D: number;
+  readonly maxTextureDimension2D: number;
+  readonly maxTextureDimension3D: number;
+  readonly maxTextureArrayLayers: number;
+  readonly maxBindGroups: number;
+  readonly maxDynamicUniformBuffersPerPipelineLayout: number;
+  readonly maxDynamicStorageBuffersPerPipelineLayout: number;
+  readonly maxSampledTexturesPerShaderStage: number;
+  readonly maxSamplersPerShaderStage: number;
+  readonly maxStorageBuffersPerShaderStage: number;
+  readonly maxStorageTexturesPerShaderStage: number;
+  readonly maxUniformBuffersPerShaderStage: number;
+  readonly maxUniformBufferBindingSize: number;
+  readonly maxStorageBufferBindingSize: number;
+  readonly maxVertexBuffers: number;
+  readonly maxVertexAttributes: number;
+  readonly maxVertexBufferArrayStride: number;
 }
 
-declare var GPUSwapChain: {
-  prototype: GPUSwapChain;
-  new (): never;
+declare var GPUSupportedLimits: {
+  prototype: GPUSupportedLimits;
 };
 
 interface GPUTexture
@@ -2377,145 +2344,75 @@ interface WorkerNavigator
 // Deprecated
 // *********************************************************************************************
 
-/** @deprecated */
-type GPUExtensionName = GPUFeatureName;
-/** @deprecated */
-interface GPULimits {
-  maxTextureDimension1D?: number;
-  maxTextureDimension2D?: number;
-  maxTextureDimension3D?: number;
-  maxTextureArrayLayers?: number;
-  maxBindGroups?: number;
-  maxDynamicUniformBuffersPerPipelineLayout?: number;
-  maxDynamicStorageBuffersPerPipelineLayout?: number;
-  maxSampledTexturesPerShaderStage?: number;
-  maxSamplersPerShaderStage?: number;
-  maxStorageBuffersPerShaderStage?: number;
-  maxStorageTexturesPerShaderStage?: number;
-  maxUniformBuffersPerShaderStage?: number;
-  maxUniformBufferBindingSize?: number;
+/** @deprecated Use GPUPresentationContext instead */
+interface GPUCanvasContext {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUCanvasContext";
+  /**
+   * Configures the swap chain for this canvas, and returns a new
+   * {@link GPUSwapChain} object representing it. Destroys any swapchain
+   * previously returned by `configureSwapChain`, including all of the
+   * textures it has produced.
+   * @param descriptor - Description of the {@link GPUSwapChain} to configure.
+   */
+  configureSwapChain(
+    descriptor: GPUSwapChainDescriptor
+  ): GPUSwapChain;
+  /**
+   * Returns an optimal {@link GPUTextureFormat} to use for swap chains with this context and the
+   * given device.
+   * @param adapter - Adapter the swap chain format should be queried for.
+   */
+  getSwapChainPreferredFormat(
+    adapter: GPUAdapter
+  ): GPUTextureFormat;
+  /** @deprecated */
+  getSwapChainPreferredFormat(
+    device: GPUDevice
+  ): Promise<GPUTextureFormat>;
 }
 
 /** @deprecated */
-type GPURenderPassColorAttachmentDescriptor = GPURenderPassColorAttachment;
-/** @deprecated */
-type GPURenderPassDepthStencilAttachmentDescriptor = GPURenderPassDepthStencilAttachment;
-
-/** @deprecated */
-type GPUVertexBufferLayoutDescriptor = GPUVertexBufferLayout;
-/** @deprecated */
-type GPUVertexAttributeDescriptor = GPUVertexAttribute;
-
-/** @deprecated */
-type GPUTextureDataLayout = GPUImageDataLayout;
-/** @deprecated */
-type GPUBufferCopyView = GPUImageCopyBuffer;
-/** @deprecated */
-type GPUTextureCopyView = GPUImageCopyTexture;
-/** @deprecated */
-type GPUImageBitmapCopyView = GPUImageCopyImageBitmap;
-
-/** @deprecated use GPURenderPipelineDescriptor instead */
-interface GPURenderPipelineDescriptorOld
-  extends GPUPipelineDescriptorBase {
-  /** @deprecated */ vertexStage?: GPUProgrammableStageDescriptor;
-  /** @deprecated */
-  fragmentStage?: GPUProgrammableStageDescriptor;
-  /** @deprecated */
-  primitiveTopology?: GPUPrimitiveTopology;
-  /** @deprecated */
-  rasterizationState?: GPURasterizationStateDescriptor;
-  /** @deprecated */
-  colorStates?: Iterable<GPUColorStateDescriptor>;
-  /** @deprecated */
-  depthStencilState?: GPUDepthStencilStateDescriptor;
-  /** @deprecated */
-  vertexState?: GPUVertexStateDescriptor;
-  /** @deprecated */
-  sampleCount?: number;
-  /** @deprecated */
-  sampleMask?: number;
-  /** @deprecated */
-  alphaToCoverageEnabled?: boolean;
-}
-
-/** @deprecated */
-type GPUProgrammableStageDescriptor = GPUProgrammableStage;
-
-/** @deprecated */
-type GPUBindingType =
-  | "uniform-buffer"
-  | "storage-buffer"
-  | "readonly-storage-buffer"
-  | "sampler"
-  | "comparison-sampler"
-  | "sampled-texture"
-  | "multisampled-texture"
-  | "readonly-storage-texture"
-  | "writeonly-storage-texture";
-/** @deprecated */
-type GPUTextureComponentType =
-  | "float"
-  | "sint"
-  | "uint"
-  | "depth-comparison";
-/** @deprecated */
-type GPUBlendDescriptor = GPUBlendComponent;
-/** @deprecated */
-interface GPUColorStateDescriptor {
-  format: GPUTextureFormat;
-  alphaBlend?: GPUBlendDescriptor;
-  colorBlend?: GPUBlendDescriptor;
-  writeMask?: GPUColorWriteFlags;
-}
-
-/** @deprecated */
-interface GPUDepthStencilStateDescriptor {
-  format: GPUTextureFormat;
-  depthWriteEnabled?: boolean;
-  depthCompare?: GPUCompareFunction;
-  stencilFront?: GPUStencilStateFaceDescriptor;
-  stencilBack?: GPUStencilStateFaceDescriptor;
-  stencilReadMask?: number;
-  stencilWriteMask?: number;
-}
-
-/** @deprecated */
-interface GPUFenceDescriptor
-  extends GPUObjectDescriptorBase {
-  initialValue?: number;
-  signalQueue?: GPUQueue;
-}
-
-/** @deprecated */
-interface GPUVertexStateDescriptor {
-  indexFormat?: GPUIndexFormat;
-  vertexBuffers?: Iterable<GPUVertexBufferLayoutDescriptor>;
-}
-
-/** @deprecated */
-interface GPURasterizationStateDescriptor {
-  frontFace?: GPUFrontFace;
-  cullMode?: GPUCullMode;
-  clampDepth?: boolean;
-  depthBias?: number;
-  depthBiasSlopeScale?: number;
-  depthBiasClamp?: number;
-}
-
-/** @deprecated */
-type GPUStencilStateFaceDescriptor = GPUStencilFaceState;
-/** @deprecated */
-declare var GPUFence: {
-  prototype: GPUFence;
+declare var GPUCanvasContext: {
+  prototype: GPUCanvasContext;
   new (): never;
 };
 
 /** @deprecated */
-interface GPUFence
+type GPUSwapChainDescriptor = GPUPresentationConfiguration;
+
+/** @deprecated Use GPUPresentationContext instead */
+interface GPUSwapChain
   extends GPUObjectBase {
-  getCompletedValue(): number;
-  onCompletion(
-    completionValue: number
-  ): Promise<undefined>;
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUSwapChain";
+  /**
+   * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
+   * that created this swap chain next.
+   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
+   * call to {@link GPUSwapChain#getCurrentTexture} made within the same frame (i.e. between
+   * invocations of Update the rendering).
+   */
+  getCurrentTexture(): GPUTexture;
+}
+
+declare var GPUSwapChain: {
+  prototype: GPUSwapChain;
+  new (): never;
+};
+
+/** @deprecated */
+interface GPUImageCopyImageBitmap {
+  /** @deprecated */
+  imageBitmap: ImageBitmap;
+  /** @deprecated */
+  origin?: GPUOrigin2D;
 }
