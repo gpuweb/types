@@ -2347,25 +2347,13 @@ interface WorkerNavigator
 /** @deprecated Use GPUPresentationContext instead */
 interface GPUCanvasContext {
   /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUCanvasContext";
-  /**
-   * Configures the swap chain for this canvas, and returns a new
-   * {@link GPUSwapChain} object representing it. Destroys any swapchain
-   * previously returned by `configureSwapChain`, including all of the
-   * textures it has produced.
-   * @param descriptor - Description of the {@link GPUSwapChain} to configure.
+   * @deprecated
    */
   configureSwapChain(
     descriptor: GPUSwapChainDescriptor
   ): GPUSwapChain;
   /**
-   * Returns an optimal {@link GPUTextureFormat} to use for swap chains with this context and the
-   * given device.
-   * @param adapter - Adapter the swap chain format should be queried for.
+   * @deprecated
    */
   getSwapChainPreferredFormat(
     adapter: GPUAdapter
