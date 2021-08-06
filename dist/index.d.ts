@@ -756,7 +756,7 @@ interface GPURenderPassDescriptor
 
 interface GPURenderPassLayout
   extends GPUObjectDescriptorBase {
-  colorFormats: Array<GPUTextureFormat>;
+  colorFormats: Iterable<GPUTextureFormat>;
   depthStencilFormat?: GPUTextureFormat;
   sampleCount?: GPUSize32;
 }
