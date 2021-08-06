@@ -102,9 +102,6 @@ type GPUFrontFace =
 type GPUIndexFormat =
   | "uint16"
   | "uint32";
-type GPUInputStepMode =
-  | "vertex"
-  | "instance";
 type GPULoadOp = "load";
 type GPUPipelineStatisticName =
   | "vertex-shader-invocations"
@@ -139,9 +136,7 @@ type GPUStencilOperation =
   | "decrement-clamp"
   | "increment-wrap"
   | "decrement-wrap";
-type GPUStorageTextureAccess =
-  | "read-only"
-  | "write-only";
+type GPUStorageTextureAccess = "write-only";
 type GPUStoreOp =
   | "store"
   | "discard";
@@ -255,6 +250,9 @@ type GPUVertexFormat =
   | "sint32x2"
   | "sint32x3"
   | "sint32x4";
+type GPUVertexStepMode =
+  | "vertex"
+  | "instance";
 
 interface GPUBindGroupDescriptor
   extends GPUObjectDescriptorBase {
@@ -351,6 +349,15 @@ interface GPUBufferDescriptor
   mappedAtCreation?: boolean;
 }
 
+interface GPUCanvasConfiguration {
+  device: GPUDevice;
+  format: GPUTextureFormat;
+  usage?: GPUTextureUsageFlags;
+  colorSpace?: GPUPredefinedColorSpace;
+  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
+  size?: GPUExtent3D;
+}
+
 interface GPUColorDict {
   r: number;
   g: number;
@@ -409,14 +416,14 @@ interface GPUDeviceDescriptor
    * Each key must be the name of a member of supported limits.
    * Exactly the specified limits, and no limit/better or worse,
    * will be allowed in validation of API calls on the resulting device.
-   * <!-- If we ever need limit types other than GPUSize32, we can change the value type to
-   * `double` or `any` in the future and write out the type conversion explicitly (by reference
-   * to WebIDL spec). Or change the entire type to `any` and add back a `dictionary GPULimits`
-   * and define the conversion of the whole object by reference to WebIDL. -->
+   * <!-- If we ever need limit types other than GPUSize32/GPUSize64, we can change the value
+   * type to `double` or `any` in the future and write out the type conversion explicitly (by
+   * reference to WebIDL spec). Or change the entire type to `any` and add back a `dictionary
+   * GPULimits` and define the conversion of the whole object by reference to WebIDL. -->
    */
   requiredLimits?: Record<
     string,
-    GPUSize32
+    GPUSize64
   >;
 }
 
@@ -554,15 +561,6 @@ interface GPUPipelineLayoutDescriptor
   bindGroupLayouts: Array<GPUBindGroupLayout>;
 }
 
-interface GPUPresentationConfiguration
-  extends GPUObjectDescriptorBase {
-  device: GPUDevice;
-  format: GPUTextureFormat;
-  usage?: GPUTextureUsageFlags;
-  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
-  size?: GPUExtent3D;
-}
-
 interface GPUPrimitiveState {
   topology?: GPUPrimitiveTopology;
   stripIndexFormat?: GPUIndexFormat;
@@ -599,10 +597,9 @@ interface GPUQuerySetDescriptor
 type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
 
 interface GPURenderBundleEncoderDescriptor
-  extends GPUObjectDescriptorBase {
-  colorFormats: Array<GPUTextureFormat>;
-  depthStencilFormat?: GPUTextureFormat;
-  sampleCount?: GPUSize32;
+  extends GPURenderPassLayout {
+  depthReadOnly?: boolean;
+  stencilReadOnly?: boolean;
 }
 
 interface GPURenderPassColorAttachment {
@@ -703,6 +700,13 @@ interface GPURenderPassDescriptor
   occlusionQuerySet?: GPUQuerySet;
 }
 
+interface GPURenderPassLayout
+  extends GPUObjectDescriptorBase {
+  colorFormats: Array<GPUTextureFormat>;
+  depthStencilFormat?: GPUTextureFormat;
+  sampleCount?: GPUSize32;
+}
+
 interface GPURenderPipelineDescriptor
   extends GPUPipelineDescriptorBase {
   vertex: GPUVertexState;
@@ -756,7 +760,7 @@ interface GPUStorageTextureBindingLayout {
    * Indicates whether texture views bound to this binding will be bound for read-only or
    * write-only access.
    */
-  access: GPUStorageTextureAccess;
+  access?: GPUStorageTextureAccess;
   /**
    * The required {@link GPUTextureViewDescriptor#format} of texture views bound to this binding.
    */
@@ -824,7 +828,7 @@ interface GPUVertexAttribute {
 
 interface GPUVertexBufferLayout {
   arrayStride: GPUSize64;
-  stepMode?: GPUInputStepMode;
+  stepMode?: GPUVertexStepMode;
   attributes: Array<GPUVertexAttribute>;
 }
 
@@ -924,9 +928,9 @@ interface GPURenderEncoderBase {
    * Sets the current index buffer.
    * @param buffer - Buffer containing index data to use for subsequent drawing commands.
    * @param indexFormat - Format of the index data contained in `buffer`.
-   * @param offset - Offset in bytes into `buffer` where the index data begins.
+   * @param offset - Offset in bytes into `buffer` where the index data begins. Defaults to `0`.
    * @param size - Size in bytes of the index data in `buffer`.
-   * 	If `0`, `buffer.size` - `offset` is used.
+   * 	Defaults to the size of the buffer minus the offset.
    */
   setIndexBuffer(
     buffer: GPUBuffer,
@@ -938,9 +942,9 @@ interface GPURenderEncoderBase {
    * Sets the current vertex buffer for the given slot.
    * @param slot - The vertex buffer slot to set the vertex buffer for.
    * @param buffer - Buffer containing vertex data to use for subsequent drawing commands.
-   * @param offset - Offset in bytes into `buffer` where the vertex data begins.
+   * @param offset - Offset in bytes into `buffer` where the vertex data begins. Defaults to `0`.
    * @param size - Size in bytes of the vertex data in `buffer`.
-   * 	If `0`, `buffer.size` - `offset` is used.
+   * 	Defaults to the size of the buffer minus the offset.
    */
   setVertexBuffer(
     slot: GPUIndex32,
@@ -962,15 +966,6 @@ interface GPURenderEncoderBase {
     firstVertex?: GPUSize32,
     firstInstance?: GPUSize32
   ): undefined;
-  /**
-   * Draws indexed primitives.
-   * See [[#rendering-operations]] for the detailed specification.
-   * @param indexCount - The number of indices to draw.
-   * @param instanceCount - The number of instances to draw.
-   * @param firstIndex - Offset into the index buffer, in indices, begin drawing from.
-   * @param baseVertex - Added to each index value before indexing into the vertex buffers.
-   * @param firstInstance - First instance to draw.
-   */
   drawIndexed(
     indexCount: GPUSize32,
     instanceCount?: GPUSize32,
@@ -978,26 +973,10 @@ interface GPURenderEncoderBase {
     baseVertex?: GPUSignedOffset32,
     firstInstance?: GPUSize32
   ): undefined;
-  /**
-   * Draws primitives using parameters read from a {@link GPUBuffer}.
-   * See [[#rendering-operations]] for the detailed specification.
-   * packed block of **four 32-bit unsigned integer values (16 bytes total)**, given in the same
-   * order as the arguments for {@link GPURenderEncoderBase#draw}. For example:
-   * @param indirectBuffer - Buffer containing the indirect draw parameters.
-   * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
-   */
   drawIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
   ): undefined;
-  /**
-   * Draws indexed primitives using parameters read from a {@link GPUBuffer}.
-   * See [[#rendering-operations]] for the detailed specification.
-   * tightly packed block of **five 32-bit unsigned integer values (20 bytes total)**, given in
-   * the same order as the arguments for {@link GPURenderEncoderBase#drawIndexed}. For example:
-   * @param indirectBuffer - Buffer containing the indirect drawIndexed parameters.
-   * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
-   */
   drawIndexedIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
@@ -1170,6 +1149,53 @@ declare var GPUBufferUsage: {
   readonly STORAGE: GPUFlagsConstant;
   readonly INDIRECT: GPUFlagsConstant;
   readonly QUERY_RESOLVE: GPUFlagsConstant;
+};
+
+interface GPUCanvasContext {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUCanvasContext";
+  /**
+   * The canvas this context was created from.
+   */
+  readonly canvas:
+    | HTMLCanvasElement
+    | OffscreenCanvas;
+  /**
+   * Configures the context for this canvas. Destroys any textures produced with a previous
+   * configuration.
+   * @param configuration - Desired configuration for the context.
+   */
+  configure(
+    configuration: GPUCanvasConfiguration
+  ): undefined;
+  /**
+   * Removes the context configuration. Destroys any textures produced while configured.
+   */
+  unconfigure(): undefined;
+  /**
+   * Returns an optimal {@link GPUTextureFormat} to use with this context and devices created from
+   * the given adapter.
+   * @param adapter - Adapter the format should be queried for.
+   */
+  getPreferredFormat(
+    adapter: GPUAdapter
+  ): GPUTextureFormat;
+  /**
+   * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
+   * next.
+   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
+   * call to {@link GPUCanvasContext#getCurrentTexture} made within the same frame (i.e. between
+   * invocations of Update the rendering) unless {@link GPUCanvasContext#configure} is called.
+   */
+  getCurrentTexture(): GPUTexture;
+}
+
+declare var GPUCanvasContext: {
+  prototype: GPUCanvasContext;
 };
 
 interface GPUColorWrite {
@@ -1381,7 +1407,6 @@ interface GPUCompilationMessage {
   readonly __brand: "GPUCompilationMessage";
   /**
    * A human-readable string containing the message generated during the shader compilation.
-   *
    */
   readonly message: string;
   /**
@@ -1392,7 +1417,6 @@ interface GPUCompilationMessage {
    * The line number in the shader {@link GPUShaderModuleDescriptor#code} the
    * {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a lineNum of
    * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}.
-   *
    * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
    * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
    * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
@@ -1756,47 +1780,6 @@ declare var GPUPipelineLayout: {
   prototype: GPUPipelineLayout;
 };
 
-interface GPUPresentationContext {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUPresentationContext";
-  /**
-   * Configures the presentation context for this canvas. Destroys any textures produced with a
-   * previous configuration.
-   * @param configuration - Desired configuration for the presentation context.
-   */
-  configure(
-    configuration: GPUPresentationConfiguration
-  ): undefined;
-  /**
-   * Removes the presentation context configuration. Destroys any textures produced while configured.
-   */
-  unconfigure(): undefined;
-  /**
-   * Returns an optimal {@link GPUTextureFormat} to use with this presentation context and devices
-   * created from the given adapter.
-   * @param adapter - Adapter the format should be queried for.
-   */
-  getPreferredFormat(
-    adapter: GPUAdapter
-  ): GPUTextureFormat;
-  /**
-   * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUPresentationContext}
-   * next.
-   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
-   * call to {@link GPUPresentationContext#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of Update the rendering) unless {@link GPUPresentationContext#configure} is called.
-   */
-  getCurrentTexture(): GPUTexture;
-}
-
-declare var GPUPresentationContext: {
-  prototype: GPUPresentationContext;
-};
-
 interface GPUQuerySet
   extends GPUObjectBase {
   /**
@@ -2119,9 +2102,18 @@ interface GPUSupportedLimits {
   readonly maxUniformBuffersPerShaderStage: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
+  readonly minUniformBufferOffsetAlignment: number;
+  readonly minStorageBufferOffsetAlignment: number;
   readonly maxVertexBuffers: number;
   readonly maxVertexAttributes: number;
   readonly maxVertexBufferArrayStride: number;
+  readonly maxInterStageShaderComponents: number;
+  readonly maxComputeWorkgroupStorageSize: number;
+  readonly maxComputeInvocationsPerWorkgroup: number;
+  readonly maxComputeWorkgroupSizeX: number;
+  readonly maxComputeWorkgroupSizeY: number;
+  readonly maxComputeWorkgroupSizeZ: number;
+  readonly maxComputeWorkgroupsPerDimension: number;
 }
 
 declare var GPUSupportedLimits: {
@@ -2162,8 +2154,8 @@ interface GPUTextureUsage {
   readonly __brand: "GPUTextureUsage";
   readonly COPY_SRC: GPUFlagsConstant;
   readonly COPY_DST: GPUFlagsConstant;
-  readonly SAMPLED: GPUFlagsConstant;
-  readonly STORAGE: GPUFlagsConstant;
+  readonly TEXTURE_BINDING: GPUFlagsConstant;
+  readonly STORAGE_BINDING: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 }
 
@@ -2171,8 +2163,8 @@ declare var GPUTextureUsage: {
   prototype: GPUTextureUsage;
   readonly COPY_SRC: GPUFlagsConstant;
   readonly COPY_DST: GPUFlagsConstant;
-  readonly SAMPLED: GPUFlagsConstant;
-  readonly STORAGE: GPUFlagsConstant;
+  readonly TEXTURE_BINDING: GPUFlagsConstant;
+  readonly STORAGE_BINDING: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 };
 
