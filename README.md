@@ -91,4 +91,4 @@ The following differences will remain.
 
 (only for people who have npm publish access)
 
-`git checkout main && git pull git@github.com:gpuweb/types.git main && npm version patch && git push git@github.com:gpuweb/types.git main --tags && npm publish`
+`git checkout main && git pull git@github.com:gpuweb/types.git main && git submodule init --update && npm version patch && git push git@github.com:gpuweb/types.git main --tags && npm publish`
