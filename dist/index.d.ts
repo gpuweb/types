@@ -139,6 +139,8 @@ type GPUFeatureName =
   | "depth32float-stencil8"
   | "pipeline-statistics-query"
   | "texture-compression-bc"
+  | "texture-compression-etc2"
+  | "texture-compression-astc"
   | "timestamp-query";
 type GPUFilterMode =
   | "nearest"
