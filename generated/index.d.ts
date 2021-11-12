@@ -1,258 +1,311 @@
 type GPUBindingResource =
-  | GPUSampler
-  | GPUTextureView
-  | GPUBufferBinding
-  | GPUExternalTexture;
-type GPUBufferDynamicOffset = number;
-type GPUBufferUsageFlags = number;
+
+    | GPUSampler
+    | GPUTextureView
+    | GPUBufferBinding
+    | GPUExternalTexture;
+type GPUBufferDynamicOffset =
+  number;
+type GPUBufferUsageFlags =
+  number;
 type GPUColor =
-  | Array<number>
-  | GPUColorDict;
-type GPUColorWriteFlags = number;
-type GPUDepthBias = number;
+
+    | Array<number>
+    | GPUColorDict;
+type GPUColorWriteFlags =
+  number;
+type GPUDepthBias =
+  number;
 type GPUError =
-  | GPUOutOfMemoryError
-  | GPUValidationError;
+
+    | GPUOutOfMemoryError
+    | GPUValidationError;
 type GPUExtent3D =
-  | Array<GPUIntegerCoordinate>
-  | GPUExtent3DDict;
-type GPUFlagsConstant = number;
-type GPUIndex32 = number;
-type GPUIntegerCoordinate = number;
-type GPUMapModeFlags = number;
+
+    | Array<GPUIntegerCoordinate>
+    | GPUExtent3DDict;
+type GPUFlagsConstant =
+  number;
+type GPUIndex32 =
+  number;
+type GPUIntegerCoordinate =
+  number;
+type GPUMapModeFlags =
+  number;
 type GPUOrigin2D =
-  | Array<GPUIntegerCoordinate>
-  | GPUOrigin2DDict;
+
+    | Array<GPUIntegerCoordinate>
+    | GPUOrigin2DDict;
 type GPUOrigin3D =
-  | Array<GPUIntegerCoordinate>
-  | GPUOrigin3DDict;
-type GPUPipelineConstantValue = number;
-type GPUSampleMask = number;
-type GPUShaderStageFlags = number;
-type GPUSignedOffset32 = number;
-type GPUSize32 = number;
-type GPUSize64 = number;
-type GPUStencilValue = number;
-type GPUTextureUsageFlags = number;
+
+    | Array<GPUIntegerCoordinate>
+    | GPUOrigin3DDict;
+type GPUPipelineConstantValue =
+  number;
+type GPUSampleMask =
+  number;
+type GPUShaderStageFlags =
+  number;
+type GPUSignedOffset32 =
+  number;
+type GPUSize32 =
+  number;
+type GPUSize64 =
+  number;
+type GPUStencilValue =
+  number;
+type GPUTextureUsageFlags =
+  number;
 type GPUAddressMode =
-  | "clamp-to-edge"
-  | "repeat"
-  | "mirror-repeat";
+
+    | "clamp-to-edge"
+    | "repeat"
+    | "mirror-repeat";
 type GPUBlendFactor =
-  | "zero"
-  | "one"
-  | "src"
-  | "one-minus-src"
-  | "src-alpha"
-  | "one-minus-src-alpha"
-  | "dst"
-  | "one-minus-dst"
-  | "dst-alpha"
-  | "one-minus-dst-alpha"
-  | "src-alpha-saturated"
-  | "constant"
-  | "one-minus-constant";
+
+    | "zero"
+    | "one"
+    | "src"
+    | "one-minus-src"
+    | "src-alpha"
+    | "one-minus-src-alpha"
+    | "dst"
+    | "one-minus-dst"
+    | "dst-alpha"
+    | "one-minus-dst-alpha"
+    | "src-alpha-saturated"
+    | "constant"
+    | "one-minus-constant";
 type GPUBlendOperation =
-  | "add"
-  | "subtract"
-  | "reverse-subtract"
-  | "min"
-  | "max";
+
+    | "add"
+    | "subtract"
+    | "reverse-subtract"
+    | "min"
+    | "max";
 type GPUBufferBindingType =
-  | "uniform"
-  | "storage"
-  | "read-only-storage";
+
+    | "uniform"
+    | "storage"
+    | "read-only-storage";
 type GPUCanvasCompositingAlphaMode =
-  | "opaque"
-  | "premultiplied";
+
+    | "opaque"
+    | "premultiplied";
 type GPUCompareFunction =
-  | "never"
-  | "less"
-  | "equal"
-  | "less-equal"
-  | "greater"
-  | "not-equal"
-  | "greater-equal"
-  | "always";
+
+    | "never"
+    | "less"
+    | "equal"
+    | "less-equal"
+    | "greater"
+    | "not-equal"
+    | "greater-equal"
+    | "always";
 type GPUCompilationMessageType =
-  | "error"
-  | "warning"
-  | "info";
+
+    | "error"
+    | "warning"
+    | "info";
 type GPUCullMode =
-  | "none"
-  | "front"
-  | "back";
-type GPUDeviceLostReason = "destroyed";
+
+    | "none"
+    | "front"
+    | "back";
+type GPUDeviceLostReason =
+  "destroyed";
 type GPUErrorFilter =
-  | "out-of-memory"
-  | "validation";
+
+    | "out-of-memory"
+    | "validation";
 type GPUFeatureName =
-  | "depth-clamping"
-  | "depth24unorm-stencil8"
-  | "depth32float-stencil8"
-  | "pipeline-statistics-query"
-  | "texture-compression-bc"
-  | "timestamp-query";
+
+    | "depth-clamping"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8"
+    | "pipeline-statistics-query"
+    | "texture-compression-bc"
+    | "timestamp-query";
 type GPUFilterMode =
-  | "nearest"
-  | "linear";
+
+    | "nearest"
+    | "linear";
 type GPUFrontFace =
-  | "ccw"
-  | "cw";
+
+    | "ccw"
+    | "cw";
 type GPUIndexFormat =
-  | "uint16"
-  | "uint32";
-type GPULoadOp = "load";
+
+    | "uint16"
+    | "uint32";
+type GPULoadOp =
+  "load";
 type GPUPipelineStatisticName =
-  | "vertex-shader-invocations"
-  | "clipper-invocations"
-  | "clipper-primitives-out"
-  | "fragment-shader-invocations"
-  | "compute-shader-invocations";
+
+    | "vertex-shader-invocations"
+    | "clipper-invocations"
+    | "clipper-primitives-out"
+    | "fragment-shader-invocations"
+    | "compute-shader-invocations";
 type GPUPowerPreference =
-  | "low-power"
-  | "high-performance";
-type GPUPredefinedColorSpace = "srgb";
+
+    | "low-power"
+    | "high-performance";
+type GPUPredefinedColorSpace =
+  "srgb";
 type GPUPrimitiveTopology =
-  | "point-list"
-  | "line-list"
-  | "line-strip"
-  | "triangle-list"
-  | "triangle-strip";
+
+    | "point-list"
+    | "line-list"
+    | "line-strip"
+    | "triangle-list"
+    | "triangle-strip";
 type GPUQueryType =
-  | "occlusion"
-  | "pipeline-statistics"
-  | "timestamp";
+
+    | "occlusion"
+    | "pipeline-statistics"
+    | "timestamp";
 type GPUSamplerBindingType =
-  | "filtering"
-  | "non-filtering"
-  | "comparison";
+
+    | "filtering"
+    | "non-filtering"
+    | "comparison";
 type GPUStencilOperation =
-  | "keep"
-  | "zero"
-  | "replace"
-  | "invert"
-  | "increment-clamp"
-  | "decrement-clamp"
-  | "increment-wrap"
-  | "decrement-wrap";
-type GPUStorageTextureAccess = "write-only";
+
+    | "keep"
+    | "zero"
+    | "replace"
+    | "invert"
+    | "increment-clamp"
+    | "decrement-clamp"
+    | "increment-wrap"
+    | "decrement-wrap";
+type GPUStorageTextureAccess =
+  "write-only";
 type GPUStoreOp =
-  | "store"
-  | "discard";
+
+    | "store"
+    | "discard";
 type GPUTextureAspect =
-  | "all"
-  | "stencil-only"
-  | "depth-only";
+
+    | "all"
+    | "stencil-only"
+    | "depth-only";
 type GPUTextureDimension =
-  | "1d"
-  | "2d"
-  | "3d";
+
+    | "1d"
+    | "2d"
+    | "3d";
 type GPUTextureFormat =
-  | "r8unorm"
-  | "r8snorm"
-  | "r8uint"
-  | "r8sint"
-  | "r16uint"
-  | "r16sint"
-  | "r16float"
-  | "rg8unorm"
-  | "rg8snorm"
-  | "rg8uint"
-  | "rg8sint"
-  | "r32uint"
-  | "r32sint"
-  | "r32float"
-  | "rg16uint"
-  | "rg16sint"
-  | "rg16float"
-  | "rgba8unorm"
-  | "rgba8unorm-srgb"
-  | "rgba8snorm"
-  | "rgba8uint"
-  | "rgba8sint"
-  | "bgra8unorm"
-  | "bgra8unorm-srgb"
-  | "rgb9e5ufloat"
-  | "rgb10a2unorm"
-  | "rg11b10ufloat"
-  | "rg32uint"
-  | "rg32sint"
-  | "rg32float"
-  | "rgba16uint"
-  | "rgba16sint"
-  | "rgba16float"
-  | "rgba32uint"
-  | "rgba32sint"
-  | "rgba32float"
-  | "stencil8"
-  | "depth16unorm"
-  | "depth24plus"
-  | "depth24plus-stencil8"
-  | "depth32float"
-  | "bc1-rgba-unorm"
-  | "bc1-rgba-unorm-srgb"
-  | "bc2-rgba-unorm"
-  | "bc2-rgba-unorm-srgb"
-  | "bc3-rgba-unorm"
-  | "bc3-rgba-unorm-srgb"
-  | "bc4-r-unorm"
-  | "bc4-r-snorm"
-  | "bc5-rg-unorm"
-  | "bc5-rg-snorm"
-  | "bc6h-rgb-ufloat"
-  | "bc6h-rgb-float"
-  | "bc7-rgba-unorm"
-  | "bc7-rgba-unorm-srgb"
-  | "depth24unorm-stencil8"
-  | "depth32float-stencil8";
+
+    | "r8unorm"
+    | "r8snorm"
+    | "r8uint"
+    | "r8sint"
+    | "r16uint"
+    | "r16sint"
+    | "r16float"
+    | "rg8unorm"
+    | "rg8snorm"
+    | "rg8uint"
+    | "rg8sint"
+    | "r32uint"
+    | "r32sint"
+    | "r32float"
+    | "rg16uint"
+    | "rg16sint"
+    | "rg16float"
+    | "rgba8unorm"
+    | "rgba8unorm-srgb"
+    | "rgba8snorm"
+    | "rgba8uint"
+    | "rgba8sint"
+    | "bgra8unorm"
+    | "bgra8unorm-srgb"
+    | "rgb9e5ufloat"
+    | "rgb10a2unorm"
+    | "rg11b10ufloat"
+    | "rg32uint"
+    | "rg32sint"
+    | "rg32float"
+    | "rgba16uint"
+    | "rgba16sint"
+    | "rgba16float"
+    | "rgba32uint"
+    | "rgba32sint"
+    | "rgba32float"
+    | "stencil8"
+    | "depth16unorm"
+    | "depth24plus"
+    | "depth24plus-stencil8"
+    | "depth32float"
+    | "bc1-rgba-unorm"
+    | "bc1-rgba-unorm-srgb"
+    | "bc2-rgba-unorm"
+    | "bc2-rgba-unorm-srgb"
+    | "bc3-rgba-unorm"
+    | "bc3-rgba-unorm-srgb"
+    | "bc4-r-unorm"
+    | "bc4-r-snorm"
+    | "bc5-rg-unorm"
+    | "bc5-rg-snorm"
+    | "bc6h-rgb-ufloat"
+    | "bc6h-rgb-float"
+    | "bc7-rgba-unorm"
+    | "bc7-rgba-unorm-srgb"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8";
 type GPUTextureSampleType =
-  | "float"
-  | "unfilterable-float"
-  | "depth"
-  | "sint"
-  | "uint";
+
+    | "float"
+    | "unfilterable-float"
+    | "depth"
+    | "sint"
+    | "uint";
 type GPUTextureViewDimension =
-  | "1d"
-  | "2d"
-  | "2d-array"
-  | "cube"
-  | "cube-array"
-  | "3d";
+
+    | "1d"
+    | "2d"
+    | "2d-array"
+    | "cube"
+    | "cube-array"
+    | "3d";
 type GPUVertexFormat =
-  | "uint8x2"
-  | "uint8x4"
-  | "sint8x2"
-  | "sint8x4"
-  | "unorm8x2"
-  | "unorm8x4"
-  | "snorm8x2"
-  | "snorm8x4"
-  | "uint16x2"
-  | "uint16x4"
-  | "sint16x2"
-  | "sint16x4"
-  | "unorm16x2"
-  | "unorm16x4"
-  | "snorm16x2"
-  | "snorm16x4"
-  | "float16x2"
-  | "float16x4"
-  | "float32"
-  | "float32x2"
-  | "float32x3"
-  | "float32x4"
-  | "uint32"
-  | "uint32x2"
-  | "uint32x3"
-  | "uint32x4"
-  | "sint32"
-  | "sint32x2"
-  | "sint32x3"
-  | "sint32x4";
+
+    | "uint8x2"
+    | "uint8x4"
+    | "sint8x2"
+    | "sint8x4"
+    | "unorm8x2"
+    | "unorm8x4"
+    | "snorm8x2"
+    | "snorm8x4"
+    | "uint16x2"
+    | "uint16x4"
+    | "sint16x2"
+    | "sint16x4"
+    | "unorm16x2"
+    | "unorm16x4"
+    | "snorm16x2"
+    | "snorm16x4"
+    | "float16x2"
+    | "float16x4"
+    | "float32"
+    | "float32x2"
+    | "float32x3"
+    | "float32x4"
+    | "uint32"
+    | "uint32x2"
+    | "uint32x3"
+    | "uint32x4"
+    | "sint32"
+    | "sint32x2"
+    | "sint32x3"
+    | "sint32x4";
 type GPUVertexStepMode =
-  | "vertex"
-  | "instance";
+
+    | "vertex"
+    | "instance";
 
 interface GPUBindGroupDescriptor
   extends GPUObjectDescriptorBase {
@@ -371,7 +424,8 @@ interface GPUColorTargetState {
   writeMask?: GPUColorWriteFlags;
 }
 
-type GPUCommandBufferDescriptor = GPUObjectDescriptorBase;
+type GPUCommandBufferDescriptor =
+  GPUObjectDescriptorBase;
 
 interface GPUCommandEncoderDescriptor
   extends GPUObjectDescriptorBase {
@@ -381,7 +435,8 @@ interface GPUCommandEncoderDescriptor
   measureExecutionTime?: boolean;
 }
 
-type GPUComputePassDescriptor = GPUObjectDescriptorBase;
+type GPUComputePassDescriptor =
+  GPUObjectDescriptorBase;
 
 interface GPUComputePipelineDescriptor
   extends GPUPipelineDescriptorBase {
@@ -594,7 +649,8 @@ interface GPUQuerySetDescriptor
   pipelineStatistics?: Array<GPUPipelineStatisticName>;
 }
 
-type GPURenderBundleDescriptor = GPUObjectDescriptorBase;
+type GPURenderBundleDescriptor =
+  GPUObjectDescriptorBase;
 
 interface GPURenderBundleEncoderDescriptor
   extends GPURenderPassLayout {
@@ -2079,7 +2135,8 @@ declare var GPUShaderStage: {
   readonly COMPUTE: GPUFlagsConstant;
 };
 
-type GPUSupportedFeatures = ReadonlySet<string>;
+type GPUSupportedFeatures =
+  ReadonlySet<string>;
 
 interface GPUSupportedLimits {
   /**
