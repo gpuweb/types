@@ -62,6 +62,8 @@ type GPUColor =
     | GPUColorDict;
 type GPUColorWriteFlags =
   number;
+type GPUComputePassTimestampWrites =
+  Iterable<GPUComputePassTimestampWrite>;
 type GPUDepthBias =
   number;
 type GPUError =
@@ -90,6 +92,8 @@ type GPUOrigin3D =
     | GPUOrigin3DDict;
 type GPUPipelineConstantValue =
   number;
+type GPURenderPassTimestampWrites =
+  Iterable<GPURenderPassTimestampWrite>;
 type GPUSampleMask =
   number;
 type GPUShaderStageFlags =
@@ -155,6 +159,10 @@ type GPUCompilationMessageType =
     | "error"
     | "warning"
     | "info";
+type GPUComputePassTimestampLocation =
+
+    | "beginning"
+    | "end";
 type GPUCullMode =
 
     | "none"
@@ -167,6 +175,21 @@ type GPUErrorFilter =
     | "out-of-memory"
     | "validation";
 type GPUFeatureName =
+
+    | GPUFeatureNameNew
+    | GPUFeatureNameOld;
+type GPUFeatureNameNew =
+
+    | "depth-clip-control"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8"
+    | "texture-compression-bc"
+    | "texture-compression-etc2"
+    | "texture-compression-astc"
+    | "timestamp-query"
+    | "indirect-first-instance";
+/** @deprecated */
+type GPUFeatureNameOld =
 
     | "depth-clamping"
     | "depth24unorm-stencil8"
@@ -190,6 +213,7 @@ type GPUIndexFormat =
     | "uint32";
 type GPULoadOp =
   "load";
+/** @deprecated */
 type GPUPipelineStatisticName =
 
     | "vertex-shader-invocations"
@@ -212,9 +236,22 @@ type GPUPrimitiveTopology =
     | "triangle-strip";
 type GPUQueryType =
 
+    | GPUQueryTypeNew
+    | GPUQueryTypeOld;
+type GPUQueryTypeNew =
+
+    | "occlusion"
+    | "timestamp";
+/** @deprecated */
+type GPUQueryTypeOld =
+
     | "occlusion"
     | "pipeline-statistics"
     | "timestamp";
+type GPURenderPassTimestampLocation =
+
+    | "beginning"
+    | "end";
 type GPUSamplerBindingType =
 
     | "filtering"
@@ -231,16 +268,7 @@ type GPUStencilOperation =
     | "increment-wrap"
     | "decrement-wrap";
 type GPUStorageTextureAccess =
-
-    | GPUStorageTextureAccessNew
-    | GPUStorageTextureAccessOld;
-type GPUStorageTextureAccessNew =
   "write-only";
-/** @deprecated */
-type GPUStorageTextureAccessOld =
-
-    | "read-only"
-    | "write-only";
 type GPUStoreOp =
 
     | "store"
@@ -298,6 +326,8 @@ type GPUTextureFormat =
     | "depth24plus"
     | "depth24plus-stencil8"
     | "depth32float"
+    | "depth24unorm-stencil8"
+    | "depth32float-stencil8"
     | "bc1-rgba-unorm"
     | "bc1-rgba-unorm-srgb"
     | "bc2-rgba-unorm"
@@ -349,9 +379,7 @@ type GPUTextureFormat =
     | "astc-12x10-unorm"
     | "astc-12x10-unorm-srgb"
     | "astc-12x12-unorm"
-    | "astc-12x12-unorm-srgb"
-    | "depth24unorm-stencil8"
-    | "depth32float-stencil8";
+    | "astc-12x12-unorm-srgb";
 type GPUTextureSampleType =
 
     | "float"
@@ -461,9 +489,9 @@ interface GPUBindGroupLayoutEntry {
 }
 
 interface GPUBlendComponent {
+  operation?: GPUBlendOperation;
   srcFactor?: GPUBlendFactor;
   dstFactor?: GPUBlendFactor;
-  operation?: GPUBlendOperation;
 }
 
 interface GPUBlendState {
@@ -487,7 +515,20 @@ interface GPUBufferBindingLayout {
    */
   hasDynamicOffset?: boolean;
   /**
-   * May be used to indicate the minimum buffer binding size.
+   * Indicates the minimum buffer binding size.
+   * Bindings are always validated against this size in {@link GPUDevice#createBindGroup}.
+   * If this *is not* `0`, pipeline creation additionally [$validating shader binding|validates$]
+   * that this value is large enough for the bindings declared in the shader.
+   * If this *is* `0`, draw/dispatch commands additionally [$Validate encoder bind groups|validate$]
+   * that each binding in the {@link GPUBindGroup} is large enough for the bindings declared in the shader.
+   * Note:
+   * Similar execution-time validation is theoretically possible for other
+   * binding-related fields specified for early validation, like
+   * {@link GPUTextureBindingLayout#sampleType} and {@link GPUStorageTextureBindingLayout#format},
+   * which currently can only be validated in pipeline creation.
+   * However, such execution-time validation could be costly or unnecessarily complex, so it is
+   * available only for {@link GPUBufferBindingLayout#minBindingSize} which is expected to have the
+   * most ergonomic impact.
    */
   minBindingSize?: GPUSize64;
 }
@@ -528,12 +569,24 @@ interface GPUCommandEncoderDescriptor
   extends GPUObjectDescriptorBase {
   /**
    * Enable measurement of the GPU execution time of the entire command buffer.
+   * @deprecated
    */
   measureExecutionTime?: boolean;
 }
 
-type GPUComputePassDescriptor =
-  GPUObjectDescriptorBase;
+interface GPUComputePassDescriptor
+  extends GPUObjectDescriptorBase {
+  /**
+   * A sequence of {@link GPUComputePassTimestampWrite} values define where and when timestamp values will be written for this pass.
+   */
+  timestampWrites?: GPUComputePassTimestampWrites;
+}
+
+interface GPUComputePassTimestampWrite {
+  querySet: GPUQuerySet;
+  queryIndex: GPUSize32;
+  location: GPUComputePassTimestampLocation;
+}
 
 interface GPUComputePipelineDescriptor
   extends GPUPipelineDescriptorBase {
@@ -643,6 +696,9 @@ interface GPUImageCopyTextureTagged
   extends GPUImageCopyTexture {
   /**
    * Describes the color space and encoding used to encode data into the destination texture.
+   * This [[#color-space-conversions|may result]] in values outside of the range [0, 1]
+   * being written to the target texture, if its format can represent them.
+   * Otherwise, the results are clamped to the target texture format's range.
    * Note:
    * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image, no conversion occurs.
    * {@link ImageBitmap} color space tagging and conversion can be controlled via {@link ImageBitmapOptions}.
@@ -667,14 +723,14 @@ interface GPUImageDataLayout {
   offset?: GPUSize64;
   /**
    * The stride, in bytes, between the beginning of each block row and the subsequent block row.
-   * Required if there are multiple block rows (i.e. the height or depth is more than one block).
+   * Required if there are multiple block rows (i.e. the copy height or depth is more than one block).
    */
   bytesPerRow?: GPUSize32;
   /**
    * Number of block rows per single image of the texture.
    * {@link GPUImageDataLayout#rowsPerImage} &times;
    * {@link GPUImageDataLayout#bytesPerRow} is the stride, in bytes, between the beginning of each image of data and the subsequent image.
-   * Required if there are multiple images (i.e. the depth is more than one).
+   * Required if there are multiple images (i.e. the copy depth is more than one).
    */
   rowsPerImage?: GPUSize32;
 }
@@ -718,6 +774,8 @@ interface GPUPrimitiveState {
   stripIndexFormat?: GPUIndexFormat;
   frontFace?: GPUFrontFace;
   cullMode?: GPUCullMode;
+  unclippedDepth?: boolean;
+  /** @deprecated */
   clampDepth?: boolean;
 }
 
@@ -742,6 +800,7 @@ interface GPUQuerySetDescriptor
   count: GPUSize32;
   /**
    * The set of {@link GPUPipelineStatisticName} values in this sequence defines which pipeline statistics will be returned in the new query set.
+   * @deprecated
    */
   pipelineStatistics?: Iterable<GPUPipelineStatisticName>;
 }
@@ -851,6 +910,10 @@ interface GPURenderPassDescriptor
    * The {@link GPUQuerySet} value defines where the occlusion query results will be stored for this pass.
    */
   occlusionQuerySet?: GPUQuerySet;
+  /**
+   * A sequence of {@link GPURenderPassTimestampWrite} values defines where and when timestamp values will be written for this pass.
+   */
+  timestampWrites?: GPURenderPassTimestampWrites;
 }
 
 interface GPURenderPassLayout
@@ -858,6 +921,12 @@ interface GPURenderPassLayout
   colorFormats: Iterable<GPUTextureFormat>;
   depthStencilFormat?: GPUTextureFormat;
   sampleCount?: GPUSize32;
+}
+
+interface GPURenderPassTimestampWrite {
+  querySet: GPUQuerySet;
+  queryIndex: GPUSize32;
+  location: GPURenderPassTimestampLocation;
 }
 
 interface GPURenderPipelineDescriptor
@@ -930,9 +999,7 @@ interface GPUStorageTextureBindingLayout {
   /**
    * Indicates the required {@link GPUTextureViewDescriptor#dimension} for texture views bound to
    * this binding.
-   * Note:
-   * This enables Metal-based WebGPU implementations to back the respective bind groups with
-   * `MTLArgumentBuffer` objects that are more efficient to bind at run-time.
+   * <!-- https://github.com/gpuweb/gpuweb/pull/339 -->
    */
   viewDimension?: GPUTextureViewDimension;
 }
@@ -945,9 +1012,7 @@ interface GPUTextureBindingLayout {
   /**
    * Indicates the required {@link GPUTextureViewDescriptor#dimension} for texture views bound to
    * this binding.
-   * Note:
-   * This enables Metal-based WebGPU implementations to back the respective bind groups with
-   * `MTLArgumentBuffer` objects that are more efficient to bind at run-time.
+   * <!-- https://github.com/gpuweb/gpuweb/pull/339 -->
    */
   viewDimension?: GPUTextureViewDimension;
   /**
@@ -1218,7 +1283,12 @@ interface GPUAdapter {
    */
   readonly limits: GPUSupportedLimits;
   /**
+   * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[fallback]]}.
+   */
+  readonly isFallbackAdapter: boolean;
+  /**
    * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[software]]}.
+   * @deprecated
    */
   readonly isSoftware: boolean;
   /**
@@ -1440,6 +1510,7 @@ interface GPUCommandBuffer
    * the promise is resolved with that value.
    * If the submit() fails, then the promise resolves to 0.
    * </div>
+   * @deprecated
    */
   readonly executionTime: Promise<number>;
 }
@@ -1525,6 +1596,18 @@ interface GPUCommandEncoder
     copySize: GPUExtent3DStrict
   ): undefined;
   /**
+   * Encode a command into the {@link GPUCommandEncoder} that fills a sub-region of a
+   * {@link GPUBuffer} with zeros.
+   * @param buffer - The {@link GPUBuffer} to clear.
+   * @param offset - Offset in bytes into `buffer` where the sub-region to clear begins.
+   * @param size - Size in bytes of the sub-region to clear. Defaults to the size of the buffer minus `offset`.
+   */
+  clearBuffer(
+    buffer: GPUBuffer,
+    offset?: GPUSize64,
+    size?: GPUSize64
+  ): undefined;
+  /**
    * Marks the beginning of a labeled group of commands for the {@link GPUCommandEncoder}.
    * @param groupLabel - The label for the command group.
    */
@@ -1543,7 +1626,7 @@ interface GPUCommandEncoder
     markerLabel: string
   ): undefined;
   /**
-   * Writes a timestamp value into `querySet` when all previous commands have completed executing.
+   * Writes a timestamp value into a querySet when all previous commands have completed executing.
    * @param querySet - The query set that will store the timestamp values.
    * @param queryIndex - The index of the query in the query set.
    */
@@ -1607,6 +1690,8 @@ interface GPUCompilationMessage {
   readonly message: string;
   /**
    * The severity level of the message.
+   * If the {@link GPUCompilationMessage#type} is "error", it corresponds to a
+   * shader-creation error.
    */
   readonly type: GPUCompilationMessageType;
   /**
@@ -1694,18 +1779,19 @@ interface GPUComputePassEncoder
   /**
    * 	querySet:
    * 	queryIndex:
+   * @deprecated
    */
   beginPipelineStatisticsQuery(
     querySet: GPUQuerySet,
     queryIndex: GPUSize32
   ): undefined;
-  /**
-   */
+  /** @deprecated */
   endPipelineStatisticsQuery(): undefined;
   /**
    * Writes a timestamp value into `querySet` when all previous commands have completed executing.
    * @param querySet - The query set that will store the timestamp values.
    * @param queryIndex - The index of the query in the query set.
+   * @deprecated
    */
   writeTimestamp(
     querySet: GPUQuerySet,
@@ -2065,6 +2151,13 @@ interface GPUQueue
   /**
    * Issues a copy operation of the contents of a platform image/canvas
    * into the destination texture.
+   * This operation performs [[#color-space-conversions|color encoding]] into the destination
+   * encoding according to the parameters of {@link GPUImageCopyTextureTagged}.
+   * Copying into a `-srgb` texture results in the same texture bytes, not the same decoded
+   * values, as copying into the corresponding non-`-srgb` format.
+   * Thus, after a copy operation, sampling the destination texture has
+   * different results depending on whether its format is `-srgb`, all else unchanged.
+   * Issue: If an srgb-linear color space is added, explain here how it interacts.
    * @param source - source image and origin to copy to `destination`.
    * @param destination - The texture subresource and origin to write to, and its encoding metadata.
    * @param copySize - Extents of the content to write from `source` to `destination`.
@@ -2191,18 +2284,19 @@ interface GPURenderPassEncoder
   /**
    * 	querySet:
    * 	queryIndex:
+   * @deprecated
    */
   beginPipelineStatisticsQuery(
     querySet: GPUQuerySet,
     queryIndex: GPUSize32
   ): undefined;
-  /**
-   */
+  /** @deprecated */
   endPipelineStatisticsQuery(): undefined;
   /**
    * Writes a timestamp value into `querySet` when all previous commands have completed executing.
    * @param querySet - The query set that will store the timestamp values.
    * @param queryIndex - The index of the query in the query set.
+   * @deprecated
    */
   writeTimestamp(
     querySet: GPUQuerySet,
@@ -2379,10 +2473,6 @@ interface GPUTextureUsage {
   readonly COPY_DST: GPUFlagsConstant;
   readonly TEXTURE_BINDING: GPUFlagsConstant;
   readonly STORAGE_BINDING: GPUFlagsConstant;
-  /** @deprecated Use TEXTURE_BINDING instead */
-  readonly SAMPLED: GPUFlagsConstant;
-  /** @deprecated Use STORAGE_BINDING instead */
-  readonly STORAGE: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 }
 
@@ -2392,10 +2482,6 @@ declare var GPUTextureUsage: {
   readonly COPY_DST: GPUFlagsConstant;
   readonly TEXTURE_BINDING: GPUFlagsConstant;
   readonly STORAGE_BINDING: GPUFlagsConstant;
-  /** @deprecated Use TEXTURE_BINDING instead */
-  readonly SAMPLED: GPUFlagsConstant;
-  /** @deprecated Use STORAGE_BINDING instead */
-  readonly STORAGE: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 };
 
@@ -2455,19 +2541,3 @@ interface Navigator
 
 interface WorkerNavigator
   extends NavigatorGPU {}
-
-// *********************************************************************************************
-// Deprecated
-// *********************************************************************************************
-
-/** @deprecated Use GPUVertexStepMode instead */
-type GPUInputStepMode =
-  GPUVertexStepMode;
-
-/** @deprecated Use GPUCanvasContext instead */
-type GPUPresentationContext =
-  GPUCanvasContext;
-
-/** @deprecated */
-type GPUPresentationConfiguration =
-  GPUCanvasConfiguration;
