@@ -12,8 +12,7 @@ interface HTMLCanvasElement {
       | "webgpu"
       | "gpupresent"
   ):
-    | (GPUPresentationContext &
-        GPUCanvasContext)
+    | GPUCanvasContext
     | null;
 }
 
@@ -23,8 +22,7 @@ interface OffscreenCanvas {
       | "webgpu"
       | "gpupresent"
   ):
-    | (GPUPresentationContext &
-        GPUCanvasContext)
+    | GPUCanvasContext
     | null;
 }
 
