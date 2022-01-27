@@ -582,6 +582,15 @@ interface GPUImageCopyExternalImage {
    * Together with `copySize`, defines the full copy sub-region.
    */
   origin?: GPUOrigin2D;
+  /**
+   * Describes whether the source image is vertically flipped, or not.
+   *
+   * If this option is set to `true`, the copy is flipped vertically: the bottom row of the source
+   * region is copied into the first row of the destination region, and so on.
+   * The {@link GPUImageCopyExternalImage#origin} option is still relative to the top-left corner
+   * of the source image, increasing downward.
+   */
+  flipY?: boolean;
 }
 
 interface GPUImageCopyTexture {
