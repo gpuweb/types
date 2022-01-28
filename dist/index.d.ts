@@ -947,7 +947,7 @@ interface GPURenderPipelineDescriptor
 
 interface GPURequestAdapterOptions {
   powerPreference?: GPUPowerPreference;
-  forceSoftware?: boolean;
+  forceFallbackAdapter?: boolean;
 }
 
 interface GPUSamplerBindingLayout {
