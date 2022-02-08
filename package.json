@@ -15,7 +15,7 @@
     "format": "prettier -w dist/index.d.ts"
   },
   "devDependencies": {
-    "bikeshed-to-ts": "^1.2.0",
+    "bikeshed-to-ts": "github:toji/bikeshed-to-ts",
     "prettier": "^2.2.1"
   }
 }

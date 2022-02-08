@@ -149,7 +149,9 @@ type GPUIndexFormat =
     | "uint16"
     | "uint32";
 type GPULoadOp =
-  "load";
+
+    | "load"
+    | "clear";
 type GPUPowerPreference =
 
     | "low-power"
@@ -463,6 +465,7 @@ interface GPUCanvasConfiguration {
   device: GPUDevice;
   format: GPUTextureFormat;
   usage?: GPUTextureUsageFlags;
+  viewFormats?: Array<GPUTextureFormat>;
   colorSpace?: GPUPredefinedColorSpace;
   compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
   size?: GPUExtent3D;
@@ -578,13 +581,12 @@ interface GPUImageCopyExternalImage {
     | HTMLCanvasElement
     | OffscreenCanvas;
   /**
-   * Defines the origin of the copy - the minimum corner of the source sub-region to copy from.
+   * Defines the origin of the copy - the minimum (top-left) corner of the source sub-region to copy from.
    * Together with `copySize`, defines the full copy sub-region.
    */
   origin?: GPUOrigin2D;
   /**
    * Describes whether the source image is vertically flipped, or not.
-   *
    * If this option is set to `true`, the copy is flipped vertically: the bottom row of the source
    * region is copied into the first row of the destination region, and so on.
    * The {@link GPUImageCopyExternalImage#origin} option is still relative to the top-left corner
@@ -741,15 +743,17 @@ interface GPURenderPassColorAttachment {
    */
   resolveTarget?: GPUTextureView;
   /**
-   * If a {@link GPULoadOp}, indicates the load operation to perform on
-   * {@link GPURenderPassColorAttachment#view} prior to executing the render pass.
-   * If a {@link GPUColor}, indicates the value to clear {@link GPURenderPassColorAttachment#view}
-   * to prior to executing the render pass.
-   * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
+   * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
+   * render pass. If not map/exist|provided defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
+   * if {@link GPURenderPassColorAttachment#loadOp} if not {@link GPULoadOp#"clear"}.
    */
-  loadValue:
-    | GPULoadOp
-    | GPUColor;
+  clearValue?: GPUColor;
+  /**
+   * Indicates the load operation to perform on {@link GPURenderPassColorAttachment#view} prior to
+   * executing the render pass.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   */
+  loadOp: GPULoadOp;
   /**
    * The store operation to perform on {@link GPURenderPassColorAttachment#view}
    * after executing the render pass.
@@ -764,43 +768,46 @@ interface GPURenderPassDepthStencilAttachment {
    */
   view: GPUTextureView;
   /**
-   * If a {@link GPULoadOp}, indicates the load operation to perform on
-   * {@link GPURenderPassDepthStencilAttachment#view}'s depth component prior to
-   * executing the render pass.
-   * If a `float`, indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s
-   * depth component to prior to executing the render pass.
-   * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
+   * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s depth component
+   * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#depthLoadOp}
+   * if not {@link GPULoadOp#"clear"}. Must be between 0.0 and 1.0, inclusive.
+   * <!-- unless unrestricted depth is enabled -->
    */
-  depthLoadValue:
-    | GPULoadOp
-    | number;
+  depthClearValue?: number;
+  /**
+   * Indicates the load operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
+   * depth component prior to executing the render pass.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   */
+  depthLoadOp?: GPULoadOp;
   /**
    * The store operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
    * depth component after executing the render pass.
    * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
    */
-  depthStoreOp: GPUStoreOp;
+  depthStoreOp?: GPUStoreOp;
   /**
    * Indicates that the depth component of {@link GPURenderPassDepthStencilAttachment#view}
    * is read only.
    */
   depthReadOnly?: boolean;
   /**
-   * If a {@link GPULoadOp}, indicates the load operation to perform on
-   * {@link GPURenderPassDepthStencilAttachment#view}'s stencil component prior to
-   * executing the render pass.
-   * If a {@link GPUStencilValue}, indicates the value to clear
-   * {@link GPURenderPassDepthStencilAttachment#view}'s stencil component to prior to
-   * executing the render pass.
+   * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s stencil component
+   * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#stencilLoadOp}
+   * if not {@link GPULoadOp#"clear"}.
    */
-  stencilLoadValue:
-    | GPULoadOp
-    | GPUStencilValue;
+  stencilClearValue?: GPUStencilValue;
+  /**
+   * Indicates the load operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
+   * stencil component prior to executing the render pass.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   */
+  stencilLoadOp?: GPULoadOp;
   /**
    * The store operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
    * stencil component after executing the render pass.
    */
-  stencilStoreOp: GPUStoreOp;
+  stencilStoreOp?: GPUStoreOp;
   /**
    * Indicates that the stencil component of {@link GPURenderPassDepthStencilAttachment#view}
    * is read only.
@@ -813,11 +820,15 @@ interface GPURenderPassDescriptor
   /**
    * The set of {@link GPURenderPassColorAttachment} values in this sequence defines which
    * color attachments will be output to when executing this render pass.
+   * Due to compatible usage list|usage compatibility, no color attachment
+   * may alias another attachment or any resource used inside the render pass.
    */
   colorAttachments: Array<GPURenderPassColorAttachment>;
   /**
    * The {@link GPURenderPassDepthStencilAttachment} value that defines the depth/stencil
    * attachment that will be output to and tested against when executing this render pass.
+   * Due to compatible usage list|usage compatibility, no writable depth/stencil attachment
+   * may alias another attachment or any resource used inside the render pass.
    */
   depthStencilAttachment?: GPURenderPassDepthStencilAttachment;
   /**
@@ -878,10 +889,18 @@ interface GPUSamplerDescriptor
   maxAnisotropy?: number;
 }
 
+interface GPUShaderModuleCompilationHint {
+  layout: GPUPipelineLayout;
+}
+
 interface GPUShaderModuleDescriptor
   extends GPUObjectDescriptorBase {
   code: string;
   sourceMap?: any;
+  hints?: Record<
+    string,
+    GPUShaderModuleCompilationHint
+  >;
 }
 
 interface GPUStencilFaceState {
@@ -921,7 +940,7 @@ interface GPUTextureBindingLayout {
    */
   viewDimension?: GPUTextureViewDimension;
   /**
-   * Inicates whether or not texture views bound to this binding must be multisampled.
+   * Indicates whether or not texture views bound to this binding must be multisampled.
    */
   multisampled?: boolean;
 }
@@ -934,6 +953,21 @@ interface GPUTextureDescriptor
   dimension?: GPUTextureDimension;
   format: GPUTextureFormat;
   usage: GPUTextureUsageFlags;
+  /**
+   * Specifies what view {@link GPUTextureViewDescriptor#format} values will be allowed when calling
+   * {@link GPUTexture#createView} on this texture (in addition to the texture's actual
+   * {@link GPUTextureDescriptor#format}).
+   * Note: Adding formats to this list may have a sizable performance impact, depending on the
+   * user's system. It is best to avoid adding formats unnecessarily.
+   * Formats in this list must be texture view format compatible with the texture format.
+   * <div algorithm>
+   * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for=>texture view format compatible</dfn> if:
+   * - `format` equals `viewFormat`, or
+   * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
+   * Issue(gpuweb/gpuweb#168): Define larger compatibility classes.
+   * </div>
+   */
+  viewFormats?: Array<GPUTextureFormat>;
 }
 
 interface GPUTextureViewDescriptor
@@ -969,6 +1003,29 @@ interface GPUVertexState
   buffers?: Array<GPUVertexBufferLayout | null>;
 }
 
+interface GPUCommandsMixin {}
+
+interface GPUDebugCommandsMixin {
+  /**
+   * Begins a labeled debug group containing subsequent commands.
+   * @param groupLabel - The label for the command group.
+   */
+  pushDebugGroup(
+    groupLabel: string
+  ): undefined;
+  /**
+   * Ends the labeled debug group most recently started by {@link GPUDebugCommandsMixin#pushDebugGroup}.
+   */
+  popDebugGroup(): undefined;
+  /**
+   * Marks a point in a stream of commands with a label.
+   * @param markerLabel - The label to insert.
+   */
+  insertDebugMarker(
+    markerLabel: string
+  ): undefined;
+}
+
 interface GPUObjectBase {
   /**
    * A label which can be used by development tools (such as error/warning messages,
@@ -979,7 +1036,7 @@ interface GPUObjectBase {
    */
   label:
     | string
-    | null;
+    | undefined;
 }
 
 interface GPUPipelineBase {
@@ -1027,24 +1084,6 @@ interface GPUProgrammablePassEncoder {
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
-  ): undefined;
-  /**
-   * Marks the beginning of a labeled group of commands for the {@link GPUProgrammablePassEncoder}.
-   * @param groupLabel - The label for the command group.
-   */
-  pushDebugGroup(
-    groupLabel: string
-  ): undefined;
-  /**
-   * Marks the end of a labeled group of commands for the {@link GPUProgrammablePassEncoder}.
-   */
-  popDebugGroup(): undefined;
-  /**
-   * Inserts a single debug marker label into the {@link GPUProgrammablePassEncoder}'s commands sequence.
-   * @param markerLabel - The label to insert.
-   */
-  insertDebugMarker(
-    markerLabel: string
   ): undefined;
 }
 
@@ -1250,39 +1289,6 @@ declare var GPUBuffer: {
   prototype: GPUBuffer;
 };
 
-interface GPUBufferUsage {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUBufferUsage";
-  readonly MAP_READ: GPUFlagsConstant;
-  readonly MAP_WRITE: GPUFlagsConstant;
-  readonly COPY_SRC: GPUFlagsConstant;
-  readonly COPY_DST: GPUFlagsConstant;
-  readonly INDEX: GPUFlagsConstant;
-  readonly VERTEX: GPUFlagsConstant;
-  readonly UNIFORM: GPUFlagsConstant;
-  readonly STORAGE: GPUFlagsConstant;
-  readonly INDIRECT: GPUFlagsConstant;
-  readonly QUERY_RESOLVE: GPUFlagsConstant;
-}
-
-declare var GPUBufferUsage: {
-  prototype: GPUBufferUsage;
-  readonly MAP_READ: GPUFlagsConstant;
-  readonly MAP_WRITE: GPUFlagsConstant;
-  readonly COPY_SRC: GPUFlagsConstant;
-  readonly COPY_DST: GPUFlagsConstant;
-  readonly INDEX: GPUFlagsConstant;
-  readonly VERTEX: GPUFlagsConstant;
-  readonly UNIFORM: GPUFlagsConstant;
-  readonly STORAGE: GPUFlagsConstant;
-  readonly INDIRECT: GPUFlagsConstant;
-  readonly QUERY_RESOLVE: GPUFlagsConstant;
-};
-
 interface GPUCanvasContext {
   /**
    * Nominal type branding.
@@ -1330,29 +1336,6 @@ declare var GPUCanvasContext: {
   prototype: GPUCanvasContext;
 };
 
-interface GPUColorWrite {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUColorWrite";
-  readonly RED: GPUFlagsConstant;
-  readonly GREEN: GPUFlagsConstant;
-  readonly BLUE: GPUFlagsConstant;
-  readonly ALPHA: GPUFlagsConstant;
-  readonly ALL: GPUFlagsConstant;
-}
-
-declare var GPUColorWrite: {
-  prototype: GPUColorWrite;
-  readonly RED: GPUFlagsConstant;
-  readonly GREEN: GPUFlagsConstant;
-  readonly BLUE: GPUFlagsConstant;
-  readonly ALPHA: GPUFlagsConstant;
-  readonly ALL: GPUFlagsConstant;
-};
-
 interface GPUCommandBuffer
   extends GPUObjectBase {
   /**
@@ -1368,7 +1351,9 @@ declare var GPUCommandBuffer: {
 };
 
 interface GPUCommandEncoder
-  extends GPUObjectBase {
+  extends GPUObjectBase,
+    GPUCommandsMixin,
+    GPUDebugCommandsMixin {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
@@ -1455,24 +1440,6 @@ interface GPUCommandEncoder
     size?: GPUSize64
   ): undefined;
   /**
-   * Marks the beginning of a labeled group of commands for the {@link GPUCommandEncoder}.
-   * @param groupLabel - The label for the command group.
-   */
-  pushDebugGroup(
-    groupLabel: string
-  ): undefined;
-  /**
-   * Marks the end of a labeled group of commands for the {@link GPUCommandEncoder}.
-   */
-  popDebugGroup(): undefined;
-  /**
-   * Marks a point in a stream of commands with a label string.
-   * @param markerLabel - The label to insert.
-   */
-  insertDebugMarker(
-    markerLabel: string
-  ): undefined;
-  /**
    * Writes a timestamp value into a querySet when all previous commands have completed executing.
    * @param querySet - The query set that will store the timestamp values.
    * @param queryIndex - The index of the query in the query set.
@@ -1482,6 +1449,7 @@ interface GPUCommandEncoder
     queryIndex: GPUSize32
   ): undefined;
   /**
+   * Resolves query results from a {@link GPUQuerySet} out into a range of a {@link GPUBuffer}.
    * 	querySet:
    * 	firstQuery:
    * 	queryCount:
@@ -1546,7 +1514,7 @@ interface GPUCompilationMessage {
    * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
    * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
    * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
-   * Issue: Reference WGSL spec when it [defines what a line is](https://gpuweb.github.io/gpuweb/wgsl/#comments).
+   * Issue(gpuweb/gpuweb#2435): Reference WGSL spec when it [defines what a line is](https://gpuweb.github.io/gpuweb/wgsl/#comments).
    */
   readonly lineNum: number;
   /**
@@ -1581,6 +1549,8 @@ declare var GPUCompilationMessage: {
 
 interface GPUComputePassEncoder
   extends GPUObjectBase,
+    GPUCommandsMixin,
+    GPUDebugCommandsMixin,
     GPUProgrammablePassEncoder {
   /**
    * Nominal type branding.
@@ -1598,21 +1568,21 @@ interface GPUComputePassEncoder
   /**
    * Dispatch work to be performed with the current {@link GPUComputePipeline}.
    * See [[#computing-operations]] for the detailed specification.
-   * @param x - X dimension of the grid of workgroups to dispatch.
-   * @param y - Y dimension of the grid of workgroups to dispatch.
-   * @param z - Z dimension of the grid of workgroups to dispatch.
+   * @param workgroupCountX - X dimension of the grid of workgroups to dispatch.
+   * @param workgroupCountY - Y dimension of the grid of workgroups to dispatch.
+   * @param workgroupCountZ - Z dimension of the grid of workgroups to dispatch.
    */
   dispatch(
-    x: GPUSize32,
-    y?: GPUSize32,
-    z?: GPUSize32
+    workgroupCountX: GPUSize32,
+    workgroupCountY?: GPUSize32,
+    workgroupCountZ?: GPUSize32
   ): undefined;
   /**
    * Dispatch work to be performed with the current {@link GPUComputePipeline} using parameters read
    * from a {@link GPUBuffer}.
    * See [[#computing-operations]] for the detailed specification.
-   * packed block of **three 32-bit unsigned integer values (12 bytes total)**, given in the same
-   * order as the arguments for {@link GPUComputePassEncoder#dispatch}. For example:
+   * packed block of **three 32-bit unsigned integer values (12 bytes total)**,
+   * given in the same order as the arguments for {@link GPUComputePassEncoder#dispatch}. For example:
    * @param indirectBuffer - Buffer containing the indirect dispatch parameters.
    * @param indirectOffset - Offset in bytes into `indirectBuffer` where the dispatch data begins.
    */
@@ -1623,7 +1593,7 @@ interface GPUComputePassEncoder
   /**
    * Completes recording of the compute pass commands sequence.
    */
-  endPass(): undefined;
+  end(): undefined;
 }
 
 declare var GPUComputePassEncoder: {
@@ -1789,6 +1759,12 @@ interface GPUDevice
   createQuerySet(
     descriptor: GPUQuerySetDescriptor
   ): GPUQuerySet;
+  /**
+   * A promise which is created with the device, remains pending for the lifetime of the device,
+   * then resolves when the device is lost.
+   * This attribute is backed by an immutable internal slot of the same name, initially set
+   * to a new promise, and always returns its value.
+   */
   readonly lost: Promise<GPUDeviceLostInfo>;
   /**
    * Issue: Define pushErrorScope.
@@ -1839,23 +1815,6 @@ interface GPUExternalTexture
 
 declare var GPUExternalTexture: {
   prototype: GPUExternalTexture;
-};
-
-interface GPUMapMode {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUMapMode";
-  readonly READ: GPUFlagsConstant;
-  readonly WRITE: GPUFlagsConstant;
-}
-
-declare var GPUMapMode: {
-  prototype: GPUMapMode;
-  readonly READ: GPUFlagsConstant;
-  readonly WRITE: GPUFlagsConstant;
 };
 
 interface GPUOutOfMemoryError {
@@ -1995,6 +1954,8 @@ declare var GPURenderBundle: {
 
 interface GPURenderBundleEncoder
   extends GPUObjectBase,
+    GPUCommandsMixin,
+    GPUDebugCommandsMixin,
     GPUProgrammablePassEncoder,
     GPURenderEncoderBase {
   /**
@@ -2018,6 +1979,8 @@ declare var GPURenderBundleEncoder: {
 
 interface GPURenderPassEncoder
   extends GPUObjectBase,
+    GPUCommandsMixin,
+    GPUDebugCommandsMixin,
     GPUProgrammablePassEncoder,
     GPURenderEncoderBase {
   /**
@@ -2068,7 +2031,7 @@ interface GPURenderPassEncoder
     color: GPUColor
   ): undefined;
   /**
-   * Sets the stencil reference value used during stencil tests with the the
+   * Sets the stencil reference value used during stencil tests with the
    * {@link GPUStencilOperation#"replace"} {@link GPUStencilOperation}.
    * @param reference - The stencil reference value.
    */
@@ -2099,7 +2062,7 @@ interface GPURenderPassEncoder
   /**
    * Completes recording of the render pass commands sequence.
    */
-  endPass(): undefined;
+  end(): undefined;
 }
 
 declare var GPURenderPassEncoder: {
@@ -2145,31 +2108,14 @@ interface GPUShaderModule
   readonly __brand: "GPUShaderModule";
   /**
    * Returns any messages generated during the {@link GPUShaderModule}'s compilation.
+   * The locations, order, and contents of messages are implementation-defined.
+   * In particular, messages may not be ordered by {@link GPUCompilationMessage#lineNum}.
    */
   compilationInfo(): Promise<GPUCompilationInfo>;
 }
 
 declare var GPUShaderModule: {
   prototype: GPUShaderModule;
-};
-
-interface GPUShaderStage {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUShaderStage";
-  readonly VERTEX: GPUFlagsConstant;
-  readonly FRAGMENT: GPUFlagsConstant;
-  readonly COMPUTE: GPUFlagsConstant;
-}
-
-declare var GPUShaderStage: {
-  prototype: GPUShaderStage;
-  readonly VERTEX: GPUFlagsConstant;
-  readonly FRAGMENT: GPUFlagsConstant;
-  readonly COMPUTE: GPUFlagsConstant;
 };
 
 type GPUSupportedFeatures =
@@ -2239,29 +2185,6 @@ declare var GPUTexture: {
   prototype: GPUTexture;
 };
 
-interface GPUTextureUsage {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
-  readonly __brand: "GPUTextureUsage";
-  readonly COPY_SRC: GPUFlagsConstant;
-  readonly COPY_DST: GPUFlagsConstant;
-  readonly TEXTURE_BINDING: GPUFlagsConstant;
-  readonly STORAGE_BINDING: GPUFlagsConstant;
-  readonly RENDER_ATTACHMENT: GPUFlagsConstant;
-}
-
-declare var GPUTextureUsage: {
-  prototype: GPUTextureUsage;
-  readonly COPY_SRC: GPUFlagsConstant;
-  readonly COPY_DST: GPUFlagsConstant;
-  readonly TEXTURE_BINDING: GPUFlagsConstant;
-  readonly STORAGE_BINDING: GPUFlagsConstant;
-  readonly RENDER_ATTACHMENT: GPUFlagsConstant;
-};
-
 interface GPUTextureView
   extends GPUObjectBase {
   /**
@@ -2284,6 +2207,15 @@ interface GPUUncapturedErrorEvent
    * @internal
    */
   readonly __brand: "GPUUncapturedErrorEvent";
+  /**
+   * Object representing the error that was uncaptured.
+   * This has the same type as errors returned by {@link GPUDevice#popErrorScope}.
+   * This attribute is backed by an immutable internal slot of the same name, and
+   * always returns its value.
+   * Issue(whatwg/webidl#1077): This attribute should be `[SameObject]`.
+   * (If GPUError [becomes an interface](https://github.com/gpuweb/gpuweb/issues/1884) then
+   * we can do this without resolving the WebIDL issue.)
+   */
   readonly error: GPUError;
 }
 
@@ -2317,3 +2249,43 @@ interface Navigator
 
 interface WorkerNavigator
   extends NavigatorGPU {}
+
+interface GPUBufferUsage {
+  readonly MAP_READ: GPUFlagsConstant;
+  readonly MAP_WRITE: GPUFlagsConstant;
+  readonly COPY_SRC: GPUFlagsConstant;
+  readonly COPY_DST: GPUFlagsConstant;
+  readonly INDEX: GPUFlagsConstant;
+  readonly VERTEX: GPUFlagsConstant;
+  readonly UNIFORM: GPUFlagsConstant;
+  readonly STORAGE: GPUFlagsConstant;
+  readonly INDIRECT: GPUFlagsConstant;
+  readonly QUERY_RESOLVE: GPUFlagsConstant;
+}
+
+interface GPUColorWrite {
+  readonly RED: GPUFlagsConstant;
+  readonly GREEN: GPUFlagsConstant;
+  readonly BLUE: GPUFlagsConstant;
+  readonly ALPHA: GPUFlagsConstant;
+  readonly ALL: GPUFlagsConstant;
+}
+
+interface GPUMapMode {
+  readonly READ: GPUFlagsConstant;
+  readonly WRITE: GPUFlagsConstant;
+}
+
+interface GPUShaderStage {
+  readonly VERTEX: GPUFlagsConstant;
+  readonly FRAGMENT: GPUFlagsConstant;
+  readonly COMPUTE: GPUFlagsConstant;
+}
+
+interface GPUTextureUsage {
+  readonly COPY_SRC: GPUFlagsConstant;
+  readonly COPY_DST: GPUFlagsConstant;
+  readonly TEXTURE_BINDING: GPUFlagsConstant;
+  readonly STORAGE_BINDING: GPUFlagsConstant;
+  readonly RENDER_ATTACHMENT: GPUFlagsConstant;
+}
