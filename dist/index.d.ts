@@ -803,7 +803,7 @@ interface GPURenderPassColorAttachment {
    */
   loadOp: GPULoadOp;
   /** @deprecated Use loadOp and clearValue instead */
-  loadValue:
+  loadValue?:
     | GPULoadOp
     | GPUColor;
   /**
@@ -833,7 +833,7 @@ interface GPURenderPassDepthStencilAttachment {
    */
   depthLoadOp?: GPULoadOp;
   /** @deprecated Use depthLoadOp and depthClearValue instead */
-  depthLoadValue:
+  depthLoadValue?:
     | GPULoadOp
     | number;
   /**
@@ -860,7 +860,7 @@ interface GPURenderPassDepthStencilAttachment {
    */
   stencilLoadOp?: GPULoadOp;
   /** @deprecated Use stencilLoadOp and stencilClearValue instead */
-  stencilLoadValue:
+  stencilLoadValue?:
     | GPULoadOp
     | GPUStencilValue;
   /**
