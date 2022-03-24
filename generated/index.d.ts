@@ -152,6 +152,10 @@ type GPULoadOp =
 
     | "load"
     | "clear";
+type GPUMipmapFilterMode =
+
+    | "nearest"
+    | "linear";
 type GPUPowerPreference =
 
     | "low-power"
@@ -545,6 +549,10 @@ interface GPUDeviceDescriptor
     string,
     GPUSize64
   >;
+  /**
+   * The descriptor for the default {@link GPUQueue}.
+   */
+  defaultQueue?: GPUQueueDescriptor;
 }
 
 interface GPUExtent3DDict {
@@ -563,7 +571,7 @@ interface GPUExternalTextureDescriptor
 
 interface GPUFragmentState
   extends GPUProgrammableStage {
-  targets: Array<GPUColorTargetState>;
+  targets: Array<GPUColorTargetState | null>;
 }
 
 interface GPUImageCopyBuffer
@@ -721,6 +729,8 @@ interface GPUQuerySetDescriptor
   count: GPUSize32;
 }
 
+type GPUQueueDescriptor =
+  GPUObjectDescriptorBase;
 type GPURenderBundleDescriptor =
   GPUObjectDescriptorBase;
 
@@ -823,7 +833,7 @@ interface GPURenderPassDescriptor
    * Due to compatible usage list|usage compatibility, no color attachment
    * may alias another attachment or any resource used inside the render pass.
    */
-  colorAttachments: Array<GPURenderPassColorAttachment>;
+  colorAttachments: Array<GPURenderPassColorAttachment | null>;
   /**
    * The {@link GPURenderPassDepthStencilAttachment} value that defines the depth/stencil
    * attachment that will be output to and tested against when executing this render pass.
@@ -843,7 +853,7 @@ interface GPURenderPassDescriptor
 
 interface GPURenderPassLayout
   extends GPUObjectDescriptorBase {
-  colorFormats: Array<GPUTextureFormat>;
+  colorFormats: Array<GPUTextureFormat | null>;
   depthStencilFormat?: GPUTextureFormat;
   sampleCount?: GPUSize32;
 }
@@ -882,7 +892,7 @@ interface GPUSamplerDescriptor
   addressModeW?: GPUAddressMode;
   magFilter?: GPUFilterMode;
   minFilter?: GPUFilterMode;
-  mipmapFilter?: GPUFilterMode;
+  mipmapFilter?: GPUMipmapFilterMode;
   lodMinClamp?: number;
   lodMaxClamp?: number;
   compare?: GPUCompareFunction;
@@ -1661,7 +1671,7 @@ interface GPUDevice
     descriptor: GPUTextureDescriptor
   ): GPUTexture;
   /**
-   * Creates a {@link GPUBindGroupLayout}.
+   * Creates a {@link GPUSampler}.
    * @param descriptor - Description of the {@link GPUSampler} to create.
    */
   createSampler(
@@ -1767,18 +1777,20 @@ interface GPUDevice
    */
   readonly lost: Promise<GPUDeviceLostInfo>;
   /**
-   * Issue: Define pushErrorScope.
+   * Pushes a new GPU error scope onto the {@link GPUDevice#[[errorScopeStack]]} for `this`.
+   * @param filter - Which class of errors this error scope observes.
    */
   pushErrorScope(
     filter: GPUErrorFilter
   ): undefined;
   /**
-   * Issue: Define popErrorScope.
-   * Rejects with {@link OperationError} if:
-   * - The device is lost.
-   * - There are no error scopes on the stack.
+   * Pops a GPU error scope off the {@link GPUDevice#[[errorScopeStack]]} for `this`
+   * and resolves to a {@link GPUError} if one was observed by the error scope.
    */
   popErrorScope(): Promise<GPUError | null>;
+  /**
+   * An event handler IDL attribute for the {@link GPUDevice#uncapturederror} event type.
+   */
   onuncapturederror: EventHandler;
 }
 
@@ -1811,6 +1823,11 @@ interface GPUExternalTexture
    * @internal
    */
   readonly __brand: "GPUExternalTexture";
+  /**
+   * Returns the value of {@link GPUExternalTexture#[[destroyed]]}, which indicates
+   * whether the texture has [$expire stale external textures|expired$] or not.
+   */
+  readonly expired: boolean;
 }
 
 declare var GPUExternalTexture: {
