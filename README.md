@@ -101,7 +101,7 @@ The following differences will remain.
     - `git submodule update --init`
   * Create the version tag and commit, and push
     - `npm version patch`
-    - `git push https://github.com/gpuweb/types.git main`
+    - `git push https://github.com/gpuweb/types.git main --tags`
   * publish the package
     - `npm publish --otp=<code>`
       - Replace `<code>` with the one-time password from your authenticator, since two-factors authentication is required to publish.
