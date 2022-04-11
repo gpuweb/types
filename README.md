@@ -91,4 +91,19 @@ The following differences will remain.
 
 (only for people who have npm publish access)
 
-`git checkout main && git pull git@github.com:gpuweb/types.git main && git submodule update --init && npm version patch && git push git@github.com:gpuweb/types.git main --tags && npm publish`
+* One line cmd to copy-n-paste (for ssh git user, and you'd better know what you are doing, if it failed at certain steps, you might need to clean up git tags before trying again)
+  - `git checkout main && git pull git@github.com:gpuweb/types.git main && git submodule update --init && npm version patch && git push git@github.com:gpuweb/types.git main --tags && npm publish`
+* Separate steps (better for publishing for the first time)
+  * Make sure you are in the upstream repo, not your forked one. And make sure you are synced to latest commit intended for publish
+    - `git checkout main`
+    - `git pull https://github.com/gpuweb/types.git main`
+      - (If you are using HTTPS regularly. You can use remote names like `origin`, just make sure you are referring to the right repo)
+    - `git submodule update --init`
+  * Create the version tag and commit, and push
+    - `npm version patch`
+    - `git push https://github.com/gpuweb/types.git main --tags`
+  * publish the package
+    - `npm publish --otp=<code>`
+      - Replace `<code>` with the one-time password from your authenticator, since two-factors authentication is required to publish.
+      - If you are doing for the first time, you will do `npm adduser` first and it will guide you through adding the npm account.
+
