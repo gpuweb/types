@@ -135,7 +135,8 @@ type GPUFeatureName =
     | "texture-compression-etc2"
     | "texture-compression-astc"
     | "timestamp-query"
-    | "indirect-first-instance";
+    | "indirect-first-instance"
+    | "shader-f16";
 type GPUFilterMode =
 
     | "nearest"
@@ -755,7 +756,7 @@ interface GPURenderPassColorAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
    * render pass. If not map/exist|provided defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
-   * if {@link GPURenderPassColorAttachment#loadOp} if not {@link GPULoadOp#"clear"}.
+   * if {@link GPURenderPassColorAttachment#loadOp} is not {@link GPULoadOp#"clear"}.
    */
   clearValue?: GPUColor;
   /**
@@ -780,7 +781,7 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s depth component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#depthLoadOp}
-   * if not {@link GPULoadOp#"clear"}. Must be between 0.0 and 1.0, inclusive.
+   * is not {@link GPULoadOp#"clear"}. Must be between 0.0 and 1.0, inclusive.
    * <!-- unless unrestricted depth is enabled -->
    */
   depthClearValue?: number;
@@ -804,7 +805,7 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s stencil component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#stencilLoadOp}
-   * if not {@link GPULoadOp#"clear"}.
+   * is not {@link GPULoadOp#"clear"}.
    */
   stencilClearValue?: GPUStencilValue;
   /**
@@ -1013,62 +1014,16 @@ interface GPUVertexState
   buffers?: Array<GPUVertexBufferLayout | null>;
 }
 
-interface GPUCommandsMixin {}
-
-interface GPUDebugCommandsMixin {
-  /**
-   * Begins a labeled debug group containing subsequent commands.
-   * @param groupLabel - The label for the command group.
-   */
-  pushDebugGroup(
-    groupLabel: string
-  ): undefined;
-  /**
-   * Ends the labeled debug group most recently started by {@link GPUDebugCommandsMixin#pushDebugGroup}.
-   */
-  popDebugGroup(): undefined;
-  /**
-   * Marks a point in a stream of commands with a label.
-   * @param markerLabel - The label to insert.
-   */
-  insertDebugMarker(
-    markerLabel: string
-  ): undefined;
-}
-
-interface GPUObjectBase {
-  /**
-   * A label which can be used by development tools (such as error/warning messages,
-   * browser developer tools, or platform debugging utilities) to identify the underlying
-   * internal object to the developer.
-   * It has no specified format, and therefore cannot be reliably machine-parsed.
-   * In any given situation, the user agent may or may not choose to use this label.
-   */
-  label:
-    | string
-    | undefined;
-}
-
-interface GPUPipelineBase {
-  /**
-   * Gets a {@link GPUBindGroupLayout} that is compatible with the {@link GPUPipelineBase}'s
-   * {@link GPUBindGroupLayout} at `index`.
-   * @param index - Index into the pipeline layout's {@link GPUPipelineLayout#[[bindGroupLayouts]]}
-   * 	sequence.
-   */
-  getBindGroupLayout(
-    index: number
-  ): GPUBindGroupLayout;
-}
-
-interface GPUProgrammablePassEncoder {
+interface GPUBindingCommandsMixin {
   /**
    * Sets the current {@link GPUBindGroup} for the given index.
    * @param index - The index to set the bind group at.
    * @param bindGroup - Bind group to use for subsequent render or compute commands.
    * 	<!--The overload appears to be confusing bikeshed, and it ends up expecting this to
    * 	define the arguments for the 5-arg variant of the method, despite the "for"
-   * 	explicitly pointing at the 3-arg variant.-->
+   * 	explicitly pointing at the 3-arg variant. See
+   * @param https - //github.com/plinss/widlparser/issues/56 and
+   * @param https - //github.com/tabatkins/bikeshed/issues/1740 -->
    * @param dynamicOffsets - Array containing buffer offsets in bytes for each entry in
    * 	`bindGroup` marked as {@link GPUBindGroupLayoutEntry#buffer}.{@link GPUBufferBindingLayout#hasDynamicOffset}.-->
    */
@@ -1097,7 +1052,55 @@ interface GPUProgrammablePassEncoder {
   ): undefined;
 }
 
-interface GPURenderEncoderBase {
+interface GPUCommandsMixin {}
+
+interface GPUDebugCommandsMixin {
+  /**
+   * Begins a labeled debug group containing subsequent commands.
+   * @param groupLabel - The label for the command group.
+   */
+  pushDebugGroup(
+    groupLabel: string
+  ): undefined;
+  /**
+   * Ends the labeled debug group most recently started by {@link GPUDebugCommandsMixin#pushDebugGroup}.
+   */
+  popDebugGroup(): undefined;
+  /**
+   * Marks a point in a stream of commands with a label.
+   * @param markerLabel - The label to insert.
+   */
+  insertDebugMarker(
+    markerLabel: string
+  ): undefined;
+}
+
+interface GPUObjectBase {
+  /**
+   * Initially the empty string.
+   * A developer-provided label which can be used by the browser, OS, or other tools to help
+   * identify the underlying internal object to the developer. Examples include displaying
+   * the label in error/warning messages, browser developer tools, and platform debugging
+   * utilities. The user agent is free to choose if and how it will use this label.
+   * Note: {@link GPUObjectBase#label} is defined as a {@link USVString} because some user agents may
+   * supply it to the debug facilities of the underlying native APIs.
+   */
+  label: string;
+}
+
+interface GPUPipelineBase {
+  /**
+   * Gets a {@link GPUBindGroupLayout} that is compatible with the {@link GPUPipelineBase}'s
+   * {@link GPUBindGroupLayout} at `index`.
+   * @param index - Index into the pipeline layout's {@link GPUPipelineLayout#[[bindGroupLayouts]]}
+   * 	sequence.
+   */
+  getBindGroupLayout(
+    index: number
+  ): GPUBindGroupLayout;
+}
+
+interface GPURenderCommandsMixin {
   /**
    * Sets the current {@link GPURenderPipeline}.
    * @param pipeline - The render pipeline to use for subsequent drawing commands.
@@ -1531,7 +1534,7 @@ interface GPUCompilationMessage {
    * The offset, in UTF-16 code units, from the beginning of line {@link GPUCompilationMessage#lineNum}
    * of the shader {@link GPUShaderModuleDescriptor#code} to the point or beginning of the substring
    * that the {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a
-   * {@link GPUCompilationMessage#linePos} of `1` indicates the first character of the line.
+   * {@link GPUCompilationMessage#linePos} of `1` indicates the first code unit of the line.
    * If {@link GPUCompilationMessage#message} corresponds to a substring this points to the
    * first UTF-16 code unit of the substring. Must be `0` if the {@link GPUCompilationMessage#message}
    * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
@@ -1561,7 +1564,7 @@ interface GPUComputePassEncoder
   extends GPUObjectBase,
     GPUCommandsMixin,
     GPUDebugCommandsMixin,
-    GPUProgrammablePassEncoder {
+    GPUBindingCommandsMixin {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
@@ -1582,7 +1585,7 @@ interface GPUComputePassEncoder
    * @param workgroupCountY - Y dimension of the grid of workgroups to dispatch.
    * @param workgroupCountZ - Z dimension of the grid of workgroups to dispatch.
    */
-  dispatch(
+  dispatchWorkgroups(
     workgroupCountX: GPUSize32,
     workgroupCountY?: GPUSize32,
     workgroupCountZ?: GPUSize32
@@ -1592,11 +1595,12 @@ interface GPUComputePassEncoder
    * from a {@link GPUBuffer}.
    * See [[#computing-operations]] for the detailed specification.
    * packed block of **three 32-bit unsigned integer values (12 bytes total)**,
-   * given in the same order as the arguments for {@link GPUComputePassEncoder#dispatch}. For example:
+   * given in the same order as the arguments for {@link GPUComputePassEncoder#dispatchWorkgroups}.
+   * For example:
    * @param indirectBuffer - Buffer containing the indirect dispatch parameters.
    * @param indirectOffset - Offset in bytes into `indirectBuffer` where the dispatch data begins.
    */
-  dispatchIndirect(
+  dispatchWorkgroupsIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
   ): undefined;
@@ -1973,8 +1977,8 @@ interface GPURenderBundleEncoder
   extends GPUObjectBase,
     GPUCommandsMixin,
     GPUDebugCommandsMixin,
-    GPUProgrammablePassEncoder,
-    GPURenderEncoderBase {
+    GPUBindingCommandsMixin,
+    GPURenderCommandsMixin {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
@@ -1998,8 +2002,8 @@ interface GPURenderPassEncoder
   extends GPUObjectBase,
     GPUCommandsMixin,
     GPUDebugCommandsMixin,
-    GPUProgrammablePassEncoder,
-    GPURenderEncoderBase {
+    GPUBindingCommandsMixin,
+    GPURenderCommandsMixin {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
@@ -2069,8 +2073,10 @@ interface GPURenderPassEncoder
    * this render pass.
    * When a {@link GPURenderBundle} is executed, it does not inherit the render pass's pipeline, bind
    * groups, or vertex and index buffers. After a {@link GPURenderBundle} has executed, the render
-   * pass's pipeline, bind groups, and vertex and index buffers are cleared.
-   * Note: state is cleared even if zero {@link GPURenderBundle|GPURenderBundles} are executed.
+   * pass's pipeline, bind group, and vertex/index buffer state is cleared
+   * (to the initial, empty values).
+   * Note: The state is cleared, not restored to the previous state.
+   * This occurs even if zero {@link GPURenderBundle|GPURenderBundles} are executed.
    * @param bundles - List of render bundles to execute.
    */
   executeBundles(
