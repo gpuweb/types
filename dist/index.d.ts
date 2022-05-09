@@ -733,7 +733,7 @@ interface GPUOrigin3DDict {
 
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
-  layout?: GPUPipelineLayout;
+  layout?: GPUPipelineLayout | 'auto';
 }
 
 interface GPUPipelineLayoutDescriptor
