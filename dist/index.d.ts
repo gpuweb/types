@@ -564,6 +564,8 @@ interface GPUCanvasConfiguration {
   viewFormats?: Iterable<GPUTextureFormat>;
   colorSpace?: GPUPredefinedColorSpace;
   compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
+  /** @deprecated */
+  size?: GPUExtent3D;
 }
 
 interface GPUColorDict {
