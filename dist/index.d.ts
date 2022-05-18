@@ -58,10 +58,6 @@ type GPUComputePassTimestampWrites =
   Iterable<GPUComputePassTimestampWrite>;
 type GPUDepthBias =
   number;
-type GPUError =
-
-    | GPUOutOfMemoryError
-    | GPUValidationError;
 type GPUExtent3D =
 
     | Iterable<GPUIntegerCoordinate>
@@ -105,6 +101,8 @@ type GPUAddressMode =
     | "clamp-to-edge"
     | "repeat"
     | "mirror-repeat";
+type GPUAutoLayoutMode =
+  "auto";
 type GPUBlendFactor =
 
     | "zero"
@@ -176,7 +174,8 @@ type GPUFeatureName =
     | "texture-compression-astc"
     | "timestamp-query"
     | "indirect-first-instance"
-    | "shader-f16";
+    | "shader-f16"
+    | "bgra8unorm-storage";
 type GPUFilterMode =
 
     | "nearest"
@@ -400,12 +399,28 @@ type GPUVertexStepMode =
 
 interface GPUBindGroupDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The {@link GPUBindGroupLayout} the entries of this bind group will conform to.
+   */
   layout: GPUBindGroupLayout;
+  /**
+   * A list of entries describing the resources to expose to the shader for each binding
+   * described by the {@link GPUBindGroupDescriptor#layout}.
+   */
   entries: Iterable<GPUBindGroupEntry>;
 }
 
 interface GPUBindGroupEntry {
+  /**
+   * A unique identifier for a resource binding within the {@link GPUBindGroup}, corresponding to a
+   * {@link GPUBindGroupLayoutEntry#binding|GPUBindGroupLayoutEntry.binding} and a @binding
+   * attribute in the {@link GPUShaderModule}.
+   */
   binding: GPUIndex32;
+  /**
+   * The resource to bind, which may be a {@link GPUSampler}, {@link GPUTextureView},
+   * {@link GPUExternalTexture}, or {@link GPUBufferBinding}.
+   */
   resource: GPUBindingResource;
 }
 
@@ -416,9 +431,9 @@ interface GPUBindGroupLayoutDescriptor
 
 interface GPUBindGroupLayoutEntry {
   /**
-   * A unique identifier for a resource binding within a
-   * {@link GPUBindGroupLayoutEntry}, a corresponding {@link GPUBindGroupEntry},
-   * and the {@link GPUShaderModule}s.
+   * A unique identifier for a resource binding within the {@link GPUBindGroupLayout}, corresponding
+   * to a {@link GPUBindGroupEntry#binding|GPUBindGroupEntry.binding} and a @binding
+   * attribute in the {@link GPUShaderModule}.
    */
   binding: GPUIndex32;
   /**
@@ -455,8 +470,18 @@ interface GPUBindGroupLayoutEntry {
 }
 
 interface GPUBlendComponent {
+  /**
+   * Defines the {@link GPUBlendOperation} used to calculate the values written to the target
+   * attachment components.
+   */
   operation?: GPUBlendOperation;
+  /**
+   * Defines the {@link GPUBlendFactor} operation to be performed on values from the fragment shader.
+   */
   srcFactor?: GPUBlendFactor;
+  /**
+   * Defines the {@link GPUBlendFactor} operation to be performed on values from the target attachment.
+   */
   dstFactor?: GPUBlendFactor;
 }
 
@@ -466,8 +491,19 @@ interface GPUBlendState {
 }
 
 interface GPUBufferBinding {
+  /**
+   * The {@link GPUBuffer} to bind.
+   */
   buffer: GPUBuffer;
+  /**
+   * The offset, in bytes, from the beginning of {@link GPUBufferBinding#buffer} to the
+   * beginning of the range exposed to the shader by the buffer binding.
+   */
   offset?: GPUSize64;
+  /**
+   * The size, in bytes, of the buffer binding. If `undefined`, specifies the range starting at
+   * {@link GPUBufferBinding#offset} and ending at the end of {@link GPUBufferBinding#buffer}.
+   */
   size?: GPUSize64;
 }
 
@@ -501,8 +537,23 @@ interface GPUBufferBindingLayout {
 
 interface GPUBufferDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The size of the buffer in bytes.
+   */
   size: GPUSize64;
+  /**
+   * The allowed usages for the buffer.
+   */
   usage: GPUBufferUsageFlags;
+  /**
+   * If `true` creates the buffer in an already mapped state, allowing
+   * {@link GPUBuffer#getMappedRange} to be called immediately. It is valid to set
+   * {@link GPUBufferDescriptor#mappedAtCreation} to `true` even if {@link GPUBufferDescriptor#usage}
+   * does not contain {@link GPUBufferUsage#MAP_READ} or {@link GPUBufferUsage#MAP_WRITE}. This can be
+   * used to set the buffer's initial data.
+   * Guarantees that even if the buffer creation eventually fails, it will still appear as if the
+   * mapped range can be written/read to until it is unmapped.
+   */
   mappedAtCreation?: boolean;
 }
 
@@ -513,7 +564,6 @@ interface GPUCanvasConfiguration {
   viewFormats?: Iterable<GPUTextureFormat>;
   colorSpace?: GPUPredefinedColorSpace;
   compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
-  size?: GPUExtent3D;
 }
 
 interface GPUColorDict {
@@ -554,15 +604,50 @@ interface GPUComputePipelineDescriptor
 }
 
 interface GPUDepthStencilState {
+  /**
+   * The {@link GPUTextureViewDescriptor#format} of {@link GPURenderPassDescriptor#depthStencilAttachment}
+   * this {@link GPURenderPipeline} will be compatible with.
+   */
   format: GPUTextureFormat;
+  /**
+   * Indicates if this {@link GPURenderPipeline} can modify
+   * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
+   */
   depthWriteEnabled?: boolean;
+  /**
+   * The comparison operation used to test fragment depths against
+   * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
+   */
   depthCompare?: GPUCompareFunction;
+  /**
+   * Defines how stencil comparisons and operations are performed for front-facing primitives.
+   */
   stencilFront?: GPUStencilFaceState;
+  /**
+   * Defines how stencil comparisons and operations are performed for back-facing primitives.
+   */
   stencilBack?: GPUStencilFaceState;
+  /**
+   * Bitmask controlling which {@link GPURenderPassDescriptor#depthStencilAttachment} stencil value
+   * bits are read when performing stencil comparison tests.
+   */
   stencilReadMask?: GPUStencilValue;
+  /**
+   * Bitmask controlling which {@link GPURenderPassDescriptor#depthStencilAttachment} stencil value
+   * bits are written to when performing stencil operations.
+   */
   stencilWriteMask?: GPUStencilValue;
+  /**
+   * Constant depth bias added to each fragment. See [$biased fragment depth$] for details.
+   */
   depthBias?: GPUDepthBias;
+  /**
+   * Depth bias that scales with the fragment’s slope. See [$biased fragment depth$] for details.
+   */
   depthBiasSlopeScale?: number;
+  /**
+   * The maximum depth bias of a fragment. See [$biased fragment depth$] for details.
+   */
   depthBiasClamp?: number;
 }
 
@@ -617,6 +702,10 @@ interface GPUFragmentState
 
 interface GPUImageCopyBuffer
   extends GPUImageDataLayout {
+  /**
+   * A buffer which either contains image data to be copied or will store the image data being
+   * copied, depending on the method it is being passed to.
+   */
   buffer: GPUBuffer;
 }
 
@@ -692,6 +781,11 @@ interface GPUImageCopyTextureTagged
 }
 
 interface GPUImageDataLayout {
+  /**
+   * The offset, in bytes, from the beginning of the image data source (such as a
+   * {@link GPUImageCopyBuffer#buffer|GPUImageCopyBuffer.buffer}) to the start of the image data
+   * within that source.
+   */
   offset?: GPUSize64;
   /**
    * The stride, in bytes, between the beginning of each block row and the subsequent block row.
@@ -708,8 +802,21 @@ interface GPUImageDataLayout {
 }
 
 interface GPUMultisampleState {
+  /**
+   * Number of samples per pixel. This {@link GPURenderPipeline} will be compatible only
+   * with attachment textures ({@link GPURenderPassDescriptor#colorAttachments}
+   * and {@link GPURenderPassDescriptor#depthStencilAttachment})
+   * with matching {@link GPUTextureDescriptor#sampleCount}s.
+   */
   count?: GPUSize32;
+  /**
+   * Mask determining which samples are written to.
+   */
   mask?: GPUSampleMask;
+  /**
+   * When `true` indicates that a fragment's alpha channel should be used to generate a sample
+   * covarge mask.
+   */
   alphaToCoverageEnabled?: boolean;
 }
 
@@ -733,19 +840,47 @@ interface GPUOrigin3DDict {
 
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
-  layout?: GPUPipelineLayout | 'auto';
+  layout:
+    | GPUPipelineLayout
+    | GPUAutoLayoutMode;
 }
 
 interface GPUPipelineLayoutDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * A list of {@link GPUBindGroupLayout}s the pipline will use. Each element corresponds to a
+   * @group attribute in the {@link GPUShaderModule}, with the `N`th element corresponding with
+   * `@group(N)`.
+   */
   bindGroupLayouts: Iterable<GPUBindGroupLayout>;
 }
 
 interface GPUPrimitiveState {
+  /**
+   * The type of primitive to be constructed from the vertex inptus.
+   */
   topology?: GPUPrimitiveTopology;
+  /**
+   * For strip topologies ({@link GPUPrimitiveTopology#"line-strip"} or
+   * {@link GPUPrimitiveTopology#"triangle-strip"}), defines the format of indices that may be used
+   * with this {@link GPURenderPipeline}. This determines the strip's primitive restart value. See
+   * [[#primitive-assembly]] for additional details.
+   * Required only if the pipeline is used with indexed draw calls.
+   * Not allowed with non-strip topologies.
+   */
   stripIndexFormat?: GPUIndexFormat;
+  /**
+   * Defines which polygons are considered front-facing.
+   */
   frontFace?: GPUFrontFace;
+  /**
+   * Defines which polygon orientation will be culled, if any.
+   */
   cullMode?: GPUCullMode;
+  /**
+   * If true, indicates that depth clipping is disabled. See [[#depth-clip-control]] for additional details.
+   * Requires the {@link GPUFeatureName#"depth-clip-control"} feature to be enabled.
+   */
   unclippedDepth?: boolean;
 }
 
@@ -797,18 +932,28 @@ interface GPURenderPassColorAttachment {
    * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
    * render pass. If not map/exist|provided defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
    * if {@link GPURenderPassColorAttachment#loadOp} is not {@link GPULoadOp#"clear"}.
+   * The members of {@link GPURenderPassColorAttachment#clearValue} are all double values, so
+   * they will first be converted to the fully qualified format type of
+   * {@link GPURenderPassColorAttachment#view} before being set as the clear value of
+   * {@link GPURenderPassColorAttachment#view}.
+   * <div algorithm="clearValue to texture value">
+   * Let `colorAttachmentFormat` be
+   * {@link GPURenderPassColorAttachment#view}.{@link GPUTextureView#[[descriptor]]}.{@link GPUTextureViewDescriptor#format}.
+   * `colorAttachmentFormat` has up to four components: `r`, `g`, `b`, and `a`, each
+   * component containing one scalar value.
+   * For each `componentType` of `colorAttachmentFormat` and corresponding component scalar
+   * value `value` in {@link GPURenderPassColorAttachment#clearValue}:
+   * 1. If `componentType` is a:
+   * <dl class=switch>
+   * : floating-point type or normalized type
+   * Convert `value` converted to an IDL value|to an IDL value of type {{unrestricted float}} (`f32`).
+   * : signed integer type
+   * Convert `value` converted to an IDL value|to an IDL value of type {{long long}} (`i32`).
+   * : unsigned integer type
+   * Convert `value` converted to an IDL value|to an IDL value of type {{unsigned long long}} (`u32`).
    */
   clearValue?: GPUColor;
-  /**
-   * Indicates the load operation to perform on {@link GPURenderPassColorAttachment#view} prior to
-   * executing the render pass.
-   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
-   */
   loadOp: GPULoadOp;
-  /**
-   * The store operation to perform on {@link GPURenderPassColorAttachment#view}
-   * after executing the render pass.
-   */
   storeOp: GPUStoreOp;
 }
 
@@ -928,30 +1073,99 @@ interface GPUSamplerBindingLayout {
 
 interface GPUSamplerDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   */
   addressModeU?: GPUAddressMode;
+  /**
+   */
   addressModeV?: GPUAddressMode;
+  /**
+   * Specifies the {{GPUAddressMode|address modes}} for the texture width, height, and depth
+   * coordinates, respectively.
+   */
   addressModeW?: GPUAddressMode;
+  /**
+   * Specifies the sampling behavior when the sample footprint is smaller than or equal to one
+   * texel.
+   */
   magFilter?: GPUFilterMode;
+  /**
+   * Specifies the sampling behavior when the sample footprint is larger than one texel.
+   */
   minFilter?: GPUFilterMode;
+  /**
+   * Specifies behavior for sampling between mipmap levels.
+   */
   mipmapFilter?: GPUMipmapFilterMode;
+  /**
+   */
   lodMinClamp?: number;
+  /**
+   * Specifies the minimum and maximum levels of detail, respectively, used internally when
+   * sampling a texture.
+   */
   lodMaxClamp?: number;
+  /**
+   * When provided the sampler will be a comparison sampler with the specified
+   * {@link GPUCompareFunction}.
+   * Note: Comparison samplers may use filtering, but the sampling results will be
+   * implementation-dependent and may differ from the normal filtering rules.
+   */
   compare?: GPUCompareFunction;
+  /**
+   * Specifies the maximum anisotropy value clamp used by the sampler.
+   * Note: Most implementations support {@link GPUSamplerDescriptor#maxAnisotropy} values in range
+   * between 1 and 16, inclusive. The used value of {@link GPUSamplerDescriptor#maxAnisotropy} will
+   * be clamped to the maximum value that the platform supports.
+   */
   maxAnisotropy?: number;
 }
 
 interface GPUShaderModuleCompilationHint {
-  layout: GPUPipelineLayout;
+  /**
+   * A {@link GPUPipelineLayout} that the {@link GPUShaderModule} may be used with in a future
+   * {@link GPUDevice#createComputePipeline()} or {@link GPUDevice#createRenderPipeline} call.
+   * If set to {@link GPUAutoLayoutMode#"auto"} the layout will be the [$default pipeline layout$]
+   * for the entry point associated with this hint will be used.
+   */
+  layout:
+    | GPUPipelineLayout
+    | GPUAutoLayoutMode;
 }
 
-type GPUShaderModuleDescriptor =
-
-    | GPUShaderModuleDescriptorWGSL
-    | GPUShaderModuleDescriptorSPIRV;
-interface GPUShaderModuleDescriptorWGSL
+interface GPUShaderModuleDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The <a href="https://gpuweb.github.io/gpuweb/wgsl/">WGSL</a> source code for the shader
+   * module.
+   */
   code: string;
+  /**
+   * If defined MAY be interpreted as a source-map-v3 format.
+   * Source maps are optional, but serve as a standardized way to support dev-tool
+   * integration such as source-language debugging [[SourceMap]].
+   * WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier
+   * comparison.
+   */
   sourceMap?: object;
+  /**
+   * If defined maps an entry point name from the shader to a {@link GPUShaderModuleCompilationHint}.
+   * No validation is performed with any of these {@link GPUShaderModuleCompilationHint}.
+   * Implementations should use any information present in the {@link GPUShaderModuleCompilationHint}
+   * to perform as much compilation as is possible within {@link GPUDevice#createShaderModule}.
+   * Entry point names follow the rules defined in WGSL identifier comparison.
+   * Note: Supplying information in {@link GPUShaderModuleDescriptor#hints} does not have any
+   * observable effect, other than performance. Because a single shader module can hold
+   * multiple entry points, and multiple pipelines can be created from a single shader
+   * module, it can be more performant for an implementation to do as much compilation as
+   * possible once in {@link GPUDevice#createShaderModule} rather than multiple times in
+   * the multiple calls to {@link GPUDevice#createComputePipeline} /
+   * {@link GPUDevice#createRenderPipeline}.
+   */
+  hints?: Record<
+    string,
+    GPUShaderModuleCompilationHint
+  >;
 }
 /** @deprecated */
 interface GPUShaderModuleDescriptorSPIRV
@@ -960,9 +1174,25 @@ interface GPUShaderModuleDescriptorSPIRV
 }
 
 interface GPUStencilFaceState {
+  /**
+   * The {@link GPUCompareFunction} used when testing fragments against
+   * {@link GPURenderPassDescriptor#depthStencilAttachment} stencil values.
+   */
   compare?: GPUCompareFunction;
+  /**
+   * The {@link GPUStencilOperation} performed if the fragment stencil comparison test described by
+   * {@link GPUStencilFaceState#compare} fails.
+   */
   failOp?: GPUStencilOperation;
+  /**
+   * The {@link GPUStencilOperation} performed if the fragment depth comparison described by
+   * {@link GPUDepthStencilState#depthCompare} fails.
+   */
   depthFailOp?: GPUStencilOperation;
+  /**
+   * The {@link GPUStencilOperation} performed if the fragment stencil comparison test described by
+   * {@link GPUStencilFaceState#compare} passes.
+   */
   passOp?: GPUStencilOperation;
 }
 
@@ -1003,18 +1233,46 @@ interface GPUTextureBindingLayout {
 
 interface GPUTextureDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The width, height, and depth or layer count of the texture.
+   */
   size: GPUExtent3DStrict;
+  /**
+   * The number of mip levels the texture will contain.
+   */
   mipLevelCount?: GPUIntegerCoordinate;
+  /**
+   * The sample count of the texture. A {@link GPUTextureDescriptor#sampleCount} &gt; `1` indicates
+   * a multisampled texture.
+   */
   sampleCount?: GPUSize32;
+  /**
+   * Whether the texture is one-dimensional, an array of two-dimensional layers, or three-dimensional.
+   */
   dimension?: GPUTextureDimension;
+  /**
+   * The format of the texture.
+   */
   format: GPUTextureFormat;
+  /**
+   * The allowed usages for the texture.
+   */
   usage: GPUTextureUsageFlags;
   /**
    * Specifies what view {@link GPUTextureViewDescriptor#format} values will be allowed when calling
    * {@link GPUTexture#createView} on this texture (in addition to the texture's actual
    * {@link GPUTextureDescriptor#format}).
-   * Note: Adding formats to this list may have a sizable performance impact, depending on the
-   * user's system. It is best to avoid adding formats unnecessarily.
+   * <div class=note>
+   * Adding a format to this list may have a significant performance impact, so it is best
+   * to avoid adding formats unnecessarily.
+   * The actual performance impact is highly dependent on the target system; developers must
+   * test various systems to find out the impact on their particular application.
+   * For example, on some systems any texture with a {@link GPUTextureDescriptor#format} or
+   * {@link GPUTextureDescriptor#viewFormats} entry including
+   * {@link GPUTextureFormat#"rgba8unorm-srgb"} will perform less optimally than a
+   * {@link GPUTextureFormat#"rgba8unorm"} texture which does not.
+   * Similar caveats exist for other formats and pairs of formats on other systems.
+   * </div>
    * Formats in this list must be texture view format compatible with the texture format.
    * <div algorithm>
    * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for=>texture view format compatible</dfn> if:
@@ -1028,12 +1286,36 @@ interface GPUTextureDescriptor
 
 interface GPUTextureViewDescriptor
   extends GPUObjectDescriptorBase {
+  /**
+   * The format of the texture view. Must be either the {@link GPUTextureDescriptor#format} of the
+   * texture or one of the {@link GPUTextureDescriptor#viewFormats} specified during its creation.
+   */
   format?: GPUTextureFormat;
+  /**
+   * The dimension to view the texture as.
+   */
   dimension?: GPUTextureViewDimension;
+  /**
+   * Which {@link GPUTextureAspect|aspect(s)} of the texture are accessible to the texture view.
+   */
   aspect?: GPUTextureAspect;
+  /**
+   * The first (most detailed) mipmap level accessible to the texture view.
+   */
   baseMipLevel?: GPUIntegerCoordinate;
+  /**
+   * How many mipmap levels, starting with {@link GPUTextureViewDescriptor#baseMipLevel}, are accessible to
+   * the texture view.
+   */
   mipLevelCount?: GPUIntegerCoordinate;
+  /**
+   * The index of the first array layer accessible to the texture view.
+   */
   baseArrayLayer?: GPUIntegerCoordinate;
+  /**
+   * How many array layers, starting with {@link GPUTextureViewDescriptor#baseArrayLayer}, are accessible
+   * to the texture view.
+   */
   arrayLayerCount?: GPUIntegerCoordinate;
 }
 
@@ -1043,14 +1325,34 @@ interface GPUUncapturedErrorEventInit
 }
 
 interface GPUVertexAttribute {
+  /**
+   * The {@link GPUVertexFormat} of the attribute.
+   */
   format: GPUVertexFormat;
+  /**
+   * The offset, in bytes, from the beginning of the element to the data for the attribute.
+   */
   offset: GPUSize64;
+  /**
+   * The numeric location associated with this attribute, which will correspond with a
+   * <a href="https://gpuweb.github.io/gpuweb/wgsl/#input-output-locations">"@location" attribute</a>
+   * declared in the {@link GPURenderPipelineDescriptor#vertex}.{@link GPUProgrammableStage#module|module}.
+   */
   shaderLocation: GPUIndex32;
 }
 
 interface GPUVertexBufferLayout {
+  /**
+   * The stride, in bytes, between elements of this array.
+   */
   arrayStride: GPUSize64;
+  /**
+   * Whether each element of this array represents per-vertex data or per-instance data
+   */
   stepMode?: GPUVertexStepMode;
+  /**
+   * An array defining the layout of the vertex attributes within each element.
+   */
   attributes: Iterable<GPUVertexAttribute>;
 }
 
@@ -1257,6 +1559,17 @@ interface GPU {
   requestAdapter(
     options?: GPURequestAdapterOptions
   ): Promise<GPUAdapter | null>;
+  /**
+   * Returns an optimal {@link GPUTextureFormat} for displaying 8-bit depth, standard dynamic range
+   * content on this system. Must only return {@link GPUTextureFormat#"rgba8unorm"} or
+   * {@link GPUTextureFormat#"bgra8unorm"}.
+   * The returned value can be passed as the {@link GPUCanvasConfiguration#format} to
+   * {@link GPUCanvasContext#configure} calls on a {@link GPUCanvasContext} to ensure the associated
+   * canvas is able to display its contents efficiently.
+   * Note: Canvases which are not displayed to the screen may or may not benefit from using this
+   * format.
+   */
+  getPreferredCanvasFormat(): GPUTextureFormat;
 }
 
 declare var GPU: {
@@ -1368,6 +1681,9 @@ interface GPUBuffer
   unmap(): undefined;
   /**
    * Destroys the {@link GPUBuffer}.
+   * Note: It is valid to destroy a buffer multiple times.
+   * Note: Since no further operations can be enqueued using this buffer, implementations can
+   * free resource allocations, including mapped memory that was just unmapped.
    */
   destroy(): undefined;
 }
@@ -1403,6 +1719,7 @@ interface GPUCanvasContext {
    */
   unconfigure(): undefined;
   /**
+   * @deprecated Use {@link GPU#getPreferredCanvasFormat} instead.
    * Returns an optimal {@link GPUTextureFormat} to use with this context and devices created from
    * the given adapter.
    * @param adapter - Adapter the format should be queried for.
@@ -1415,7 +1732,9 @@ interface GPUCanvasContext {
    * next.
    * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
    * call to {@link GPUCanvasContext#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of Update the rendering) unless {@link GPUCanvasContext#configure} is called.
+   * invocations of the "update the rendering or user interface of that `Document`" sub-step of
+   * the "Update the rendering" step) unless the current texture has been
+   * [$Invalidate the current texture|invalidated$].
    */
   getCurrentTexture(): GPUTexture;
 }
@@ -1748,9 +2067,10 @@ interface GPUDevice
   /**
    * Destroys the device, preventing further operations on it.
    * Outstanding asynchronous operations will fail.
-   * Note:
-   * Since no further operations can occur on this device, implementations can free resource
-   * allocations and abort outstanding asynchronous operations immediately.
+   * Note: It is valid to destroy a device multiple times.
+   * Note: Since no further operations can be enqueued on this device, implementations can abort
+   * outstanding asynchronous operations immediately and free resource allocations, including
+   * mapped memory that was just unmapped.
    */
   destroy(): undefined;
   /**
@@ -1919,6 +2239,23 @@ declare var GPUDeviceLostInfo: {
   new (): never;
 };
 
+interface GPUError {
+  /**
+   * A human-readable message providing information about the error that occurred.
+   * Note: This message is generally intended for application developers to debug their
+   * applications and capture information for debug reports, not to be surfaced to end-users.
+   * Note: User agents should not include potentially machine-parsable details in this message,
+   * such as free system memory on "out-of-memory" errors, or other details
+   * about the conditions under which memory was exhausted.
+   */
+  readonly message: string;
+}
+
+declare var GPUError: {
+  prototype: GPUError;
+  new (): never;
+};
+
 interface GPUExternalTexture
   extends GPUObjectBase {
   /**
@@ -1939,7 +2276,8 @@ declare var GPUExternalTexture: {
   new (): never;
 };
 
-interface GPUOutOfMemoryError {
+interface GPUOutOfMemoryError
+  extends GPUError {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
@@ -1950,7 +2288,9 @@ interface GPUOutOfMemoryError {
 
 declare var GPUOutOfMemoryError: {
   prototype: GPUOutOfMemoryError;
-  new (): GPUOutOfMemoryError;
+  new (
+    message: string
+  ): GPUOutOfMemoryError;
 };
 
 interface GPUPipelineLayout
@@ -2162,9 +2502,9 @@ interface GPURenderPassEncoder
     color: GPUColor
   ): undefined;
   /**
-   * Sets the stencil reference value used during stencil tests with the
-   * {@link GPUStencilOperation#"replace"} {@link GPUStencilOperation}.
-   * @param reference - The stencil reference value.
+   * Sets the {@link GPURenderPassEncoder#[[stencil_reference]]} value used during stencil tests with
+   * the {@link GPUStencilOperation#"replace"} {@link GPUStencilOperation}.
+   * @param reference - The new stencil reference value.
    */
   setStencilReference(
     reference: GPUStencilValue
@@ -2366,14 +2706,14 @@ declare var GPUUncapturedErrorEvent: {
   ): GPUUncapturedErrorEvent;
 };
 
-interface GPUValidationError {
+interface GPUValidationError
+  extends GPUError {
   /**
    * Nominal type branding.
    * https://github.com/microsoft/TypeScript/pull/33038
    * @internal
    */
   readonly __brand: "GPUValidationError";
-  readonly message: string;
 }
 
 declare var GPUValidationError: {
