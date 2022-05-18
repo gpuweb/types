@@ -1169,11 +1169,6 @@ interface GPUShaderModuleDescriptor
     GPUShaderModuleCompilationHint
   >;
 }
-/** @deprecated */
-interface GPUShaderModuleDescriptorSPIRV
-  extends GPUObjectDescriptorBase {
-  /** @deprecated */ code: Uint32Array;
-}
 
 interface GPUStencilFaceState {
   /**
