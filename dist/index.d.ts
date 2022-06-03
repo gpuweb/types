@@ -130,10 +130,13 @@ type GPUBufferBindingType =
     | "uniform"
     | "storage"
     | "read-only-storage";
-type GPUCanvasCompositingAlphaMode =
+type GPUCanvasAlphaMode =
 
     | "opaque"
     | "premultiplied";
+/** @deprecated use GPUCanvasAlphaMode instead */
+type GPUCanvasCompositingAlphaMode =
+  GPUCanvasAlphaMode;
 type GPUCompareFunction =
 
     | "never"
@@ -558,13 +561,42 @@ interface GPUBufferDescriptor
 }
 
 interface GPUCanvasConfiguration {
+  /**
+   * The {@link GPUDevice} that textures returned by {@link GPUCanvasContext#getCurrentTexture} will be
+   * compatible with.
+   */
   device: GPUDevice;
+  /**
+   * The format that textures returned by {@link GPUCanvasContext#getCurrentTexture} will have.
+   * Must be one of the Supported context formats.
+   */
   format: GPUTextureFormat;
+  /**
+   * The usage that textures returned by {@link GPUCanvasContext#getCurrentTexture} will have.
+   * {@link GPUTextureUsage#RENDER_ATTACHMENT} is the default, but is not automatically included
+   * if the usage is explicitly set. Be sure to include {@link GPUTextureUsage#RENDER_ATTACHMENT}
+   * when setting a custom usage if you wish to use textures returned by
+   * {@link GPUCanvasContext#getCurrentTexture} as color targets for a render pass.
+   */
   usage?: GPUTextureUsageFlags;
+  /**
+   * The formats that views created from textures returned by
+   * {@link GPUCanvasContext#getCurrentTexture} may use.
+   */
   viewFormats?: Iterable<GPUTextureFormat>;
+  /**
+   * The color space that values written into textures returned by
+   * {@link GPUCanvasContext#getCurrentTexture} should be displayed with.
+   */
   colorSpace?: GPUPredefinedColorSpace;
+  /**
+   * Determines the effect that alpha values will have on the content of textures returned by
+   * {@link GPUCanvasContext#getCurrentTexture} when read, displayed, or used as an image source.
+   */
+  alphaMode?: GPUCanvasAlphaMode;
+  /** @deprecated use alphaMode instead (it is specified to affect the behavior of reading from the canvas) */
   compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
-  /** @deprecated */
+  /** @deprecated use the canvas width/height instead */
   size?: GPUExtent3D;
 }
 
@@ -602,6 +634,9 @@ interface GPUComputePassTimestampWrite {
 
 interface GPUComputePipelineDescriptor
   extends GPUPipelineDescriptorBase {
+  /**
+   * Describes the compute shader entry point of the pipeline.
+   */
   compute: GPUProgrammableStage;
 }
 
@@ -763,21 +798,19 @@ interface GPUImageCopyTextureTagged
    * being written to the target texture, if its format can represent them.
    * Otherwise, the results are clamped to the target texture format's range.
    * Note:
-   * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image, no conversion occurs.
-   * {@link ImageBitmap} color space tagging and conversion can be controlled via {@link ImageBitmapOptions}.
+   * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
    */
   colorSpace?: GPUPredefinedColorSpace;
   /**
-   * Describes whether the data written into the texture should be have its RGB channels
+   * Describes whether the data written into the texture should have its RGB channels
    * premultiplied by the alpha channel, or not.
    * If this option is set to `true` and the {@link GPUImageCopyExternalImage#source} is also
    * premultiplied, the source RGB values must be preserved even if they exceed their
    * corresponding alpha values.
    * Note:
-   * If {@link GPUImageCopyTextureTagged#premultipliedAlpha} matches the source image, no conversion occurs.
-   * 2d canvases are [[html#premultiplied-alpha-and-the-2d-rendering-context|always premultiplied]],
-   * while WebGL canvases can be controlled via <l spec=html>WebGLContextAttributes</l>.
-   * {@link ImageBitmap} premultiplication can be controlled via {@link ImageBitmapOptions}.
+   * If {@link GPUImageCopyTextureTagged#premultipliedAlpha} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
    */
   premultipliedAlpha?: boolean;
 }
@@ -817,7 +850,7 @@ interface GPUMultisampleState {
   mask?: GPUSampleMask;
   /**
    * When `true` indicates that a fragment's alpha channel should be used to generate a sample
-   * covarge mask.
+   * coverage mask.
    */
   alphaToCoverageEnabled?: boolean;
 }
@@ -859,7 +892,7 @@ interface GPUPipelineLayoutDescriptor
 
 interface GPUPrimitiveState {
   /**
-   * The type of primitive to be constructed from the vertex inptus.
+   * The type of primitive to be constructed from the vertex inputs.
    */
   topology?: GPUPrimitiveTopology;
   /**
@@ -1054,10 +1087,26 @@ interface GPURenderPassTimestampWrite {
 
 interface GPURenderPipelineDescriptor
   extends GPUPipelineDescriptorBase {
+  /**
+   * Describes the vertex shader entry point of the pipeline and its input buffer layouts.
+   */
   vertex: GPUVertexState;
+  /**
+   * Describes the primitive-related properties of the pipeline.
+   */
   primitive?: GPUPrimitiveState;
+  /**
+   * Describes the optional depth-stencil properties, including the testing, operations, and bias.
+   */
   depthStencil?: GPUDepthStencilState;
+  /**
+   * Describes the multi-sampling properties of the pipeline.
+   */
   multisample?: GPUMultisampleState;
+  /**
+   * Describes the fragment shader entry point of the pipeline and its output colors. If
+   * `undefined`, the [[#no-color-output]] mode is enabled.
+   */
   fragment?: GPUFragmentState;
 }
 
@@ -1130,7 +1179,7 @@ interface GPUShaderModuleCompilationHint {
    * If set to {@link GPUAutoLayoutMode#"auto"} the layout will be the [$default pipeline layout$]
    * for the entry point associated with this hint will be used.
    */
-  layout:
+  layout?:
     | GPUPipelineLayout
     | GPUAutoLayoutMode;
 }
@@ -1581,10 +1630,7 @@ interface GPUAdapter {
    * @internal
    */
   readonly __brand: "GPUAdapter";
-  /**
-   * A human-readable name identifying the adapter.
-   * The contents are implementation-defined.
-   */
+  /** @deprecated use requestAdapterInfo instead */
   readonly name: string;
   /**
    * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
@@ -1605,11 +1651,61 @@ interface GPUAdapter {
   requestDevice(
     descriptor?: GPUDeviceDescriptor
   ): Promise<GPUDevice>;
+  /**
+   * Requests the {@link GPUAdapterInfo} for this {@link GPUAdapter}.
+   * Note: Adapter info values are returned with a Promise to give user agents an
+   * opportunity to perform potentially long-running checks when requesting unmasked values,
+   * such as asking for user consent before returning. If no `unmaskHints` are specified,
+   * however, no dialogs should be displayed to the user.
+   * @param unmaskHints - A list of {@link GPUAdapterInfo} attribute names for which unmasked
+   * 	values are desired if available.
+   */
+  requestAdapterInfo(
+    unmaskHints?: Array<string>
+  ): Promise<GPUAdapterInfo>;
 }
 
 declare var GPUAdapter: {
   prototype: GPUAdapter;
   new (): never;
+};
+
+interface GPUAdapterInfo {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUAdapterInfo";
+  /**
+   * The name of the vendor of the adapter, if available. Empty string otherwise.
+   */
+  readonly vendor: string;
+  /**
+   * The name of the family or class of GPUs the adapter belongs to, if available. Empty
+   * string otherwise.
+   */
+  readonly architecture: string;
+  /**
+   * A vendor-specific identifier for the adapter, if available. Empty string otherwise.
+   * Note: This is a value that represents the type of adapter. For example, it may be a
+   * [PCI device ID](https://pcisig.com/). It does not uniquely identify a given piece of
+   * hardware like a serial number.
+   */
+  readonly device: string;
+  /**
+   * A human readable string describing the adapter as reported by the driver, if available.
+   * Empty string otherwise.
+   * Note: Because no formatting is applied to {@link GPUAdapterInfo#description} attempting to parse
+   * this value is not recommended. Applications which change their behavior based on the
+   * {@link GPUAdapterInfo}, such as applying workarounds for known driver issues, should rely on the
+   * other fields when possible.
+   */
+  readonly description: string;
+}
+
+declare var GPUAdapterInfo: {
+  prototype: GPUAdapterInfo;
 };
 
 interface GPUBindGroup
@@ -1704,8 +1800,8 @@ interface GPUCanvasContext {
     | HTMLCanvasElement
     | OffscreenCanvas;
   /**
-   * Configures the context for this canvas. Destroys any textures produced with a previous
-   * configuration.
+   * Configures the context for this canvas.
+   * This clears the drawing buffer to transparent black (in [$Replace the drawing buffer$]).
    * @param configuration - Desired configuration for the context.
    */
   configure(
@@ -1715,23 +1811,18 @@ interface GPUCanvasContext {
    * Removes the context configuration. Destroys any textures produced while configured.
    */
   unconfigure(): undefined;
-  /**
-   * @deprecated Use {@link GPU#getPreferredCanvasFormat} instead.
-   * Returns an optimal {@link GPUTextureFormat} to use with this context and devices created from
-   * the given adapter.
-   * @param adapter - Adapter the format should be queried for.
-   */
+  /** @deprecated Use {@link GPU#getPreferredCanvasFormat} instead. */
   getPreferredFormat(
     adapter: GPUAdapter
   ): GPUTextureFormat;
   /**
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
-   * Note: Developers can expect that the same {@link GPUTexture} object will be returned by every
+   * Note: The same {@link GPUTexture} object will be returned by every
    * call to {@link GPUCanvasContext#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of the "update the rendering or user interface of that `Document`" sub-step of
-   * the "Update the rendering" step) unless the current texture has been
-   * [$Invalidate the current texture|invalidated$].
+   * invocations of "[$update the rendering of the WebGPU canvas$]"), even if that {@link GPUTexture}
+   * is destroyed, failed validation, or failed to allocate, **unless** the current texture has
+   * been removed (in [$Replace the drawing buffer$]).
    */
   getCurrentTexture(): GPUTexture;
 }
@@ -2622,6 +2713,7 @@ interface GPUSupportedLimits {
   readonly maxVertexAttributes: number;
   readonly maxVertexBufferArrayStride: number;
   readonly maxInterStageShaderComponents: number;
+  readonly maxInterStageShaderVariables: number;
   readonly maxComputeWorkgroupStorageSize: number;
   readonly maxComputeInvocationsPerWorkgroup: number;
   readonly maxComputeWorkgroupSizeX: number;
