@@ -563,6 +563,8 @@ interface GPUCanvasConfiguration {
   usage?: GPUTextureUsageFlags;
   viewFormats?: Iterable<GPUTextureFormat>;
   colorSpace?: GPUPredefinedColorSpace;
+  alphaMode?: GPUCanvasCompositingAlphaMode;
+  /** @deprecated Use `alphaMode` instead. */
   compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
   /** @deprecated */
   size?: GPUExtent3D;
