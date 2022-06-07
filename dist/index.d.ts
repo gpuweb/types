@@ -170,7 +170,6 @@ type GPUErrorFilter =
 type GPUFeatureName =
 
     | "depth-clip-control"
-    | "depth24unorm-stencil8"
     | "depth32float-stencil8"
     | "texture-compression-bc"
     | "texture-compression-etc2"
@@ -203,8 +202,6 @@ type GPUPowerPreference =
 
     | "low-power"
     | "high-performance";
-type GPUPredefinedColorSpace =
-  "srgb";
 type GPUPrimitiveTopology =
 
     | "point-list"
@@ -294,7 +291,6 @@ type GPUTextureFormat =
     | "depth24plus"
     | "depth24plus-stencil8"
     | "depth32float"
-    | "depth24unorm-stencil8"
     | "depth32float-stencil8"
     | "bc1-rgba-unorm"
     | "bc1-rgba-unorm-srgb"
@@ -588,7 +584,7 @@ interface GPUCanvasConfiguration {
    * The color space that values written into textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} should be displayed with.
    */
-  colorSpace?: GPUPredefinedColorSpace;
+  colorSpace?: PredefinedColorSpace;
   /**
    * Determines the effect that alpha values will have on the content of textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} when read, displayed, or used as an image source.
@@ -729,7 +725,7 @@ interface GPUExternalTextureBindingLayout {}
 interface GPUExternalTextureDescriptor
   extends GPUObjectDescriptorBase {
   source: HTMLVideoElement;
-  colorSpace?: GPUPredefinedColorSpace;
+  colorSpace?: PredefinedColorSpace;
 }
 
 interface GPUFragmentState
@@ -801,7 +797,7 @@ interface GPUImageCopyTextureTagged
    * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image,
    * conversion may not be necessary. See [[#color-space-conversion-elision]].
    */
-  colorSpace?: GPUPredefinedColorSpace;
+  colorSpace?: PredefinedColorSpace;
   /**
    * Describes whether the data written into the texture should have its RGB channels
    * premultiplied by the alpha channel, or not.
@@ -1026,6 +1022,8 @@ interface GPURenderPassDepthStencilAttachment {
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s stencil component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#stencilLoadOp}
    * is not {@link GPULoadOp#"clear"}.
+   * The value will be converted to the type of the stencil aspect of `view` by taking the same
+   * number of LSBs as the number of bits in the stencil aspect of one texel block of `view`.
    */
   stencilClearValue?: GPUStencilValue;
   /**
@@ -1779,6 +1777,14 @@ interface GPUBuffer
    * free resource allocations, including mapped memory that was just unmapped.
    */
   destroy(): undefined;
+  /**
+   * The length of the {@link GPUBuffer} allocation in bytes.
+   */
+  readonly size: GPUSize64;
+  /**
+   * The allowed usages for this {@link GPUBuffer}.
+   */
+  readonly usage: GPUBufferUsageFlags;
 }
 
 declare var GPUBuffer: {
@@ -2408,6 +2414,14 @@ interface GPUQuerySet
    * Destroys the {@link GPUQuerySet}.
    */
   destroy(): undefined;
+  /**
+   * The type of the queries managed by this {@link GPUQuerySet}.
+   */
+  readonly type: GPUQueryType;
+  /**
+   * The number of queries managed by this {@link GPUQuerySet}.
+   */
+  readonly count: GPUSize32;
 }
 
 declare var GPUQuerySet: {
@@ -2745,6 +2759,38 @@ interface GPUTexture
    * Destroys the {@link GPUTexture}.
    */
   destroy(): undefined;
+  /**
+   * The width of this {@link GPUTexture}.
+   */
+  readonly width: GPUIntegerCoordinate;
+  /**
+   * The height of this {@link GPUTexture}.
+   */
+  readonly height: GPUIntegerCoordinate;
+  /**
+   * The depth or layer count of this {@link GPUTexture}.
+   */
+  readonly depthOrArrayLayers: GPUIntegerCoordinate;
+  /**
+   * The number of mip levels of this {@link GPUTexture}.
+   */
+  readonly mipLevelCount: GPUIntegerCoordinate;
+  /**
+   * The number of sample count of this {@link GPUTexture}.
+   */
+  readonly sampleCount: GPUSize32;
+  /**
+   * The dimension of the set of texel for each of this {@link GPUTexture}'s subresources.
+   */
+  readonly dimension: GPUTextureDimension;
+  /**
+   * The format of this {@link GPUTexture}.
+   */
+  readonly format: GPUTextureFormat;
+  /**
+   * The allowed usages for this {@link GPUTexture}.
+   */
+  readonly usage: GPUTextureUsageFlags;
 }
 
 declare var GPUTexture: {
