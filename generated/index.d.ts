@@ -2605,6 +2605,7 @@ interface GPUSupportedLimits {
   readonly maxVertexBufferArrayStride: number;
   readonly maxInterStageShaderComponents: number;
   readonly maxInterStageShaderVariables: number;
+  readonly maxColorAttachments: number;
   readonly maxComputeWorkgroupStorageSize: number;
   readonly maxComputeInvocationsPerWorkgroup: number;
   readonly maxComputeWorkgroupSizeX: number;
