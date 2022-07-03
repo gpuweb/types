@@ -1021,6 +1021,12 @@ interface GPURenderPassDescriptor
    * A sequence of {@link GPURenderPassTimestampWrite} values defines where and when timestamp values will be written for this pass.
    */
   timestampWrites?: GPURenderPassTimestampWrites;
+  /**
+   * The maximum number of draw calls that will be done in the render pass. Used by some
+   * implementations to size work injected before the render pass. Keeping the default value
+   * is a good default, unless it is known that more draw calls will be done.
+   */
+  maxDrawCount?: GPUSize64;
 }
 
 interface GPURenderPassLayout
@@ -1206,7 +1212,6 @@ interface GPUStorageTextureBindingLayout {
   /**
    * Indicates the required {@link GPUTextureViewDescriptor#dimension} for texture views bound to
    * this binding.
-   * <!-- https://github.com/gpuweb/gpuweb/pull/339 -->
    */
   viewDimension?: GPUTextureViewDimension;
 }
@@ -1219,7 +1224,6 @@ interface GPUTextureBindingLayout {
   /**
    * Indicates the required {@link GPUTextureViewDescriptor#dimension} for texture views bound to
    * this binding.
-   * <!-- https://github.com/gpuweb/gpuweb/pull/339 -->
    */
   viewDimension?: GPUTextureViewDimension;
   /**
@@ -1260,6 +1264,7 @@ interface GPUTextureDescriptor
    * {@link GPUTexture#createView} on this texture (in addition to the texture's actual
    * {@link GPUTextureDescriptor#format}).
    * <div class=note>
+   * Note:
    * Adding a format to this list may have a significant performance impact, so it is best
    * to avoid adding formats unnecessarily.
    * The actual performance impact is highly dependent on the target system; developers must
@@ -1679,7 +1684,7 @@ interface GPUBuffer
     size?: GPUSize64
   ): Promise<undefined>;
   /**
-   * Returns a {@link ArrayBuffer} with the contents of the {@link GPUBuffer} in the given mapped range.
+   * Returns a mapped range ArrayBuffer with the contents of the {@link GPUBuffer} in the given mapped range.
    * @param offset - Offset in bytes into the buffer to return buffer contents from.
    * @param size - Size in bytes of the {@link ArrayBuffer} to return.
    */
@@ -2327,6 +2332,7 @@ interface GPUQueue
   readonly __brand: "GPUQueue";
   /**
    * Schedules the execution of the command buffers by the GPU on this queue.
+   * Submitted command buffers cannot be used again.
    * 	`commandBuffers`:
    */
   submit(
