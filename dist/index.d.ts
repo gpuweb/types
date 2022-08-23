@@ -20,6 +20,17 @@ interface OffscreenCanvas {
   ): GPUCanvasContext | null;
 }
 
+type GPUOrigin2DStrict =
+
+    | Iterable<GPUIntegerCoordinate>
+    | GPUOrigin2DDictStrict;
+
+interface GPUOrigin2DDictStrict
+  extends GPUOrigin2DDict {
+  /** @deprecated Does not exist for GPUOrigin2D. */
+  z?: undefined;
+}
+
 type GPUExtent3DStrict =
 
     | Iterable<GPUIntegerCoordinate>
@@ -30,7 +41,7 @@ type GPUExtent3DStrict =
 // attempts to set depth rather than depthOrArrayLayers on a GPUExtent3D (an easy mistake to make.)
 interface GPUExtent3DDictStrict
   extends GPUExtent3DDict {
-  /** @deprecated use depthOrArrayLayers instead */
+  /** @deprecated The correct name is `depthOrArrayLayers`. */
   depth?: undefined;
 }
 
@@ -755,7 +766,7 @@ interface GPUImageCopyExternalImage {
    * Defines the origin of the copy - the minimum (top-left) corner of the source sub-region to copy from.
    * Together with `copySize`, defines the full copy sub-region.
    */
-  origin?: GPUOrigin2D;
+  origin?: GPUOrigin2DStrict;
   /**
    * Describes whether the source image is vertically flipped, or not.
    * If this option is set to `true`, the copy is flipped vertically: the bottom row of the source

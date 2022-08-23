@@ -85,7 +85,7 @@ The following differences will remain.
 
 - `onuncapturederror` strongly typed.
 - `getContext` definitions.
-- `GPUExtent3DStrict` (and similar).
+- `GPUExtent3DStrict` and `GPUOrigin2DStrict`.
 
 ### Publish a new npm package version
 
