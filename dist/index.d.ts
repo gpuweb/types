@@ -141,6 +141,11 @@ type GPUBufferBindingType =
     | "uniform"
     | "storage"
     | "read-only-storage";
+type GPUBufferMapState =
+
+    | "unmapped"
+    | "pending"
+    | "mapped";
 type GPUCanvasAlphaMode =
 
     | "opaque"
@@ -176,8 +181,9 @@ type GPUDeviceLostReason =
   "destroyed";
 type GPUErrorFilter =
 
+    | "validation"
     | "out-of-memory"
-    | "validation";
+    | "internal";
 type GPUFeatureName =
 
     | "depth-clip-control"
@@ -188,7 +194,8 @@ type GPUFeatureName =
     | "timestamp-query"
     | "indirect-first-instance"
     | "shader-f16"
-    | "bgra8unorm-storage";
+    | "bgra8unorm-storage"
+    | "rg11b10ufloat-renderable";
 type GPUFilterMode =
 
     | "nearest"
@@ -760,6 +767,7 @@ interface GPUImageCopyExternalImage {
    */
   source:
     | ImageBitmap
+    | HTMLVideoElement
     | HTMLCanvasElement
     | OffscreenCanvas;
   /**
@@ -903,12 +911,18 @@ interface GPUPrimitiveState {
    */
   topology?: GPUPrimitiveTopology;
   /**
-   * For strip topologies ({@link GPUPrimitiveTopology#"line-strip"} or
-   * {@link GPUPrimitiveTopology#"triangle-strip"}), defines the format of indices that may be used
-   * with this {@link GPURenderPipeline}. This determines the strip's primitive restart value. See
-   * [[#primitive-assembly]] for additional details.
-   * Required only if the pipeline is used with indexed draw calls.
-   * Not allowed with non-strip topologies.
+   * For pipelines with strip topologies
+   * ({@link GPUPrimitiveTopology#"line-strip"} or {@link GPUPrimitiveTopology#"triangle-strip"}),
+   * this determines the index buffer format and primitive restart value
+   * ({@link GPUIndexFormat#"uint16"}/`0xFFFF` or {@link GPUIndexFormat#"uint32"}/`0xFFFFFFFF`).
+   * It is not allowed on pipelines with non-strip topologies.
+   * Note: Some implementations require knowledge of the primitive restart value to compile
+   * pipeline state objects.
+   * To use a strip-topology pipeline with an indexed draw call
+   * ({@link GPURenderCommandsMixin#drawIndexed()} or {@link GPURenderCommandsMixin#drawIndexedIndirect}),
+   * this must be set, and it must match the index buffer format used with the draw call
+   * (set in {@link GPURenderCommandsMixin#setIndexBuffer}).
+   * See [[#primitive-assembly]] for additional details.
    */
   stripIndexFormat?: GPUIndexFormat;
   /**
@@ -972,30 +986,23 @@ interface GPURenderPassColorAttachment {
   resolveTarget?: GPUTextureView;
   /**
    * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
-   * render pass. If not map/exist|provided defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
+   * render pass. If not map/exist|provided, defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
    * if {@link GPURenderPassColorAttachment#loadOp} is not {@link GPULoadOp#"clear"}.
-   * The members of {@link GPURenderPassColorAttachment#clearValue} are all double values, so
-   * they will first be converted to the fully qualified format type of
-   * {@link GPURenderPassColorAttachment#view} before being set as the clear value of
-   * {@link GPURenderPassColorAttachment#view}.
-   * <div algorithm="clearValue to texture value">
-   * Let `colorAttachmentFormat` be
-   * {@link GPURenderPassColorAttachment#view}.{@link GPUTextureView#[[descriptor]]}.{@link GPUTextureViewDescriptor#format}.
-   * `colorAttachmentFormat` has up to four components: `r`, `g`, `b`, and `a`, each
-   * component containing one scalar value.
-   * For each `componentType` of `colorAttachmentFormat` and corresponding component scalar
-   * value `value` in {@link GPURenderPassColorAttachment#clearValue}:
-   * 1. If `componentType` is a:
-   * <dl class=switch>
-   * : floating-point type or normalized type
-   * Convert `value` converted to an IDL value|to an IDL value of type {{unrestricted float}} (`f32`).
-   * : signed integer type
-   * Convert `value` converted to an IDL value|to an IDL value of type {{long long}} (`i32`).
-   * : unsigned integer type
-   * Convert `value` converted to an IDL value|to an IDL value of type {{unsigned long long}} (`u32`).
+   * The components of {@link GPURenderPassColorAttachment#clearValue} are all double values.
+   * They are converted [$to a texel value of texture format$] matching the render attachment.
+   * If conversion fails, a validation error is generated.
    */
   clearValue?: GPUColor;
+  /**
+   * Indicates the load operation to perform on {@link GPURenderPassColorAttachment#view} prior to
+   * executing the render pass.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   */
   loadOp: GPULoadOp;
+  /**
+   * The store operation to perform on {@link GPURenderPassColorAttachment#view}
+   * after executing the render pass.
+   */
   storeOp: GPUStoreOp;
 }
 
@@ -1483,15 +1490,6 @@ interface GPUDebugCommandsMixin {
 }
 
 interface GPUObjectBase {
-  /**
-   * Initially the empty string.
-   * A developer-provided label which can be used by the browser, OS, or other tools to help
-   * identify the underlying internal object to the developer. Examples include displaying
-   * the label in error/warning messages, browser developer tools, and platform debugging
-   * utilities. The user agent is free to choose if and how it will use this label.
-   * Note: {@link GPUObjectBase#label} is defined as a {@link USVString} because some user agents may
-   * supply it to the debug facilities of the underlying native APIs.
-   */
   label: string;
 }
 
@@ -1760,9 +1758,21 @@ interface GPUBuffer
    * @internal
    */
   readonly __brand: "GPUBuffer";
+  readonly size: GPUSize64;
+  readonly usage: GPUBufferUsageFlags;
+  readonly mapState: GPUBufferMapState;
   /**
    * Maps the given range of the {@link GPUBuffer} and resolves the returned {@link Promise} when the
    * {@link GPUBuffer}'s content is ready to be accessed with {@link GPUBuffer#getMappedRange}.
+   * The resolution of the returned {@link Promise} **only** indicates that the buffer has been mapped.
+   * It does not guarantee the completion of any other operations visible to the content timeline,
+   * and in particular does not imply that any other {@link Promise} returned from
+   * {@link GPUQueue#onSubmittedWorkDone()} or {@link GPUBuffer#mapAsync} on other {@link GPUBuffer}s
+   * have resolved.
+   * The resolution of the {@link Promise} returned from {@link GPUQueue#onSubmittedWorkDone}
+   * **does** imply the completion of
+   * {@link GPUBuffer#mapAsync} calls made prior to that call,
+   * on {@link GPUBuffer}s last used exclusively on that queue.
    * @param mode - Whether the buffer should be mapped for reading or writing.
    * @param offset - Offset in bytes into the buffer to the start of the range to map.
    * @param size - Size in bytes of the range to map.
@@ -1773,7 +1783,7 @@ interface GPUBuffer
     size?: GPUSize64
   ): Promise<undefined>;
   /**
-   * Returns a mapped range ArrayBuffer with the contents of the {@link GPUBuffer} in the given mapped range.
+   * Returns an {@link ArrayBuffer} with the contents of the {@link GPUBuffer} in the given mapped range.
    * @param offset - Offset in bytes into the buffer to return buffer contents from.
    * @param size - Size in bytes of the {@link ArrayBuffer} to return.
    */
@@ -1793,14 +1803,6 @@ interface GPUBuffer
    * free resource allocations, including mapped memory that was just unmapped.
    */
   destroy(): undefined;
-  /**
-   * The length of the {@link GPUBuffer} allocation in bytes.
-   */
-  readonly size: GPUSize64;
-  /**
-   * The allowed usages for this {@link GPUBuffer}.
-   */
-  readonly usage: GPUBufferUsageFlags;
 }
 
 declare var GPUBuffer: {
@@ -2178,9 +2180,6 @@ interface GPUDevice
    * Destroys the device, preventing further operations on it.
    * Outstanding asynchronous operations will fail.
    * Note: It is valid to destroy a device multiple times.
-   * Note: Since no further operations can be enqueued on this device, implementations can abort
-   * outstanding asynchronous operations immediately and free resource allocations, including
-   * mapped memory that was just unmapped.
    */
   destroy(): undefined;
   /**
@@ -2297,10 +2296,9 @@ interface GPUDevice
     descriptor: GPUQuerySetDescriptor
   ): GPUQuerySet;
   /**
-   * A promise which is created with the device, remains pending for the lifetime of the device,
-   * then resolves when the device is lost.
-   * This attribute is backed by an immutable internal slot of the same name, initially set
-   * to a new promise, and always returns its value.
+   * A slot-backed attribute holding a promise which is created with the device, remains
+   * pending for the lifetime of the device, then resolves when the device is lost.
+   * Upon initialization, it is set to a new promise.
    */
   readonly lost: Promise<GPUDeviceLostInfo>;
   /**
@@ -2312,7 +2310,8 @@ interface GPUDevice
   ): undefined;
   /**
    * Pops a GPU error scope off the {@link GPUDevice#[[errorScopeStack]]} for `this`
-   * and resolves to a {@link GPUError} if one was observed by the error scope.
+   * and resolves to **any** {@link GPUError} observed by the error scope, or `null` if none.
+   * There is no guarantee of the ordering of promise resolution.
    */
   popErrorScope(): Promise<GPUError | null>;
   /**
@@ -2355,8 +2354,8 @@ interface GPUError {
    * Note: This message is generally intended for application developers to debug their
    * applications and capture information for debug reports, not to be surfaced to end-users.
    * Note: User agents should not include potentially machine-parsable details in this message,
-   * such as free system memory on "out-of-memory" errors, or other details
-   * about the conditions under which memory was exhausted.
+   * such as free system memory on {@link GPUErrorFilter#"out-of-memory"} or other details about the
+   * conditions under which memory was exhausted.
    */
   readonly message: string;
 }
@@ -2384,6 +2383,23 @@ interface GPUExternalTexture
 declare var GPUExternalTexture: {
   prototype: GPUExternalTexture;
   new (): never;
+};
+
+interface GPUInternalError
+  extends GPUError {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUInternalError";
+}
+
+declare var GPUInternalError: {
+  prototype: GPUInternalError;
+  new (
+    message: string
+  );
 };
 
 interface GPUOutOfMemoryError
@@ -2464,6 +2480,9 @@ interface GPUQueue
   /**
    * Returns a {@link Promise} that resolves once this queue finishes processing all the work submitted
    * up to this moment.
+   * Resolution of this {@link Promise} implies the completion of
+   * {@link GPUBuffer#mapAsync} calls made prior to that call,
+   * on {@link GPUBuffer}s last used exclusively on that queue.
    */
   onSubmittedWorkDone(): Promise<undefined>;
   /**
@@ -2729,6 +2748,7 @@ interface GPUSupportedLimits {
   readonly maxTextureDimension3D: number;
   readonly maxTextureArrayLayers: number;
   readonly maxBindGroups: number;
+  readonly maxBindingsPerBindGroup: number;
   readonly maxDynamicUniformBuffersPerPipelineLayout: number;
   readonly maxDynamicStorageBuffersPerPipelineLayout: number;
   readonly maxSampledTexturesPerShaderStage: number;
@@ -2741,11 +2761,13 @@ interface GPUSupportedLimits {
   readonly minUniformBufferOffsetAlignment: number;
   readonly minStorageBufferOffsetAlignment: number;
   readonly maxVertexBuffers: number;
+  readonly maxBufferSize: number;
   readonly maxVertexAttributes: number;
   readonly maxVertexBufferArrayStride: number;
   readonly maxInterStageShaderComponents: number;
   readonly maxInterStageShaderVariables: number;
   readonly maxColorAttachments: number;
+  readonly maxColorAttachmentBytesPerPixel: number;
   readonly maxComputeWorkgroupStorageSize: number;
   readonly maxComputeInvocationsPerWorkgroup: number;
   readonly maxComputeWorkgroupSizeX: number;
@@ -2840,13 +2862,8 @@ interface GPUUncapturedErrorEvent
    */
   readonly __brand: "GPUUncapturedErrorEvent";
   /**
-   * Object representing the error that was uncaptured.
+   * A slot-backed attribute holding an object representing the error that was uncaptured.
    * This has the same type as errors returned by {@link GPUDevice#popErrorScope}.
-   * This attribute is backed by an immutable internal slot of the same name, and
-   * always returns its value.
-   * Issue(whatwg/webidl#1077): This attribute should be `[SameObject]`.
-   * (If GPUError [becomes an interface](https://github.com/gpuweb/gpuweb/issues/1884) then
-   * we can do this without resolving the WebIDL issue.)
    */
   readonly error: GPUError;
 }
