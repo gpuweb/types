@@ -2399,7 +2399,7 @@ declare var GPUInternalError: {
   prototype: GPUInternalError;
   new (
     message: string
-  );
+  ): GPUInternalError;
 };
 
 interface GPUOutOfMemoryError
