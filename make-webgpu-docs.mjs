@@ -4,7 +4,7 @@ import TypeDoc from 'typedoc';
 async function main() {
   let ts = fs.readFileSync('./dist/index.d.ts', {encoding: 'utf-8'});
   ts = ts
-    // export interfaces
+    // export interfaces.
     .replace(/\ninterface /g, '\nexport interface ')
 
     // export types
