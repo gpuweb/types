@@ -6,6 +6,9 @@ _This package matches the work-in-progress WebGPU API, which is **currently unst
 
 Use this package to augment the ambient [`"dom"`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#compiler-options) type definitions with the new definitions for WebGPU.
 
+## API style docs
+
+This repo also generates typedoc docs here: https://gpuweb.github.io/types
 
 ## What are declaration files?
 
