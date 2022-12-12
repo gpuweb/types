@@ -1,0 +1,8 @@
+{
+    "$schema": "https://typedoc.org/schema.json",
+    "entryPoints": ["./generated/webgpu.ts"],
+    "out": "out",
+    "readme": "none",
+    "name": "WebGPU API reference",
+    "disableSources": true
+}

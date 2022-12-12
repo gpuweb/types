@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "noErrorTruncation": true,
+    "declarationDir": "types",
+    "emitDeclarationOnly": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+  },
+  "include": [
+    "./generated/webgpu.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*stories",
+    "**/*types"
+  ]
+}
