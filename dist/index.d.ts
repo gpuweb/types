@@ -20,6 +20,10 @@ interface OffscreenCanvas {
   ): GPUCanvasContext | null;
 }
 
+// Defined as an empty interface here to prevent errors when using these types in a worker.
+interface HTMLVideoElement {
+}
+
 type GPUOrigin2DStrict =
 
     | Iterable<GPUIntegerCoordinate>
