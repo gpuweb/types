@@ -220,6 +220,10 @@ type GPUMipmapFilterMode =
 
     | "nearest"
     | "linear";
+type GPUPipelineErrorReason =
+
+    | "validation"
+    | "internal";
 type GPUPowerPreference =
 
     | "low-power"
