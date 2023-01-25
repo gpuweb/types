@@ -40,12 +40,13 @@
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="minBindingSize" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>min<wbr/>Binding<wbr/>Size</span><a href="#minBindingSize" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">min<wbr/>Binding<wbr/>Size<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
-<div class="tsd-comment tsd-typography"><p>Indicates the minimum buffer binding size.
+<div class="tsd-comment tsd-typography"><p>Indicates the minimum <a href="GPUBufferBinding.html#size">size</a> of a buffer binding used with this bind point.
 Bindings are always validated against this size in <a href="GPUDevice.html#createBindGroup">createBindGroup</a>.
 If this <em>is not</em> <code>0</code>, pipeline creation additionally [$validating shader binding|validates$]
-that this value is large enough for the bindings declared in the shader.
-If this <em>is</em> <code>0</code>, draw/dispatch commands additionally [$Validate encoder bind groups|validate$]
-that each binding in the <a href="GPUBindGroup.html">GPUBindGroup</a> is large enough for the bindings declared in the shader.
+that this value &ge; the minimum buffer binding size of the variable.
+If this <em>is</em> <code>0</code>, it is ignored by pipeline creation, and instead draw/dispatch commands
+[$Validate encoder bind groups|validate$] that each binding in the <a href="GPUBindGroup.html">GPUBindGroup</a>
+satisfies the minimum buffer binding size of the variable.
 Note:
 Similar execution-time validation is theoretically possible for other
 binding-related fields specified for early validation, like

@@ -186,7 +186,7 @@ Upon initialization, it is set to a new promise.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="createComputePipeline.createComputePipeline-1">create<wbr/>Compute<wbr/>Pipeline<span class="tsd-signature-symbol">(</span>descriptor<span class="tsd-signature-symbol">: </span><a href="GPUComputePipelineDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUComputePipelineDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="GPUComputePipeline.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUComputePipeline</a><a href="#createComputePipeline.createComputePipeline-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPUComputePipeline.html">GPUComputePipeline</a>.</p>
+<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPUComputePipeline.html">GPUComputePipeline</a> using immediate pipeline creation.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -201,9 +201,10 @@ Upon initialization, it is set to a new promise.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="createComputePipelineAsync.createComputePipelineAsync-1">create<wbr/>Compute<wbr/>Pipeline<wbr/>Async<span class="tsd-signature-symbol">(</span>descriptor<span class="tsd-signature-symbol">: </span><a href="GPUComputePipelineDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUComputePipelineDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="GPUComputePipeline.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUComputePipeline</a><span class="tsd-signature-symbol">&gt;</span><a href="#createComputePipelineAsync.createComputePipelineAsync-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPUComputePipeline.html">GPUComputePipeline</a>. The returned Promise resolves when the created pipeline
+<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPUComputePipeline.html">GPUComputePipeline</a> using async pipeline creation.
+The returned Promise resolves when the created pipeline
 is ready to be used without additional delay.
-If pipeline creation fails, the returned Promise rejects with an OperationError.
+If pipeline creation fails, the returned Promise rejects with an <a href="GPUPipelineError.html">GPUPipelineError</a>.
 Note: Use of this method is preferred whenever possible, as it prevents blocking the
 queue timeline work on pipeline compilation.</p>
 </div>
@@ -265,7 +266,7 @@ queue timeline work on pipeline compilation.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="createRenderPipeline.createRenderPipeline-1">create<wbr/>Render<wbr/>Pipeline<span class="tsd-signature-symbol">(</span>descriptor<span class="tsd-signature-symbol">: </span><a href="GPURenderPipelineDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">GPURenderPipelineDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="GPURenderPipeline.html" class="tsd-signature-type" data-tsd-kind="Interface">GPURenderPipeline</a><a href="#createRenderPipeline.createRenderPipeline-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPURenderPipeline.html">GPURenderPipeline</a>.</p>
+<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPURenderPipeline.html">GPURenderPipeline</a> using immediate pipeline creation.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -280,9 +281,10 @@ queue timeline work on pipeline compilation.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="createRenderPipelineAsync.createRenderPipelineAsync-1">create<wbr/>Render<wbr/>Pipeline<wbr/>Async<span class="tsd-signature-symbol">(</span>descriptor<span class="tsd-signature-symbol">: </span><a href="GPURenderPipelineDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">GPURenderPipelineDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="GPURenderPipeline.html" class="tsd-signature-type" data-tsd-kind="Interface">GPURenderPipeline</a><span class="tsd-signature-symbol">&gt;</span><a href="#createRenderPipelineAsync.createRenderPipelineAsync-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPURenderPipeline.html">GPURenderPipeline</a>. The returned Promise resolves when the created pipeline
+<div class="tsd-comment tsd-typography"><p>Creates a <a href="GPURenderPipeline.html">GPURenderPipeline</a> using async pipeline creation.
+The returned Promise resolves when the created pipeline
 is ready to be used without additional delay.
-If pipeline creation fails, the returned Promise rejects with an OperationError.
+If pipeline creation fails, the returned Promise rejects with an <a href="GPUPipelineError.html">GPUPipelineError</a>.
 Note: Use of this method is preferred whenever possible, as it prevents blocking the
 queue timeline work on pipeline compilation.</p>
 </div>

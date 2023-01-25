@@ -35,13 +35,19 @@
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="message" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>message</span><a href="#message" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-<div class="tsd-comment tsd-typography"><p>A human-readable message providing information about the error that occurred.
+<div class="tsd-comment tsd-typography"><p>A human-readable, localizable text message providing information about the error that
+occurred.
 Note: This message is generally intended for application developers to debug their
 applications and capture information for debug reports, not to be surfaced to end-users.
 Note: User agents should not include potentially machine-parsable details in this message,
 such as free system memory on GPUErrorFilter#&quot;out-of-memory&quot; or other details about the
-conditions under which memory was exhausted.</p>
-</div><aside class="tsd-sources">
+conditions under which memory was exhausted.
+Note: The <a href="GPUError.html#message">message</a> should follow the best practices for language and
+direction information. This includes making use of any future standards which may emerge
+regarding the reporting of string language and direction metadata.</p>
+<p class="note editorial">Editorial:
+At the time of this writing, no language/direction recommendation is available that provides
+compatibility and consistency with legacy APIs, but when there is, adopt it formally.</div><aside class="tsd-sources">
 <p>Inherited from <a href="GPUError.html">GPUError</a>.<a href="GPUError.html#message">message</a></p></aside></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">

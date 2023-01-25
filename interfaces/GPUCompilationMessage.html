@@ -47,11 +47,11 @@ corresponds to. If the message does not correspond with a substring then
 <div class="tsd-signature">line<wbr/>Num<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>The line number in the shader <a href="GPUShaderModuleDescriptor.html#code">code</a> the
 <a href="GPUCompilationMessage.html#message">message</a> corresponds to. Value is one-based, such that a lineNum of
-<code>1</code> indicates the first line of the shader <a href="GPUShaderModuleDescriptor.html#code">code</a>.
+<code>1</code> indicates the first line of the shader <a href="GPUShaderModuleDescriptor.html#code">code</a>. Lines are
+delimited by line breaks.
 If the <a href="GPUCompilationMessage.html#message">message</a> corresponds to a substring this points to
 the line on which the substring begins. Must be <code>0</code> if the <a href="GPUCompilationMessage.html#message">message</a>
-does not correspond to any specific point in the shader <a href="GPUShaderModuleDescriptor.html#code">code</a>.
-Issue(gpuweb/gpuweb#2435): Reference WGSL spec when it <a href="https://gpuweb.github.io/gpuweb/wgsl/#comments">defines what a line is</a>.</p>
+does not correspond to any specific point in the shader <a href="GPUShaderModuleDescriptor.html#code">code</a>.</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="linePos" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>line<wbr/>Pos</span><a href="#linePos" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -67,8 +67,13 @@ does not correspond to any specific point in the shader <a href="GPUShaderModule
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="message" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>message</span><a href="#message" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-<div class="tsd-comment tsd-typography"><p>A human-readable string containing the message generated during the shader compilation.</p>
-</div></section>
+<div class="tsd-comment tsd-typography"><p>The human-readable, localizable text for this compilation message.
+Note: The <a href="GPUCompilationMessage.html#message">message</a> should follow the best practices for language
+and direction information. This includes making use of any future standards which may
+emerge regarding the reporting of string language and direction metadata.</p>
+<p class="note editorial">Editorial:
+At the time of this writing, no language/direction recommendation is available that provides
+compatibility and consistency with legacy APIs, but when there is, adopt it formally.</div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="offset" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>offset</span><a href="#offset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">offset<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
@@ -82,8 +87,8 @@ does not correspond to any specific point in the shader <a href="GPUShaderModule
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>type</span><a href="#type" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">type<span class="tsd-signature-symbol">:</span> <a href="../types/GPUCompilationMessageType.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUCompilationMessageType</a></div>
 <div class="tsd-comment tsd-typography"><p>The severity level of the message.
-If the <a href="GPUCompilationMessage.html#type">type</a> is &quot;error&quot;, it corresponds to a
-shader-creation error.</p>
+If the <a href="GPUCompilationMessage.html#type">type</a> is GPUCompilationMessageType#&quot;error&quot;, it
+corresponds to a shader-creation error.</p>
 </div></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
