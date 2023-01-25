@@ -538,12 +538,13 @@ interface GPUBufferBindingLayout {
    */
   hasDynamicOffset?: boolean;
   /**
-   * Indicates the minimum buffer binding size.
+   * Indicates the minimum {@link GPUBufferBinding#size} of a buffer binding used with this bind point.
    * Bindings are always validated against this size in {@link GPUDevice#createBindGroup}.
    * If this *is not* `0`, pipeline creation additionally [$validating shader binding|validates$]
-   * that this value is large enough for the bindings declared in the shader.
-   * If this *is* `0`, draw/dispatch commands additionally [$Validate encoder bind groups|validate$]
-   * that each binding in the {@link GPUBindGroup} is large enough for the bindings declared in the shader.
+   * that this value &ge; the minimum buffer binding size of the variable.
+   * If this *is* `0`, it is ignored by pipeline creation, and instead draw/dispatch commands
+   * [$Validate encoder bind groups|validate$] that each binding in the {@link GPUBindGroup}
+   * satisfies the minimum buffer binding size of the variable.
    * Note:
    * Similar execution-time validation is theoretically possible for other
    * binding-related fields specified for early validation, like
@@ -899,6 +900,10 @@ interface GPUPipelineDescriptorBase
     | GPUAutoLayoutMode;
 }
 
+interface GPUPipelineErrorInit {
+  reason: GPUPipelineErrorReason;
+}
+
 interface GPUPipelineLayoutDescriptor
   extends GPUObjectDescriptorBase {
   /**
@@ -938,7 +943,7 @@ interface GPUPrimitiveState {
    */
   cullMode?: GPUCullMode;
   /**
-   * If true, indicates that depth clipping is disabled. See [[#depth-clip-control]] for additional details.
+   * If true, indicates that depth clipping is disabled.
    * Requires the {@link GPUFeatureName#"depth-clip-control"} feature to be enabled.
    */
   unclippedDepth?: boolean;
@@ -1020,7 +1025,7 @@ interface GPURenderPassDepthStencilAttachment {
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s depth component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#depthLoadOp}
    * is not {@link GPULoadOp#"clear"}. Must be between 0.0 and 1.0, inclusive.
-   * <!-- unless unrestricted depth is enabled -->
+   * <!-- POSTV1(unrestricted-depth): unless unrestricted depth is enabled -->
    */
   depthClearValue?: number;
   /**
@@ -1032,7 +1037,6 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * The store operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
    * depth component after executing the render pass.
-   * Note: It is recommended to prefer a clear-value; see {@link GPULoadOp#"load"}.
    */
   depthStoreOp?: GPUStoreOp;
   /**
@@ -2025,23 +2029,29 @@ interface GPUCompilationMessage {
    */
   readonly __brand: "GPUCompilationMessage";
   /**
-   * A human-readable string containing the message generated during the shader compilation.
+   * The human-readable, localizable text for this compilation message.
+   * Note: The {@link GPUCompilationMessage#message} should follow the best practices for language
+   * and direction information. This includes making use of any future standards which may
+   * emerge regarding the reporting of string language and direction metadata.
+   * <p class="note editorial">Editorial:
+   * At the time of this writing, no language/direction recommendation is available that provides
+   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
    */
   readonly message: string;
   /**
    * The severity level of the message.
-   * If the {@link GPUCompilationMessage#type} is "error", it corresponds to a
-   * shader-creation error.
+   * If the {@link GPUCompilationMessage#type} is {@link GPUCompilationMessageType#"error"}, it
+   * corresponds to a shader-creation error.
    */
   readonly type: GPUCompilationMessageType;
   /**
    * The line number in the shader {@link GPUShaderModuleDescriptor#code} the
    * {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a lineNum of
-   * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}.
+   * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}. Lines are
+   * delimited by line breaks.
    * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
    * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
    * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
-   * Issue(gpuweb/gpuweb#2435): Reference WGSL spec when it [defines what a line is](https://gpuweb.github.io/gpuweb/wgsl/#comments).
    */
   readonly lineNum: number;
   /**
@@ -2243,23 +2253,24 @@ interface GPUDevice
     descriptor: GPUShaderModuleDescriptor
   ): GPUShaderModule;
   /**
-   * Creates a {@link GPUComputePipeline}.
+   * Creates a {@link GPUComputePipeline} using immediate pipeline creation.
    * @param descriptor - Description of the {@link GPUComputePipeline} to create.
    */
   createComputePipeline(
     descriptor: GPUComputePipelineDescriptor
   ): GPUComputePipeline;
   /**
-   * Creates a {@link GPURenderPipeline}.
+   * Creates a {@link GPURenderPipeline} using immediate pipeline creation.
    * @param descriptor - Description of the {@link GPURenderPipeline} to create.
    */
   createRenderPipeline(
     descriptor: GPURenderPipelineDescriptor
   ): GPURenderPipeline;
   /**
-   * Creates a {@link GPUComputePipeline}. The returned {@link Promise} resolves when the created pipeline
+   * Creates a {@link GPUComputePipeline} using async pipeline creation.
+   * The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link OperationError}.
+   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPUComputePipeline} to create.
@@ -2268,9 +2279,10 @@ interface GPUDevice
     descriptor: GPUComputePipelineDescriptor
   ): Promise<GPUComputePipeline>;
   /**
-   * Creates a {@link GPURenderPipeline}. The returned {@link Promise} resolves when the created pipeline
+   * Creates a {@link GPURenderPipeline} using async pipeline creation.
+   * The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link OperationError}.
+   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPURenderPipeline} to create.
@@ -2354,12 +2366,19 @@ declare var GPUDeviceLostInfo: {
 
 interface GPUError {
   /**
-   * A human-readable message providing information about the error that occurred.
+   * A human-readable, localizable text message providing information about the error that
+   * occurred.
    * Note: This message is generally intended for application developers to debug their
    * applications and capture information for debug reports, not to be surfaced to end-users.
    * Note: User agents should not include potentially machine-parsable details in this message,
    * such as free system memory on {@link GPUErrorFilter#"out-of-memory"} or other details about the
    * conditions under which memory was exhausted.
+   * Note: The {@link GPUError#message} should follow the best practices for language and
+   * direction information. This includes making use of any future standards which may emerge
+   * regarding the reporting of string language and direction metadata.
+   * <p class="note editorial">Editorial:
+   * At the time of this writing, no language/direction recommendation is available that provides
+   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
    */
   readonly message: string;
 }
@@ -2421,6 +2440,33 @@ declare var GPUOutOfMemoryError: {
   new (
     message: string
   ): GPUOutOfMemoryError;
+};
+
+interface GPUPipelineError
+  extends DOMException {
+  /**
+   * Nominal type branding.
+   * https://github.com/microsoft/TypeScript/pull/33038
+   * @internal
+   */
+  readonly __brand: "GPUPipelineError";
+  /**
+   * A read-only slot-backed attribute exposing the type of error encountered in pipeline creation
+   * as a <dfn enum for=>GPUPipelineErrorReason</dfn>:
+   * <ul dfn-type=enum-value dfn-for=GPUPipelineErrorReason>
+   * - <dfn>"validation"</dfn>: A [$validation error$].
+   * - <dfn>"internal"</dfn>: An [$internal error$].
+   * </ul>
+   */
+  readonly reason: GPUPipelineErrorReason;
+}
+
+declare var GPUPipelineError: {
+  prototype: GPUPipelineError;
+  new (
+    message: string,
+    options: GPUPipelineErrorInit
+  ): GPUPipelineError;
 };
 
 interface GPUPipelineLayout
@@ -2532,7 +2578,7 @@ interface GPUQueue
    * values, as copying into the corresponding non-`-srgb` format.
    * Thus, after a copy operation, sampling the destination texture has
    * different results depending on whether its format is `-srgb`, all else unchanged.
-   * Issue: If an srgb-linear color space is added, explain here how it interacts.
+   * <!-- POSTV1(srgb-linear): If added, explain here how it interacts. -->
    * @param source - source image and origin to copy to `destination`.
    * @param destination - The texture subresource and origin to write to, and its encoding metadata.
    * @param copySize - Extents of the content to write from `source` to `destination`.
@@ -2644,7 +2690,7 @@ interface GPURenderPassEncoder
     color: GPUColor
   ): undefined;
   /**
-   * Sets the {@link GPURenderPassEncoder#[[stencil_reference]]} value used during stencil tests with
+   * Sets the {@link RenderState#[[stencilReference]]} value used during stencil tests with
    * the {@link GPUStencilOperation#"replace"} {@link GPUStencilOperation}.
    * @param reference - The new stencil reference value.
    */
@@ -2771,7 +2817,7 @@ interface GPUSupportedLimits {
   readonly maxInterStageShaderComponents: number;
   readonly maxInterStageShaderVariables: number;
   readonly maxColorAttachments: number;
-  readonly maxColorAttachmentBytesPerPixel: number;
+  readonly maxColorAttachmentBytesPerSample: number;
   readonly maxComputeWorkgroupStorageSize: number;
   readonly maxComputeInvocationsPerWorkgroup: number;
   readonly maxComputeWorkgroupSizeX: number;
