@@ -20,5 +20,8 @@
     "bikeshed-to-ts": "github:toji/bikeshed-to-ts",
     "prettier": "^2.2.1",
     "typedoc": "^0.23.22"
+  },
+  "dependencies": {
+    "typescript": "^4.6.4"
   }
 }
