@@ -198,7 +198,6 @@ type GPUFeatureName =
     | "timestamp-query"
     | "indirect-first-instance"
     | "shader-f16"
-    | "bgra8unorm-storage"
     | "rg11b10ufloat-renderable";
 type GPUFilterMode =
 
