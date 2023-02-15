@@ -140,7 +140,8 @@ type GPUFeatureName =
     | "timestamp-query"
     | "indirect-first-instance"
     | "shader-f16"
-    | "rg11b10ufloat-renderable";
+    | "rg11b10ufloat-renderable"
+    | "bgra8unorm-storage";
 type GPUFilterMode =
 
     | "nearest"
@@ -2155,11 +2156,6 @@ interface GPUExternalTexture
    * @internal
    */
   readonly __brand: "GPUExternalTexture";
-  /**
-   * Returns the value of {@link GPUExternalTexture#[[destroyed]]}, which indicates
-   * whether the texture has [$expire stale external textures|expired$] or not.
-   */
-  readonly expired: boolean;
 }
 
 declare var GPUExternalTexture: {
