@@ -21,8 +21,7 @@ interface OffscreenCanvas {
 }
 
 // Defined as an empty interface here to prevent errors when using these types in a worker.
-interface HTMLVideoElement {
-}
+interface HTMLVideoElement {}
 
 type GPUOrigin2DStrict =
 
