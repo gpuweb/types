@@ -2510,7 +2510,7 @@ interface GPUShaderModule
    * The locations, order, and contents of messages are implementation-defined.
    * In particular, messages may not be ordered by {@link GPUCompilationMessage#lineNum}.
    */
-  compilationInfo(): Promise<GPUCompilationInfo>;
+  getCompilationInfo(): Promise<GPUCompilationInfo>;
 }
 
 declare var GPUShaderModule: {
