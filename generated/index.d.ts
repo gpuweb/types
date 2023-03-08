@@ -141,7 +141,8 @@ type GPUFeatureName =
     | "indirect-first-instance"
     | "shader-f16"
     | "rg11b10ufloat-renderable"
-    | "bgra8unorm-storage";
+    | "bgra8unorm-storage"
+    | "float32-filterable";
 type GPUFilterMode =
 
     | "nearest"
@@ -410,27 +411,27 @@ interface GPUBindGroupLayoutEntry {
    */
   visibility: GPUShaderStageFlags;
   /**
-   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUBufferBinding}.
    */
   buffer?: GPUBufferBindingLayout;
   /**
-   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUSampler}.
    */
   sampler?: GPUSamplerBindingLayout;
   /**
-   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUTextureView}.
    */
   texture?: GPUTextureBindingLayout;
   /**
-   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUTextureView}.
    */
   storageTexture?: GPUStorageTextureBindingLayout;
   /**
-   * When not `undefined`, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
+   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
    * is {@link GPUExternalTexture}.
    */
   externalTexture?: GPUExternalTextureBindingLayout;
@@ -468,7 +469,8 @@ interface GPUBufferBinding {
    */
   offset?: GPUSize64;
   /**
-   * The size, in bytes, of the buffer binding. If `undefined`, specifies the range starting at
+   * The size, in bytes, of the buffer binding.
+   * If not map/exist|provided, specifies the range starting at
    * {@link GPUBufferBinding#offset} and ending at the end of {@link GPUBufferBinding#buffer}.
    */
   size?: GPUSize64;
@@ -611,12 +613,12 @@ interface GPUDepthStencilState {
    * Indicates if this {@link GPURenderPipeline} can modify
    * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
    */
-  depthWriteEnabled?: boolean;
+  depthWriteEnabled: boolean;
   /**
    * The comparison operation used to test fragment depths against
    * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
    */
-  depthCompare?: GPUCompareFunction;
+  depthCompare: GPUCompareFunction;
   /**
    * Defines how stencil comparisons and operations are performed for front-facing primitives.
    */
@@ -749,7 +751,7 @@ interface GPUPipelineErrorInit {
 interface GPUPipelineLayoutDescriptor
   extends GPUObjectDescriptorBase {
   /**
-   * A list of {@link GPUBindGroupLayout}s the pipline will use. Each element corresponds to a
+   * A list of {@link GPUBindGroupLayout}s the pipeline will use. Each element corresponds to a
    * @group attribute in the {@link GPUShaderModule}, with the `N`th element corresponding with
    * `@group(N)`.
    */
@@ -977,7 +979,7 @@ interface GPURenderPipelineDescriptor
   multisample?: GPUMultisampleState;
   /**
    * Describes the fragment shader entry point of the pipeline and its output colors. If
-   * `undefined`, the [[#no-color-output]] mode is enabled.
+   * not map/exist|provided, the [[#no-color-output]] mode is enabled.
    */
   fragment?: GPUFragmentState;
 }
@@ -1116,8 +1118,10 @@ interface GPUStencilFaceState {
 
 interface GPUStorageTextureBindingLayout {
   /**
-   * Indicates whether texture views bound to this binding will be bound for read-only or
-   * write-only access.
+   * The access mode for this binding, indicating readability and writability.
+   * Note:
+   * There is currently only one access mode, {@link GPUStorageTextureAccess#"write-only"},
+   * but this will expand in the future.
    */
   access?: GPUStorageTextureAccess;
   /**
@@ -2540,6 +2544,7 @@ interface GPUSupportedLimits {
   readonly maxStorageBuffersPerShaderStage: number;
   readonly maxStorageTexturesPerShaderStage: number;
   readonly maxUniformBuffersPerShaderStage: number;
+  readonly maxFragmentCombinedOutputResources: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
   readonly minUniformBufferOffsetAlignment: number;
