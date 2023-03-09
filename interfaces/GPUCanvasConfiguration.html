@@ -28,10 +28,8 @@
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="GPUCanvasConfiguration.html#alphaMode" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>alpha<wbr/>Mode?</span></a>
 <a href="GPUCanvasConfiguration.html#colorSpace" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>color<wbr/>Space?</span></a>
-<a href="GPUCanvasConfiguration.html#compositingAlphaMode" class="tsd-index-link deprecated tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>compositing<wbr/>Alpha<wbr/>Mode?</span></a>
 <a href="GPUCanvasConfiguration.html#device" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>device</span></a>
 <a href="GPUCanvasConfiguration.html#format" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>format</span></a>
-<a href="GPUCanvasConfiguration.html#size" class="tsd-index-link deprecated tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>size?</span></a>
 <a href="GPUCanvasConfiguration.html#usage" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>usage?</span></a>
 <a href="GPUCanvasConfiguration.html#viewFormats" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>view<wbr/>Formats?</span></a>
 </div></section></div></details></section></section>
@@ -49,12 +47,6 @@
 <div class="tsd-comment tsd-typography"><p>The color space that values written into textures returned by
 <a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> should be displayed with.</p>
 </div></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="compositingAlphaMode" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span class="deprecated">compositing<wbr/>Alpha<wbr/>Mode</span><a href="#compositingAlphaMode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">compositing<wbr/>Alpha<wbr/>Mode<span class="tsd-signature-symbol">?:</span> <a href="../types/GPUCanvasAlphaMode.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUCanvasAlphaMode</a></div>
-<div class="tsd-comment tsd-typography">
-<h3>Deprecated</h3><p>use alphaMode instead (it is specified to affect the behavior of reading from the canvas)</p>
-</div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="device" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>device</span><a href="#device" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">device<span class="tsd-signature-symbol">:</span> <a href="GPUDevice.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUDevice</a></div>
@@ -66,12 +58,6 @@ compatible with.</p>
 <div class="tsd-signature">format<span class="tsd-signature-symbol">:</span> <a href="../types/GPUTextureFormat.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUTextureFormat</a></div>
 <div class="tsd-comment tsd-typography"><p>The format that textures returned by <a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> will have.
 Must be one of the Supported context formats.</p>
-</div></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="size" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span class="deprecated">size</span><a href="#size" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">size<span class="tsd-signature-symbol">?:</span> <a href="../types/GPUExtent3D.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUExtent3D</a></div>
-<div class="tsd-comment tsd-typography">
-<h3>Deprecated</h3><p>use the canvas width/height instead</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="usage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>usage</span><a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -115,10 +101,8 @@ when setting a custom usage if you wish to use textures returned by
 <ul>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#alphaMode" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>alpha<wbr/>Mode?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#colorSpace" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>color<wbr/>Space?</a></li>
-<li class="deprecated tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#compositingAlphaMode" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>compositing<wbr/>Alpha<wbr/>Mode?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#device" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>device</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#format" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>format</a></li>
-<li class="deprecated tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#size" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>size?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#usage" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>usage?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#viewFormats" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>view<wbr/>Formats?</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
