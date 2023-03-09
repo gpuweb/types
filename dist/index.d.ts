@@ -153,9 +153,6 @@ type GPUCanvasAlphaMode =
 
     | "opaque"
     | "premultiplied";
-/** @deprecated use GPUCanvasAlphaMode instead */
-type GPUCanvasCompositingAlphaMode =
-  GPUCanvasAlphaMode;
 type GPUCompareFunction =
 
     | "never"
@@ -618,10 +615,6 @@ interface GPUCanvasConfiguration {
    * {@link GPUCanvasContext#getCurrentTexture} when read, displayed, or used as an image source.
    */
   alphaMode?: GPUCanvasAlphaMode;
-  /** @deprecated use alphaMode instead (it is specified to affect the behavior of reading from the canvas) */
-  compositingAlphaMode?: GPUCanvasCompositingAlphaMode;
-  /** @deprecated use the canvas width/height instead */
-  size?: GPUExtent3D;
 }
 
 interface GPUColorDict {
@@ -1657,8 +1650,6 @@ interface GPUAdapter {
    * @internal
    */
   readonly __brand: "GPUAdapter";
-  /** @deprecated use requestAdapterInfo instead */
-  readonly name: string;
   /**
    * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
    */
@@ -1850,10 +1841,6 @@ interface GPUCanvasContext {
    * Removes the context configuration. Destroys any textures produced while configured.
    */
   unconfigure(): undefined;
-  /** @deprecated Use {@link GPU#getPreferredCanvasFormat} instead. */
-  getPreferredFormat(
-    adapter: GPUAdapter
-  ): GPUTextureFormat;
   /**
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
@@ -2122,12 +2109,6 @@ interface GPUComputePassEncoder
     workgroupCountY?: GPUSize32,
     workgroupCountZ?: GPUSize32
   ): undefined;
-  /** @deprecated Use dispatchWorkgroups instead */
-  dispatch(
-    workgroupCountX: GPUSize32,
-    workgroupCountY?: GPUSize32,
-    workgroupCountZ?: GPUSize32
-  ): undefined;
   /**
    * Dispatch work to be performed with the current {@link GPUComputePipeline} using parameters read
    * from a {@link GPUBuffer}.
@@ -2139,11 +2120,6 @@ interface GPUComputePassEncoder
    * @param indirectOffset - Offset in bytes into `indirectBuffer` where the dispatch data begins.
    */
   dispatchWorkgroupsIndirect(
-    indirectBuffer: GPUBuffer,
-    indirectOffset: GPUSize64
-  ): undefined;
-  /** @deprecated Use dispatchWorkgroupsIndirect instead */
-  dispatchIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
   ): undefined;
