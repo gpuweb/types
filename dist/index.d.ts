@@ -178,7 +178,9 @@ type GPUCullMode =
     | "front"
     | "back";
 type GPUDeviceLostReason =
-  "destroyed";
+
+    | "unknown"
+    | "destroyed";
 type GPUErrorFilter =
 
     | "validation"
@@ -2336,9 +2338,7 @@ interface GPUDeviceLostInfo {
    * @internal
    */
   readonly __brand: "GPUDeviceLostInfo";
-  readonly reason:
-    | GPUDeviceLostReason
-    | undefined;
+  readonly reason: GPUDeviceLostReason;
   readonly message: string;
 }
 
