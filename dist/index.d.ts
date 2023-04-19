@@ -1638,6 +1638,7 @@ interface GPU {
    * format.
    */
   getPreferredCanvasFormat(): GPUTextureFormat;
+  readonly wgslLanguageFeatures: WGSLLanguageFeatures;
 }
 
 declare var GPU: {
@@ -1666,6 +1667,8 @@ interface GPUAdapter {
   readonly isFallbackAdapter: boolean;
   /**
    * Requests a device from the adapter.
+   * This is a one-time action: if a device is returned successfully,
+   * the adapter becomes invalid.
    * @param descriptor - Description of the {@link GPUDevice} to request.
    */
   requestDevice(
@@ -1847,10 +1850,8 @@ interface GPUCanvasContext {
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
    * Note: The same {@link GPUTexture} object will be returned by every
-   * call to {@link GPUCanvasContext#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of "[$update the rendering of the WebGPU canvas$]"), even if that {@link GPUTexture}
-   * is destroyed, failed validation, or failed to allocate, **unless** the current texture has
-   * been removed (in [$Replace the drawing buffer$]).
+   * call to {@link GPUCanvasContext#getCurrentTexture} until "[$Expire the current texture$]"
+   * runs, even if that {@link GPUTexture} is destroyed, failed validation, or failed to allocate.
    */
   getCurrentTexture(): GPUTexture;
 }
@@ -2442,7 +2443,9 @@ interface GPUPipelineError
 declare var GPUPipelineError: {
   prototype: GPUPipelineError;
   new (
-    message: string,
+    message:
+      | string
+      | undefined,
     options: GPUPipelineErrorInit
   ): GPUPipelineError;
 };
@@ -2784,7 +2787,6 @@ interface GPUSupportedLimits {
   readonly maxStorageBuffersPerShaderStage: number;
   readonly maxStorageTexturesPerShaderStage: number;
   readonly maxUniformBuffersPerShaderStage: number;
-  readonly maxFragmentCombinedOutputResources: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
   readonly minUniformBufferOffsetAlignment: number;
@@ -2921,6 +2923,9 @@ declare var GPUValidationError: {
     message: string
   ): GPUValidationError;
 };
+
+type WGSLLanguageFeatures =
+  ReadonlySet<string>;
 
 interface Navigator
   extends NavigatorGPU {}

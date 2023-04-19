@@ -124,7 +124,9 @@ type GPUCullMode =
     | "front"
     | "back";
 type GPUDeviceLostReason =
-  "destroyed";
+
+    | "unknown"
+    | "destroyed";
 type GPUErrorFilter =
 
     | "validation"
@@ -1196,7 +1198,7 @@ interface GPUTextureDescriptor
    * </div>
    * Formats in this list must be texture view format compatible with the texture format.
    * <div algorithm>
-   * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for=>texture view format compatible</dfn> if:
+   * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for="">texture view format compatible</dfn> if:
    * - `format` equals `viewFormat`, or
    * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
    * Issue(gpuweb/gpuweb#168): Define larger compatibility classes.
@@ -1288,12 +1290,12 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup,
+    bindGroup: GPUBindGroup | null,
     dynamicOffsets?: Array<GPUBufferDynamicOffset>
   ): undefined;
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup,
+    bindGroup: GPUBindGroup | null,
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
@@ -1371,7 +1373,7 @@ interface GPURenderCommandsMixin {
    */
   setVertexBuffer(
     slot: GPUIndex32,
-    buffer: GPUBuffer,
+    buffer: GPUBuffer | null,
     offset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -1437,6 +1439,7 @@ interface GPU {
    * format.
    */
   getPreferredCanvasFormat(): GPUTextureFormat;
+  readonly wgslLanguageFeatures: WGSLLanguageFeatures;
 }
 
 declare var GPU: {
@@ -1464,6 +1467,8 @@ interface GPUAdapter {
   readonly isFallbackAdapter: boolean;
   /**
    * Requests a device from the adapter.
+   * This is a one-time action: if a device is returned successfully,
+   * the adapter becomes invalid.
    * @param descriptor - Description of the {@link GPUDevice} to request.
    */
   requestDevice(
@@ -1641,10 +1646,8 @@ interface GPUCanvasContext {
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
    * Note: The same {@link GPUTexture} object will be returned by every
-   * call to {@link GPUCanvasContext#getCurrentTexture} made within the same frame (i.e. between
-   * invocations of "[$update the rendering of the WebGPU canvas$]"), even if that {@link GPUTexture}
-   * is destroyed, failed validation, or failed to allocate, **unless** the current texture has
-   * been removed (in [$Replace the drawing buffer$]).
+   * call to {@link GPUCanvasContext#getCurrentTexture} until "[$Expire the current texture$]"
+   * runs, even if that {@link GPUTexture} is destroyed, failed validation, or failed to allocate.
    */
   getCurrentTexture(): GPUTexture;
 }
@@ -2119,9 +2122,7 @@ interface GPUDeviceLostInfo {
    * @internal
    */
   readonly __brand: "GPUDeviceLostInfo";
-  readonly reason:
-    | GPUDeviceLostReason
-    | undefined;
+  readonly reason: GPUDeviceLostReason;
   readonly message: string;
 }
 
@@ -2210,7 +2211,7 @@ interface GPUPipelineError
   readonly __brand: "GPUPipelineError";
   /**
    * A read-only slot-backed attribute exposing the type of error encountered in pipeline creation
-   * as a <dfn enum for=>GPUPipelineErrorReason</dfn>:
+   * as a <dfn enum for="">GPUPipelineErrorReason</dfn>:
    * <ul dfn-type=enum-value dfn-for=GPUPipelineErrorReason>
    * - <dfn>"validation"</dfn>: A [$validation error$].
    * - <dfn>"internal"</dfn>: An [$internal error$].
@@ -2222,7 +2223,9 @@ interface GPUPipelineError
 declare var GPUPipelineError: {
   prototype: GPUPipelineError;
   new (
-    message: string,
+    message:
+      | string
+      | undefined,
     options: GPUPipelineErrorInit
   );
 };
@@ -2544,7 +2547,6 @@ interface GPUSupportedLimits {
   readonly maxStorageBuffersPerShaderStage: number;
   readonly maxStorageTexturesPerShaderStage: number;
   readonly maxUniformBuffersPerShaderStage: number;
-  readonly maxFragmentCombinedOutputResources: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
   readonly minUniformBufferOffsetAlignment: number;
@@ -2679,6 +2681,9 @@ declare var GPUValidationError: {
     message: string
   );
 };
+
+type WGSLLanguageFeatures =
+  ReadonlySet<string>;
 
 interface Navigator
   extends NavigatorGPU {}
