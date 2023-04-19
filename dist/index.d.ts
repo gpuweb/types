@@ -1453,7 +1453,7 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup,
+    bindGroup: GPUBindGroup | null,
     dynamicOffsets?: Iterable<GPUBufferDynamicOffset>
   ): undefined;
   /**
@@ -1547,7 +1547,7 @@ interface GPURenderCommandsMixin {
    */
   setVertexBuffer(
     slot: GPUIndex32,
-    buffer: GPUBuffer,
+    buffer: GPUBuffer | null,
     offset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
