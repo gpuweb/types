@@ -1469,7 +1469,7 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup,
+    bindGroup: GPUBindGroup | null,
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
