@@ -2779,6 +2779,7 @@ interface GPUSupportedLimits {
   readonly maxTextureDimension3D: number;
   readonly maxTextureArrayLayers: number;
   readonly maxBindGroups: number;
+  readonly maxBindGroupsPlusVertexBuffers: number;
   readonly maxBindingsPerBindGroup: number;
   readonly maxDynamicUniformBuffersPerPipelineLayout: number;
   readonly maxDynamicStorageBuffersPerPipelineLayout: number;
