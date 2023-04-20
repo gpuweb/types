@@ -67,10 +67,8 @@ This clears the drawing buffer to transparent black (in [$Replace the drawing bu
 <div class="tsd-comment tsd-typography"><p>Get the <a href="GPUTexture.html">GPUTexture</a> that will be composited to the document by the <a href="GPUCanvasContext.html">GPUCanvasContext</a>
 next.
 Note: The same <a href="GPUTexture.html">GPUTexture</a> object will be returned by every
-call to <a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> made within the same frame (i.e. between
-invocations of &quot;[$update the rendering of the WebGPU canvas$]&quot;), even if that <a href="GPUTexture.html">GPUTexture</a>
-is destroyed, failed validation, or failed to allocate, <strong>unless</strong> the current texture has
-been removed (in [$Replace the drawing buffer$]).</p>
+call to <a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> until &quot;[$Expire the current texture$]&quot;
+runs, even if that <a href="GPUTexture.html">GPUTexture</a> is destroyed, failed validation, or failed to allocate.</p>
 </div>
 <h4 class="tsd-returns-title">Returns <a href="GPUTexture.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUTexture</a></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="unconfigure" class="tsd-anchor"></a>

@@ -79,7 +79,9 @@ however, no dialogs should be displayed to the user.</p>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
 <li class="tsd-signature tsd-anchor-link" id="requestDevice.requestDevice-1">request<wbr/>Device<span class="tsd-signature-symbol">(</span>descriptor<span class="tsd-signature-symbol">?: </span><a href="GPUDeviceDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUDeviceDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="GPUDevice.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUDevice</a><span class="tsd-signature-symbol">&gt;</span><a href="#requestDevice.requestDevice-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Requests a device from the adapter.</p>
+<div class="tsd-comment tsd-typography"><p>Requests a device from the adapter.
+This is a one-time action: if a device is returned successfully,
+the adapter becomes invalid.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
