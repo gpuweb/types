@@ -14,8 +14,6 @@ type GPUColor =
     | GPUColorDict;
 type GPUColorWriteFlags =
   number;
-type GPUComputePassTimestampWrites =
-  Array<GPUComputePassTimestampWrite>;
 type GPUDepthBias =
   number;
 type GPUExtent3D =
@@ -40,8 +38,6 @@ type GPUOrigin3D =
     | GPUOrigin3DDict;
 type GPUPipelineConstantValue =
   number;
-type GPURenderPassTimestampWrites =
-  Array<GPURenderPassTimestampWrite>;
 type GPUSampleMask =
   number;
 type GPUShaderStageFlags =
@@ -114,10 +110,6 @@ type GPUCompilationMessageType =
     | "error"
     | "warning"
     | "info";
-type GPUComputePassTimestampLocation =
-
-    | "beginning"
-    | "end";
 type GPUCullMode =
 
     | "none"
@@ -184,10 +176,6 @@ type GPUQueryType =
 
     | "occlusion"
     | "timestamp";
-type GPURenderPassTimestampLocation =
-
-    | "beginning"
-    | "end";
 type GPUSamplerBindingType =
 
     | "filtering"
@@ -456,7 +444,13 @@ interface GPUBlendComponent {
 }
 
 interface GPUBlendState {
+  /**
+   * Defines the blending behavior of the corresponding render target for color channels.
+   */
   color: GPUBlendComponent;
+  /**
+   * Defines the blending behavior of the corresponding render target for the alpha channel.
+   */
   alpha: GPUBlendComponent;
 }
 
@@ -566,15 +560,39 @@ interface GPUCanvasConfiguration {
 }
 
 interface GPUColorDict {
+  /**
+   * The red channel value
+   */
   r: number;
+  /**
+   * The green channel value
+   */
   g: number;
+  /**
+   * The blue channel value
+   */
   b: number;
+  /**
+   * The alpha channel value
+   */
   a: number;
 }
 
 interface GPUColorTargetState {
+  /**
+   * The {@link GPUTextureFormat} of this color target. The pipeline will only be compatible with
+   * {@link GPURenderPassEncoder}s which use a {@link GPUTextureView} of the same format in the
+   * corresponding color attachment.
+   */
   format: GPUTextureFormat;
+  /**
+   * The blending behavior for this color target. If left undefined, disables blending for this
+   * color target.
+   */
   blend?: GPUBlendState;
+  /**
+   * Bitmask controlling which channels are are written to when drawing to this color target.
+   */
   writeMask?: GPUColorWriteFlags;
 }
 
@@ -586,15 +604,27 @@ type GPUCommandEncoderDescriptor =
 interface GPUComputePassDescriptor
   extends GPUObjectDescriptorBase {
   /**
-   * A sequence of {@link GPUComputePassTimestampWrite} values define where and when timestamp values will be written for this pass.
+   * Defines which timestamp values will be written for this pass, and where to write them to.
    */
   timestampWrites?: GPUComputePassTimestampWrites;
 }
 
-interface GPUComputePassTimestampWrite {
+interface GPUComputePassTimestampWrites {
+  /**
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * written to.
+   */
   querySet: GPUQuerySet;
-  queryIndex: GPUSize32;
-  location: GPUComputePassTimestampLocation;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the beginning of the compute pass will be written.
+   */
+  beginningOfPassWriteIndex?: GPUSize32;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the end of the compute pass will be written.
+   */
+  endOfPassWriteIndex?: GPUSize32;
 }
 
 interface GPUComputePipelineDescriptor
@@ -684,8 +714,20 @@ interface GPUDeviceDescriptor
 }
 
 interface GPUExtent3DDict {
+  /**
+   * The width of the extent
+   */
   width: GPUIntegerCoordinate;
+  /**
+   * The height of the extent
+   */
   height?: GPUIntegerCoordinate;
+  /**
+   * The depth of the extent or the number of array layers it contains.
+   * If used with a {@link GPUTexture} with a {@link GPUTextureDimension} of {@link GPUTextureDimension#"3d"}
+   * defines the depth of the texture. If used with a {@link GPUTexture} with a {@link GPUTextureDimension}
+   * of {@link GPUTextureDimension#"2d"} defines the number of array layers in the texture.
+   */
   depthOrArrayLayers?: GPUIntegerCoordinate;
 }
 
@@ -693,12 +735,18 @@ interface GPUExternalTextureBindingLayout {}
 
 interface GPUExternalTextureDescriptor
   extends GPUObjectDescriptorBase {
-  source: HTMLVideoElement;
+  source:
+    | HTMLVideoElement
+    | VideoFrame;
   colorSpace?: PredefinedColorSpace;
 }
 
 interface GPUFragmentState
   extends GPUProgrammableStage {
+  /**
+   * A list of {@link GPUColorTargetState} defining the formats and behaviors of the color targets
+   * this pipeline writes to.
+   */
   targets: Array<GPUColorTargetState | null>;
 }
 
@@ -741,6 +789,12 @@ interface GPUOrigin3DDict {
 
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
+  /**
+   * The {@link GPUPipelineLayout} for this pipeline or {@link GPUAutoLayoutMode#"auto"}, to generate
+   * the pipeline layout automatically.
+   * Note: If {@link GPUAutoLayoutMode#"auto"} is used the pipeline cannot share {@link GPUBindGroup}s
+   * with any other pipelines.
+   */
   layout:
     | GPUPipelineLayout
     | GPUAutoLayoutMode;
@@ -796,8 +850,70 @@ interface GPUPrimitiveState {
 }
 
 interface GPUProgrammableStage {
+  /**
+   * The {@link GPUShaderModule} containing the code that this programmable stage will execute.
+   */
   module: GPUShaderModule;
+  /**
+   * The name of the function in {@link GPUProgrammableStage#module} that this stage will use to
+   * perform its work.
+   */
   entryPoint: string;
+  /**
+   * Specifies the values of pipeline-overridable constants in the shader module
+   * {@link GPUProgrammableStage#module}.
+   * Each such pipeline-overridable constant is uniquely identified by a single
+   * pipeline-overridable constant identifier string (representing the numeric ID of the
+   * constant, if one is specified, and otherwise the constant's identifier name).
+   * WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier comparison.
+   * The key of each key-value pair must equal the identifier string of one such constant.
+   * When the pipeline is executed, that constant will have the specified value.
+   * Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a {@link double}.
+   * They are converted [$to WGSL type$] of the pipeline-overridable constant (`bool`/`i32`/`u32`/`f32`/`f16`).
+   * If conversion fails, a validation error is generated.
+   * <div class=example>
+   * Pipeline-overridable constants defined in WGSL:
+   * <pre highlight=rust>
+   * @id(0)      override has_point_light: bool = true;  // Algorithmic control.
+   * @id(1200)   override specular_param: f32 = 2.3;     // Numeric control.
+   * @id(1300)   override gain: f32;                     // Must be overridden.
+   * override width: f32 = 0.0;              // Specifed at the API level
+   * //   using the name "width".
+   * override depth: f32;                    // Specifed at the API level
+   * //   using the name "depth".
+   * //   Must be overridden.
+   * override height = 2 * depth;            // The default value
+   * // (if not set at the API level),
+   * // depends on another
+   * // overridable constant.
+   * </pre>
+   * Corresponding JavaScript code, providing only the overrides which are required
+   * (have no defaults):
+   * <pre highlight=js>
+   * {
+   * // ...
+   * constants: {
+   * 1300: 2.0,  // "gain"
+   * depth: -1,  // "depth"
+   * }
+   * }
+   * </pre>
+   * Corresponding JavaScript code, overriding all constants:
+   * <pre highlight=js>
+   * {
+   * // ...
+   * constants: {
+   * 0: false,   // "has_point_light"
+   * 1200: 3.0,  // "specular_param"
+   * 1300: 2.0,  // "gain"
+   * width: 20,  // "width"
+   * depth: -1,  // "depth"
+   * height: 15, // "height"
+   * }
+   * }
+   * </pre>
+   * </div>
+   */
   constants?: Record<
     string,
     GPUPipelineConstantValue
@@ -823,7 +939,17 @@ type GPURenderBundleDescriptor =
 
 interface GPURenderBundleEncoderDescriptor
   extends GPURenderPassLayout {
+  /**
+   * If `true`, indicates that the render bundle does not modify the depth component of the
+   * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
+   * in.
+   */
   depthReadOnly?: boolean;
+  /**
+   * If `true`, indicates that the render bundle does not modify the stencil component of the
+   * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
+   * in.
+   */
   stencilReadOnly?: boolean;
 }
 
@@ -937,7 +1063,7 @@ interface GPURenderPassDescriptor
    */
   occlusionQuerySet?: GPUQuerySet;
   /**
-   * A sequence of {@link GPURenderPassTimestampWrite} values defines where and when timestamp values will be written for this pass.
+   * Defines which timestamp values will be written for this pass, and where to write them to.
    */
   timestampWrites?: GPURenderPassTimestampWrites;
   /**
@@ -950,15 +1076,36 @@ interface GPURenderPassDescriptor
 
 interface GPURenderPassLayout
   extends GPUObjectDescriptorBase {
+  /**
+   * A list of the {@link GPUTextureFormat}s of the color attachments for this pass or bundle.
+   */
   colorFormats: Array<GPUTextureFormat | null>;
+  /**
+   * The {@link GPUTextureFormat} of the depth/stencil attachment for this pass or bundle.
+   */
   depthStencilFormat?: GPUTextureFormat;
+  /**
+   * Number of samples per pixel in the attachments for this pass or bundle.
+   */
   sampleCount?: GPUSize32;
 }
 
-interface GPURenderPassTimestampWrite {
+interface GPURenderPassTimestampWrites {
+  /**
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * written to.
+   */
   querySet: GPUQuerySet;
-  queryIndex: GPUSize32;
-  location: GPURenderPassTimestampLocation;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the beginning of the render pass will be written.
+   */
+  beginningOfPassWriteIndex?: GPUSize32;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the end of the render pass will be written.
+   */
+  endOfPassWriteIndex?: GPUSize32;
 }
 
 interface GPURenderPipelineDescriptor
@@ -1201,7 +1348,6 @@ interface GPUTextureDescriptor
    * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for="">texture view format compatible</dfn> if:
    * - `format` equals `viewFormat`, or
    * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
-   * Issue(gpuweb/gpuweb#168): Define larger compatibility classes.
    * </div>
    */
   viewFormats?: Array<GPUTextureFormat>;
@@ -1281,6 +1427,10 @@ interface GPUVertexBufferLayout {
 
 interface GPUVertexState
   extends GPUProgrammableStage {
+  /**
+   * A list of {@link GPUVertexBufferLayout}s defining the layout of the vertex attribute data in the
+   * vertex buffers used by this pipeline.
+   */
   buffers?: Array<GPUVertexBufferLayout | null>;
 }
 
@@ -1409,6 +1559,9 @@ interface GPURenderCommandsMixin {
 }
 
 interface NavigatorGPU {
+  /**
+   * Provides access to interfaces related to WebGPU.
+   */
   readonly gpu: GPU;
 }
 
@@ -1724,7 +1877,7 @@ interface GPUCommandEncoder
   ): undefined;
   /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of one or
-   * multiple continuous texture subresourcesto a sub-region of a {@link GPUBuffer}.
+   * multiple continuous texture subresources to a sub-region of a {@link GPUBuffer}.
    * @param source - Combined with `copySize`, defines the region of the source texture subresources.
    * @param destination - Combined with `copySize`, defines the region of the destination buffer.
    * 	`copySize`:
