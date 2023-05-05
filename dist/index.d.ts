@@ -68,8 +68,6 @@ type GPUColor =
     | GPUColorDict;
 type GPUColorWriteFlags =
   number;
-type GPUComputePassTimestampWrites =
-  Iterable<GPUComputePassTimestampWrite>;
 type GPUDepthBias =
   number;
 type GPUExtent3D =
@@ -94,8 +92,6 @@ type GPUOrigin3D =
     | GPUOrigin3DDict;
 type GPUPipelineConstantValue =
   number;
-type GPURenderPassTimestampWrites =
-  Iterable<GPURenderPassTimestampWrite>;
 type GPUSampleMask =
   number;
 type GPUShaderStageFlags =
@@ -168,10 +164,6 @@ type GPUCompilationMessageType =
     | "error"
     | "warning"
     | "info";
-type GPUComputePassTimestampLocation =
-
-    | "beginning"
-    | "end";
 type GPUCullMode =
 
     | "none"
@@ -238,10 +230,6 @@ type GPUQueryType =
 
     | "occlusion"
     | "timestamp";
-type GPURenderPassTimestampLocation =
-
-    | "beginning"
-    | "end";
 type GPUSamplerBindingType =
 
     | "filtering"
@@ -510,7 +498,13 @@ interface GPUBlendComponent {
 }
 
 interface GPUBlendState {
+  /**
+   * Defines the blending behavior of the corresponding render target for color channels.
+   */
   color: GPUBlendComponent;
+  /**
+   * Defines the blending behavior of the corresponding render target for the alpha channel.
+   */
   alpha: GPUBlendComponent;
 }
 
@@ -620,15 +614,39 @@ interface GPUCanvasConfiguration {
 }
 
 interface GPUColorDict {
+  /**
+   * The red channel value
+   */
   r: number;
+  /**
+   * The green channel value
+   */
   g: number;
+  /**
+   * The blue channel value
+   */
   b: number;
+  /**
+   * The alpha channel value
+   */
   a: number;
 }
 
 interface GPUColorTargetState {
+  /**
+   * The {@link GPUTextureFormat} of this color target. The pipeline will only be compatible with
+   * {@link GPURenderPassEncoder}s which use a {@link GPUTextureView} of the same format in the
+   * corresponding color attachment.
+   */
   format: GPUTextureFormat;
+  /**
+   * The blending behavior for this color target. If left undefined, disables blending for this
+   * color target.
+   */
   blend?: GPUBlendState;
+  /**
+   * Bitmask controlling which channels are are written to when drawing to this color target.
+   */
   writeMask?: GPUColorWriteFlags;
 }
 
@@ -640,15 +658,27 @@ type GPUCommandEncoderDescriptor =
 interface GPUComputePassDescriptor
   extends GPUObjectDescriptorBase {
   /**
-   * A sequence of {@link GPUComputePassTimestampWrite} values define where and when timestamp values will be written for this pass.
+   * Defines which timestamp values will be written for this pass, and where to write them to.
    */
   timestampWrites?: GPUComputePassTimestampWrites;
 }
 
-interface GPUComputePassTimestampWrite {
+interface GPUComputePassTimestampWrites {
+  /**
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * written to.
+   */
   querySet: GPUQuerySet;
-  queryIndex: GPUSize32;
-  location: GPUComputePassTimestampLocation;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the beginning of the compute pass will be written.
+   */
+  beginningOfPassWriteIndex?: GPUSize32;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the end of the compute pass will be written.
+   */
+  endOfPassWriteIndex?: GPUSize32;
 }
 
 interface GPUComputePipelineDescriptor
@@ -738,8 +768,20 @@ interface GPUDeviceDescriptor
 }
 
 interface GPUExtent3DDict {
+  /**
+   * The width of the extent
+   */
   width: GPUIntegerCoordinate;
+  /**
+   * The height of the extent
+   */
   height?: GPUIntegerCoordinate;
+  /**
+   * The depth of the extent or the number of array layers it contains.
+   * If used with a {@link GPUTexture} with a {@link GPUTextureDimension} of {@link GPUTextureDimension#"3d"}
+   * defines the depth of the texture. If used with a {@link GPUTexture} with a {@link GPUTextureDimension}
+   * of {@link GPUTextureDimension#"2d"} defines the number of array layers in the texture.
+   */
   depthOrArrayLayers?: GPUIntegerCoordinate;
 }
 
@@ -747,12 +789,18 @@ interface GPUExternalTextureBindingLayout {}
 
 interface GPUExternalTextureDescriptor
   extends GPUObjectDescriptorBase {
-  source: HTMLVideoElement;
+  source:
+    | HTMLVideoElement
+    | VideoFrame;
   colorSpace?: PredefinedColorSpace;
 }
 
 interface GPUFragmentState
   extends GPUProgrammableStage {
+  /**
+   * A list of {@link GPUColorTargetState} defining the formats and behaviors of the color targets
+   * this pipeline writes to.
+   */
   targets: Iterable<GPUColorTargetState | null>;
 }
 
@@ -895,6 +943,12 @@ interface GPUOrigin3DDict {
 
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
+  /**
+   * The {@link GPUPipelineLayout} for this pipeline or {@link GPUAutoLayoutMode#"auto"}, to generate
+   * the pipeline layout automatically.
+   * Note: If {@link GPUAutoLayoutMode#"auto"} is used the pipeline cannot share {@link GPUBindGroup}s
+   * with any other pipelines.
+   */
   layout:
     | GPUPipelineLayout
     | GPUAutoLayoutMode;
@@ -950,8 +1004,19 @@ interface GPUPrimitiveState {
 }
 
 interface GPUProgrammableStage {
+  /**
+   * The {@link GPUShaderModule} containing the code that this programmable stage will execute.
+   */
   module: GPUShaderModule;
+  /**
+   * The name of the function in {@link GPUProgrammableStage#module} that this stage will use to
+   * perform its work.
+   */
   entryPoint: string;
+  /**
+   * Specifies the values of pipeline-overridable constants in the shader module
+   * {@link GPUProgrammableStage#module}.
+   */
   constants?: Record<
     string,
     GPUPipelineConstantValue
@@ -975,9 +1040,19 @@ type GPUQueueDescriptor =
 type GPURenderBundleDescriptor =
   GPUObjectDescriptorBase;
 
-interface GPURenderBundleEncoderDescriptor
+  interface GPURenderBundleEncoderDescriptor
   extends GPURenderPassLayout {
+  /**
+   * If `true`, indicates that the render bundle does not modify the depth component of the
+   * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
+   * in.
+   */
   depthReadOnly?: boolean;
+  /**
+   * If `true`, indicates that the render bundle does not modify the stencil component of the
+   * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
+   * in.
+   */
   stencilReadOnly?: boolean;
 }
 
@@ -1091,7 +1166,7 @@ interface GPURenderPassDescriptor
    */
   occlusionQuerySet?: GPUQuerySet;
   /**
-   * A sequence of {@link GPURenderPassTimestampWrite} values defines where and when timestamp values will be written for this pass.
+   * Defines which timestamp values will be written for this pass, and where to write them to.
    */
   timestampWrites?: GPURenderPassTimestampWrites;
   /**
@@ -1104,15 +1179,36 @@ interface GPURenderPassDescriptor
 
 interface GPURenderPassLayout
   extends GPUObjectDescriptorBase {
+  /**
+   * A list of the {@link GPUTextureFormat}s of the color attachments for this pass or bundle.
+   */
   colorFormats: Iterable<GPUTextureFormat | null>;
+  /**
+   * The {@link GPUTextureFormat} of the depth/stencil attachment for this pass or bundle.
+   */
   depthStencilFormat?: GPUTextureFormat;
+  /**
+   * Number of samples per pixel in the attachments for this pass or bundle.
+   */
   sampleCount?: GPUSize32;
 }
 
-interface GPURenderPassTimestampWrite {
+interface GPURenderPassTimestampWrites {
+  /**
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * written to.
+   */
   querySet: GPUQuerySet;
-  queryIndex: GPUSize32;
-  location: GPURenderPassTimestampLocation;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the beginning of the render pass will be written.
+   */
+  beginningOfPassWriteIndex?: GPUSize32;
+  /**
+   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * which the timestamp at the end of the render pass will be written.
+   */
+  endOfPassWriteIndex?: GPUSize32;
 }
 
 interface GPURenderPipelineDescriptor
@@ -1141,7 +1237,36 @@ interface GPURenderPipelineDescriptor
 }
 
 interface GPURequestAdapterOptions {
+  /**
+   * Optionally provides a hint indicating what class of adapter should be selected from
+   * the system's available adapters.
+   * The value of this hint may influence which adapter is chosen, but it must not
+   * influence whether an adapter is returned or not.
+   * Note:
+   * The primary utility of this hint is to influence which GPU is used in a multi-GPU system.
+   * For instance, some laptops have a low-power integrated GPU and a high-performance
+   * discrete GPU. This hint may also affect the power configuration of the selected GPU to
+   * match the requested power preference.
+   * Note:
+   * Depending on the exact hardware configuration, such as battery status and attached displays
+   * or removable GPUs, the user agent may select different adapters given the same power
+   * preference.
+   * Typically, given the same hardware configuration and state and
+   * `powerPreference`, the user agent is likely to select the same adapter.
+   */
   powerPreference?: GPUPowerPreference;
+  /**
+   * When set to `true` indicates that only a fallback adapter may be returned. If the user
+   * agent does not support a fallback adapter, will cause {@link GPU#requestAdapter} to
+   * resolve to `null`.
+   * Note:
+   * {@link GPU#requestAdapter} may still return a fallback adapter if
+   * {@link GPURequestAdapterOptions#forceFallbackAdapter} is set to `false` and either no
+   * other appropriate adapter is available or the user agent chooses to return a
+   * fallback adapter. Developers that wish to prevent their applications from running on
+   * fallback adapters should check the {@link GPUAdapter}.{@link GPUAdapter#isFallbackAdapter}
+   * attribute prior to requesting a {@link GPUDevice}.
+   */
   forceFallbackAdapter?: boolean;
 }
 
@@ -1355,7 +1480,6 @@ interface GPUTextureDescriptor
    * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for=>texture view format compatible</dfn> if:
    * - `format` equals `viewFormat`, or
    * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
-   * Issue(gpuweb/gpuweb#168): Define larger compatibility classes.
    * </div>
    */
   viewFormats?: Iterable<GPUTextureFormat>;
@@ -1435,6 +1559,10 @@ interface GPUVertexBufferLayout {
 
 interface GPUVertexState
   extends GPUProgrammableStage {
+  /**
+   * A list of {@link GPUVertexBufferLayout}s defining the layout of the vertex attribute data in the
+   * vertex buffers used by this pipeline.
+   */
   buffers?: Iterable<GPUVertexBufferLayout | null>;
 }
 
@@ -1608,6 +1736,9 @@ interface GPURenderCommandsMixin {
 }
 
 interface NavigatorGPU {
+  /**
+   * Provides access to interfaces related to WebGPU.
+   */
   readonly gpu: GPU;
 }
 
@@ -1930,7 +2061,7 @@ interface GPUCommandEncoder
   ): undefined;
   /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of one or
-   * multiple continuous texture subresourcesto a sub-region of a {@link GPUBuffer}.
+   * multiple continuous texture subresources to a sub-region of a {@link GPUBuffer}.
    * @param source - Combined with `copySize`, defines the region of the source texture subresources.
    * @param destination - Combined with `copySize`, defines the region of the destination buffer.
    * 	`copySize`:
