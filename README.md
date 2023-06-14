@@ -62,6 +62,7 @@ Please contribute a PR to add instructions for other setups or improve existing 
 - Make sure the submodule is checked out: `git submodule update --init`
 - Pull `gpuweb` changes: `pushd gpuweb && git checkout main && git pull && popd`
 - Install dependencies: `npm ci`
+- Bug workaround: paste the `copies.bs` contents in place of its include in `index.bs` (generator doesn't support includes).
 - Generate `generated/index.d.ts`: `npm run generate`
 - Open a diff between `generated/index.d.ts` and `dist/index.d.ts`.
     The generated file is tracked by Git so you can see what has changed.

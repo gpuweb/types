@@ -2,3 +2,4 @@
 /node_modules/
 /out/
 /generated/webgpu.ts
+.DS_Store

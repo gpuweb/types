@@ -22,9 +22,18 @@ type GPUExtent3D =
     | GPUExtent3DDict;
 type GPUFlagsConstant =
   number;
+type GPUImageCopyExternalImageSource =
+
+    | ImageBitmap
+    | HTMLVideoElement
+    | VideoFrame
+    | HTMLCanvasElement
+    | OffscreenCanvas;
 type GPUIndex32 =
   number;
 type GPUIntegerCoordinate =
+  number;
+type GPUIntegerCoordinateOut =
   number;
 type GPUMapModeFlags =
   number;
@@ -46,7 +55,11 @@ type GPUSignedOffset32 =
   number;
 type GPUSize32 =
   number;
+type GPUSize32Out =
+  number;
 type GPUSize64 =
+  number;
+type GPUSize64Out =
   number;
 type GPUStencilValue =
   number;
@@ -561,19 +574,19 @@ interface GPUCanvasConfiguration {
 
 interface GPUColorDict {
   /**
-   * The red channel value
+   * The red channel value.
    */
   r: number;
   /**
-   * The green channel value
+   * The green channel value.
    */
   g: number;
   /**
-   * The blue channel value
+   * The blue channel value.
    */
   b: number;
   /**
-   * The alpha channel value
+   * The alpha channel value.
    */
   a: number;
 }
@@ -581,7 +594,7 @@ interface GPUColorDict {
 interface GPUColorTargetState {
   /**
    * The {@link GPUTextureFormat} of this color target. The pipeline will only be compatible with
-   * {@link GPURenderPassEncoder}s which use a {@link GPUTextureView} of the same format in the
+   * {@link GPURenderPassEncoder}s which use a {@link GPUTextureView} of this format in the
    * corresponding color attachment.
    */
   format: GPUTextureFormat;
@@ -616,12 +629,12 @@ interface GPUComputePassTimestampWrites {
    */
   querySet: GPUQuerySet;
   /**
-   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * If defined, indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
    * which the timestamp at the beginning of the compute pass will be written.
    */
   beginningOfPassWriteIndex?: GPUSize32;
   /**
-   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * If defined, indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
    * which the timestamp at the end of the compute pass will be written.
    */
   endOfPassWriteIndex?: GPUSize32;
@@ -715,11 +728,11 @@ interface GPUDeviceDescriptor
 
 interface GPUExtent3DDict {
   /**
-   * The width of the extent
+   * The width of the extent.
    */
   width: GPUIntegerCoordinate;
   /**
-   * The height of the extent
+   * The height of the extent.
    */
   height?: GPUIntegerCoordinate;
   /**
@@ -748,6 +761,134 @@ interface GPUFragmentState
    * this pipeline writes to.
    */
   targets: Array<GPUColorTargetState | null>;
+}
+
+interface GPUImageCopyBuffer
+  extends GPUImageDataLayout {
+  /**
+   * A buffer which either contains image data to be copied or will store the image data being
+   * copied, depending on the method it is being passed to.
+   */
+  buffer: GPUBuffer;
+}
+
+interface GPUImageCopyExternalImage {
+  /**
+   * The source of the image copy. The copy source data is captured at the moment that
+   * {@link GPUQueue#copyExternalImageToTexture} is issued. Source size is defined by source
+   * type, given by this table:
+   *
+   * <table class=data>
+   * <thead>
+   * <tr>
+   * <th>Source type
+   * <th>Width
+   * <th>Height
+   * </thead>
+   * <tbody>
+   * <tr>
+   * <td>{@link ImageBitmap}
+   * <td>{@link ImageBitmap#width|ImageBitmap.width}
+   * <td>{@link ImageBitmap#height|ImageBitmap.height}
+   * <tr>
+   * <td>{@link HTMLVideoElement}
+   * <td>video/intrinsic width|intrinsic width of the frame
+   * <td>video/intrinsic height|intrinsic height of the frame
+   * <tr>
+   * <td>{@link VideoFrame}
+   * <td>{@link VideoFrame#codedWidth|VideoFrame.codedWidth}
+   * <td>{@link VideoFrame#codedHeight|VideoFrame.codedHeight}
+   * <tr>
+   * <td>{@link HTMLCanvasElement}
+   * <td>{@link HTMLCanvasElement#width|HTMLCanvasElement.width}
+   * <td>{@link HTMLCanvasElement#height|HTMLCanvasElement.height}
+   * <tr>
+   * <td>{@link OffscreenCanvas}
+   * <td>{@link OffscreenCanvas#width|OffscreenCanvas.width}
+   * <td>{@link OffscreenCanvas#height|OffscreenCanvas.height}
+   * </tbody>
+   * </table>
+   */
+  source: GPUImageCopyExternalImageSource;
+  /**
+   * Defines the origin of the copy - the minimum (top-left) corner of the source sub-region to copy from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
+  origin?: GPUOrigin2D;
+  /**
+   * Describes whether the source image is vertically flipped, or not.
+   * If this option is set to `true`, the copy is flipped vertically: the bottom row of the source
+   * region is copied into the first row of the destination region, and so on.
+   * The {@link GPUImageCopyExternalImage#origin} option is still relative to the top-left corner
+   * of the source image, increasing downward.
+   */
+  flipY?: boolean;
+}
+
+interface GPUImageCopyTexture {
+  /**
+   * Texture to copy to/from.
+   */
+  texture: GPUTexture;
+  /**
+   * Mip-map level of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
+  mipLevel?: GPUIntegerCoordinate;
+  /**
+   * Defines the origin of the copy - the minimum corner of the texture sub-region to copy to/from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
+  origin?: GPUOrigin3D;
+  /**
+   * Defines which aspects of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
+  aspect?: GPUTextureAspect;
+}
+
+interface GPUImageCopyTextureTagged
+  extends GPUImageCopyTexture {
+  /**
+   * Describes the color space and encoding used to encode data into the destination texture.
+   * This [[#color-space-conversions|may result]] in values outside of the range [0, 1]
+   * being written to the target texture, if its format can represent them.
+   * Otherwise, the results are clamped to the target texture format's range.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   */
+  colorSpace?: PredefinedColorSpace;
+  /**
+   * Describes whether the data written into the texture should have its RGB channels
+   * premultiplied by the alpha channel, or not.
+   * If this option is set to `true` and the {@link GPUImageCopyExternalImage#source} is also
+   * premultiplied, the source RGB values must be preserved even if they exceed their
+   * corresponding alpha values.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#premultipliedAlpha} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   */
+  premultipliedAlpha?: boolean;
+}
+
+interface GPUImageDataLayout {
+  /**
+   * The offset, in bytes, from the beginning of the image data source (such as a
+   * {@link GPUImageCopyBuffer#buffer|GPUImageCopyBuffer.buffer}) to the start of the image data
+   * within that source.
+   */
+  offset?: GPUSize64;
+  /**
+   * The stride, in bytes, between the beginning of each block row and the subsequent block row.
+   * Required if there are multiple block rows (i.e. the copy height or depth is more than one block).
+   */
+  bytesPerRow?: GPUSize32;
+  /**
+   * Number of block rows per single image of the texture.
+   * {@link GPUImageDataLayout#rowsPerImage} &times;
+   * {@link GPUImageDataLayout#bytesPerRow} is the stride, in bytes, between the beginning of each image of data and the subsequent image.
+   * Required if there are multiple images (i.e. the copy depth is more than one).
+   */
+  rowsPerImage?: GPUSize32;
 }
 
 interface GPUMultisampleState {
@@ -790,7 +931,7 @@ interface GPUOrigin3DDict {
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
   /**
-   * The {@link GPUPipelineLayout} for this pipeline or {@link GPUAutoLayoutMode#"auto"}, to generate
+   * The {@link GPUPipelineLayout} for this pipeline, or {@link GPUAutoLayoutMode#"auto"} to generate
    * the pipeline layout automatically.
    * Note: If {@link GPUAutoLayoutMode#"auto"} is used the pipeline cannot share {@link GPUBindGroup}s
    * with any other pipelines.
@@ -873,7 +1014,7 @@ interface GPUProgrammableStage {
    * If conversion fails, a validation error is generated.
    * <div class=example>
    * Pipeline-overridable constants defined in WGSL:
-   * <pre highlight=rust>
+   * <pre highlight=wgsl>
    * @id(0)      override has_point_light: bool = true;  // Algorithmic control.
    * @id(1200)   override specular_param: f32 = 2.3;     // Numeric control.
    * @id(1300)   override gain: f32;                     // Must be overridden.
@@ -1097,12 +1238,12 @@ interface GPURenderPassTimestampWrites {
    */
   querySet: GPUQuerySet;
   /**
-   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * If defined, indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
    * which the timestamp at the beginning of the render pass will be written.
    */
   beginningOfPassWriteIndex?: GPUSize32;
   /**
-   * If defined indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
+   * If defined, indicates the query index in {@link GPURenderPassTimestampWrites#querySet} into
    * which the timestamp at the end of the render pass will be written.
    */
   endOfPassWriteIndex?: GPUSize32;
@@ -1428,8 +1569,8 @@ interface GPUVertexBufferLayout {
 interface GPUVertexState
   extends GPUProgrammableStage {
   /**
-   * A list of {@link GPUVertexBufferLayout}s defining the layout of the vertex attribute data in the
-   * vertex buffers used by this pipeline.
+   * A list of {@link GPUVertexBufferLayout}s, each defining the layout of vertex attribute data in a
+   * vertex buffer used by this pipeline.
    */
   buffers?: Array<GPUVertexBufferLayout | null>;
 }
@@ -1560,7 +1701,7 @@ interface GPURenderCommandsMixin {
 
 interface NavigatorGPU {
   /**
-   * Provides access to interfaces related to WebGPU.
+   * A global singleton providing top-level entry points like {@link GPU#requestAdapter}.
    */
   readonly gpu: GPU;
 }
@@ -1719,8 +1860,8 @@ interface GPUBuffer
    * @internal
    */
   readonly __brand: "GPUBuffer";
-  readonly size: GPUSize64;
-  readonly usage: GPUBufferUsageFlags;
+  readonly size: GPUSize64Out;
+  readonly usage: GPUFlagsConstant;
   readonly mapState: GPUBufferMapState;
   /**
    * Maps the given range of the {@link GPUBuffer} and resolves the returned {@link Promise} when the
@@ -1914,6 +2055,8 @@ interface GPUCommandEncoder
   ): undefined;
   /**
    * Writes a timestamp value into a querySet when all previous commands have completed executing.
+   * Note: Timestamp query values are written in nanoseconds, but how the value is determined is
+   * implementation-defined and may not increase monotonically. See [[#timestamp]] for details.
    * @param querySet - The query set that will store the timestamp values.
    * @param queryIndex - The index of the query in the query set.
    */
@@ -2376,9 +2519,7 @@ interface GPUPipelineError
 declare var GPUPipelineError: {
   prototype: GPUPipelineError;
   new (
-    message:
-      | string
-      | undefined,
+    message?: string,
     options: GPUPipelineErrorInit
   );
 };
@@ -2416,7 +2557,7 @@ interface GPUQuerySet
   /**
    * The number of queries managed by this {@link GPUQuerySet}.
    */
-  readonly count: GPUSize32;
+  readonly count: GPUSize32Out;
 }
 
 declare var GPUQuerySet: {
@@ -2547,8 +2688,8 @@ interface GPURenderPassEncoder
    */
   readonly __brand: "GPURenderPassEncoder";
   /**
-   * Sets the viewport used during the rasterization stage to linearly map from normalized device
-   * coordinates to viewport coordinates.
+   * Sets the viewport used during the rasterization stage to linearly map from
+   * NDC|normalized device coordinates to viewport coordinates.
    * @param x - Minimum X value of the viewport in pixels.
    * @param y - Minimum Y value of the viewport in pixels.
    * @param width - Width of the viewport in pixels.
@@ -2747,23 +2888,23 @@ interface GPUTexture
   /**
    * The width of this {@link GPUTexture}.
    */
-  readonly width: GPUIntegerCoordinate;
+  readonly width: GPUIntegerCoordinateOut;
   /**
    * The height of this {@link GPUTexture}.
    */
-  readonly height: GPUIntegerCoordinate;
+  readonly height: GPUIntegerCoordinateOut;
   /**
    * The depth or layer count of this {@link GPUTexture}.
    */
-  readonly depthOrArrayLayers: GPUIntegerCoordinate;
+  readonly depthOrArrayLayers: GPUIntegerCoordinateOut;
   /**
    * The number of mip levels of this {@link GPUTexture}.
    */
-  readonly mipLevelCount: GPUIntegerCoordinate;
+  readonly mipLevelCount: GPUIntegerCoordinateOut;
   /**
    * The number of sample count of this {@link GPUTexture}.
    */
-  readonly sampleCount: GPUSize32;
+  readonly sampleCount: GPUSize32Out;
   /**
    * The dimension of the set of texel for each of this {@link GPUTexture}'s subresources.
    */
@@ -2775,7 +2916,7 @@ interface GPUTexture
   /**
    * The allowed usages for this {@link GPUTexture}.
    */
-  readonly usage: GPUTextureUsageFlags;
+  readonly usage: GPUFlagsConstant;
 }
 
 declare var GPUTexture: {
