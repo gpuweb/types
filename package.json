@@ -16,6 +16,9 @@
     "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && prettier -w generated/index.d.ts",
     "format": "prettier -w dist/index.d.ts"
   },
+  "dependencies": {
+    "@types/dom-webcodecs": "^0.1.5"
+  },
   "devDependencies": {
     "bikeshed-to-ts": "github:toji/bikeshed-to-ts",
     "prettier": "^2.2.1",
