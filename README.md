@@ -20,6 +20,10 @@ See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declar
 - npm: `npm install --save @webgpu/types`
 - yarn: `yarn add @webgpu/types`
 
+If you are on TypeScript < 5.1, you will also need to install `@types/dom-webcodecs`
+as a sibling dependency. The version you need depends on the TypeScript version;
+see the [tests](tests/) for examples.
+
 ### Configure
 
 #### TypeScript `tsc` and `tsc`-based bundlers
