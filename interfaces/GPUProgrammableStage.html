@@ -37,13 +37,30 @@
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="constants" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>constants</span><a href="#constants" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
-<div class="tsd-signature">constants<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div></section>
+<div class="tsd-signature">constants<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
+<div class="tsd-comment tsd-typography"><p>Specifies the values of pipeline-overridable constants in the shader module
+<a href="GPUProgrammableStage.html#module">module</a>.
+Each such pipeline-overridable constant is uniquely identified by a single
+pipeline-overridable constant identifier string (representing the numeric ID of the
+constant, if one is specified, and otherwise the constant&#39;s identifier name).
+WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier comparison.
+The key of each key-value pair must equal the identifier string of one such constant.
+When the pipeline is executed, that constant will have the specified value.
+Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a double.
+They are converted [$to WGSL type$] of the pipeline-overridable constant (<code>bool</code>/<code>i32</code>/<code>u32</code>/<code>f32</code>/<code>f16</code>).
+If conversion fails, a validation error is generated.</p>
+</div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="entryPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>entry<wbr/>Point</span><a href="#entryPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">entry<wbr/>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div></section>
+<div class="tsd-signature">entry<wbr/>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-comment tsd-typography"><p>The name of the function in <a href="GPUProgrammableStage.html#module">module</a> that this stage will use to
+perform its work.</p>
+</div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="module" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>module</span><a href="#module" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">module<span class="tsd-signature-symbol">:</span> <a href="GPUShaderModule.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUShaderModule</a></div></section></section></div>
+<div class="tsd-signature">module<span class="tsd-signature-symbol">:</span> <a href="GPUShaderModule.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUShaderModule</a></div>
+<div class="tsd-comment tsd-typography"><p>The <a href="GPUShaderModule.html">GPUShaderModule</a> containing the code that this programmable stage will execute.</p>
+</div></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
