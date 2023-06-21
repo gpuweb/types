@@ -1,8 +1,7 @@
 import fs from 'fs';
-import TypeDoc from 'typedoc';
 
 async function main() {
-  let ts = fs.readFileSync('./dist/index.d.ts', {encoding: 'utf-8'});
+  let ts = fs.readFileSync('../dist/index.d.ts', {encoding: 'utf-8'});
   ts = ts
     // export interfaces.
     .replace(/\ninterface /g, '\nexport interface ')
@@ -30,21 +29,7 @@ async function main() {
    \\*/
   readonly __brand: ".*?";`.replace(/sss\*/g, '\\*').replace(/\s+/g, '\\s+'), 'g'), '');
 
-  fs.writeFileSync('./generated/webgpu.ts', ts);
-
-  const app = new TypeDoc.Application();
-  app.options.addReader(new TypeDoc.TSConfigReader());
-  app.options.addReader(new TypeDoc.TypeDocReader());
-
-  app.bootstrap({
-    entryPoints: ['./generated/webgpu.ts'],
-  });
-
-  const project = app.convert();
-  if (project) {
-    const outputDir = 'out';
-    await app.generateDocs(project, outputDir);
-  }
+  fs.writeFileSync('./webgpu.ts', ts);
 }
 
 main();
