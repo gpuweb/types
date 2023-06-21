@@ -1,5 +1,8 @@
 name: Build and Deploy
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -17,14 +20,13 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Install and Build 🏭
-        run: |
-          npm ci
-          npm run build-ci
+      - run: npm ci
+      - run: npm run build-docs
 
       - name: Deploy 📦
+        if: ${{ success() && github.ref == 'refs/heads/main' }}
         uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
-          FOLDER: out
+          FOLDER: tsdoc-src/out

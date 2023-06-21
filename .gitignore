@@ -1,5 +1,5 @@
 /dist/
-/node_modules/
 /out/
 /generated/webgpu.ts
+node_modules
 .DS_Store

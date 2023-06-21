@@ -11,15 +11,13 @@
     "dist/**/*"
   ],
   "scripts": {
-    "build-docs": "node make-webgpu-docs.mjs",
-    "build-ci": "npm run build-docs",
+    "test": "for t in tests/* ; do (cd \"$t\" && npm i && npm test); done",
+    "build-docs": "cd tsdoc-src && npm ci && npm run build",
     "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && prettier -w generated/index.d.ts",
     "format": "prettier -w dist/index.d.ts"
   },
   "devDependencies": {
     "bikeshed-to-ts": "github:toji/bikeshed-to-ts",
-    "prettier": "^2.2.1",
-    "typedoc": "^0.23.22",
-    "typescript": "4.6.4"
+    "prettier": "^2.2.1"
   }
 }
