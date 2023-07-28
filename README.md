@@ -26,6 +26,9 @@ see the [tests](tests/) for examples.
 
 ### Configure
 
+Since this package is outside DefinitelyTyped, the dependency won't be picked up automatically.
+There are several ways to add a additional TypeScript type definition dependencies to your TypeScript project:
+
 #### TypeScript `tsc` and `tsc`-based bundlers
 
 In `tsconfig.json`:
@@ -35,25 +38,38 @@ In `tsconfig.json`:
   // ...
   "compilerOptions": {
     // ...
-    "typeRoots": [ "./node_modules/@webgpu/types", "./node_modules/@types"]
+    "types": ["@webgpu/types"]
   }
 }
 ```
 
-#### Webpack
-
-In `webpack.config.js` add:
+Or you can use `typeRoots`:
 
 ```js
-"types": ["@webgpu/types"]
+{
+  // ...
+  "compilerOptions": {
+    // ...
+    "typeRoots": ["./node_modules/@webgpu/types", "./node_modules/@types"]
+  }
+}
 ```
-
-(may not be necessary with `tsc` config above - untested)
 
 #### Inline in TypeScript
 
+This may work better if your toolchain doesn't read `tsconfig.json`.
+
 ```ts
 /// <reference types="@webgpu/types" />
+```
+
+#### Webpack
+
+If you use Webpack and the options above aren't sufficient (this has not been verified),
+you may need the following in `webpack.config.js`:
+
+```js
+"types": ["@webgpu/types"]
 ```
 
 #### Others?
