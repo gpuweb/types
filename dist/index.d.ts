@@ -79,6 +79,8 @@ type GPUFlagsConstant =
 type GPUImageCopyExternalImageSource =
 
     | ImageBitmap
+    | ImageData
+    | HTMLImageElement
     | HTMLVideoElement
     | VideoFrame
     | HTMLCanvasElement
