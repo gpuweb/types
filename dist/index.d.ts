@@ -303,6 +303,7 @@ type GPUTextureFormat =
     | "bgra8unorm"
     | "bgra8unorm-srgb"
     | "rgb9e5ufloat"
+    | "rgb10a2uint"
     | "rgb10a2unorm"
     | "rg11b10ufloat"
     | "rg32uint"
