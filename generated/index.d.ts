@@ -25,6 +25,8 @@ type GPUFlagsConstant =
 type GPUImageCopyExternalImageSource =
 
     | ImageBitmap
+    | ImageData
+    | HTMLImageElement
     | HTMLVideoElement
     | VideoFrame
     | HTMLCanvasElement
@@ -247,6 +249,7 @@ type GPUTextureFormat =
     | "bgra8unorm"
     | "bgra8unorm-srgb"
     | "rgb9e5ufloat"
+    | "rgb10a2uint"
     | "rgb10a2unorm"
     | "rg11b10ufloat"
     | "rg32uint"
@@ -2594,7 +2597,7 @@ interface GPUQueue
   writeBuffer(
     buffer: GPUBuffer,
     bufferOffset: GPUSize64,
-    data: BufferSource,
+    data: AllowSharedBufferSource,
     dataOffset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -2607,7 +2610,7 @@ interface GPUQueue
    */
   writeTexture(
     destination: GPUImageCopyTexture,
-    data: BufferSource,
+    data: AllowSharedBufferSource,
     dataLayout: GPUImageDataLayout,
     size: GPUExtent3D
   ): undefined;
