@@ -716,12 +716,12 @@ interface GPUDepthStencilState {
    * Indicates if this {@link GPURenderPipeline} can modify
    * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
    */
-  depthWriteEnabled: boolean;
+  depthWriteEnabled?: boolean;
   /**
    * The comparison operation used to test fragment depths against
    * {@link GPURenderPassDescriptor#depthStencilAttachment} depth values.
    */
-  depthCompare: GPUCompareFunction;
+  depthCompare?: GPUCompareFunction;
   /**
    * Defines how stencil comparisons and operations are performed for front-facing primitives.
    */
@@ -1862,15 +1862,9 @@ interface GPUAdapter {
   /**
    * Requests the {@link GPUAdapterInfo} for this {@link GPUAdapter}.
    * Note: Adapter info values are returned with a Promise to give user agents an
-   * opportunity to perform potentially long-running checks when requesting unmasked values,
-   * such as asking for user consent before returning. If no `unmaskHints` are specified,
-   * however, no dialogs should be displayed to the user.
-   * @param unmaskHints - A list of {@link GPUAdapterInfo} attribute names for which unmasked
-   * 	values are desired if available.
+   * opportunity to perform potentially long-running checks in the future.
    */
-  requestAdapterInfo(
-    unmaskHints?: Array<string>
-  ): Promise<GPUAdapterInfo>;
+  requestAdapterInfo(): Promise<GPUAdapterInfo>;
 }
 
 declare var GPUAdapter: {
