@@ -261,7 +261,10 @@ type GPUStencilOperation =
     | "increment-wrap"
     | "decrement-wrap";
 type GPUStorageTextureAccess =
-  "write-only";
+
+    | "write-only"
+    | "read-only"
+    | "read-write";
 type GPUStoreOp =
 
     | "store"
