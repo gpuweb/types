@@ -261,7 +261,10 @@ type GPUStencilOperation =
     | "increment-wrap"
     | "decrement-wrap";
 type GPUStorageTextureAccess =
-  "write-only";
+
+    | "write-only"
+    | "read-only"
+    | "read-write";
 type GPUStoreOp =
 
     | "store"
@@ -1117,6 +1120,11 @@ interface GPURenderPassColorAttachment {
    */
   view: GPUTextureView;
   /**
+   * Indicates the depth slice index of {@link GPUTextureViewDimension#"3d"} {@link GPURenderPassColorAttachment#view}
+   * that will be output to for this color attachment.
+   */
+  depthSlice?: GPUIntegerCoordinate;
+  /**
    * A {@link GPUTextureView} describing the texture subresource that will receive the resolved
    * output for this color attachment if {@link GPURenderPassColorAttachment#view} is
    * multisampled.
@@ -1382,6 +1390,7 @@ interface GPUSamplerDescriptor
 }
 
 interface GPUShaderModuleCompilationHint {
+  entryPoint: string;
   /**
    * A {@link GPUPipelineLayout} that the {@link GPUShaderModule} may be used with in a future
    * {@link GPUDevice#createComputePipeline()} or {@link GPUDevice#createRenderPipeline} call.
@@ -1407,25 +1416,31 @@ interface GPUShaderModuleDescriptor
    * WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier
    * comparison.
    */
-  sourceMap?: object;
+  sourceMap?: any;
   /**
-   * If defined maps an entry point name from the shader to a {@link GPUShaderModuleCompilationHint}.
-   * No validation is performed with any of these {@link GPUShaderModuleCompilationHint}.
-   * Implementations should use any information present in the {@link GPUShaderModuleCompilationHint}
+   * A list of {@link GPUShaderModuleCompilationHint}s.
+   * Any hint provided by an application **should** contain information about one entry point of
+   * a pipeline that will eventually be created from the entry point.
+   * Implementations **should** use any information present in the {@link GPUShaderModuleCompilationHint}
    * to perform as much compilation as is possible within {@link GPUDevice#createShaderModule}.
-   * Entry point names follow the rules defined in WGSL identifier comparison.
-   * Note: Supplying information in {@link GPUShaderModuleDescriptor#hints} does not have any
-   * observable effect, other than performance. Because a single shader module can hold
+   * Aside from type-checking, these hints are not validated in any way.
+   * <div class=note heading>
+   * Supplying information in {@link GPUShaderModuleDescriptor#compilationHints} does not have any
+   * observable effect, other than performance. It may be detrimental to performance to
+   * provide hints for pipelines that never end up being created.
+   * Because a single shader module can hold
    * multiple entry points, and multiple pipelines can be created from a single shader
    * module, it can be more performant for an implementation to do as much compilation as
    * possible once in {@link GPUDevice#createShaderModule} rather than multiple times in
-   * the multiple calls to {@link GPUDevice#createComputePipeline} /
+   * the multiple calls to {@link GPUDevice#createComputePipeline} or
    * {@link GPUDevice#createRenderPipeline}.
+   * </div>
+   * Note:
+   * Hints are not validated in an observable way, but user agents **may** surface identifiable
+   * errors (like unknown entry point names or incompatible pipeline layouts) to developers,
+   * for example in the browser developer console.
    */
-  hints?: Record<
-    string,
-    GPUShaderModuleCompilationHint
-  >;
+  compilationHints?: Array<GPUShaderModuleCompilationHint>;
 }
 
 interface GPUStencilFaceState {
@@ -1454,9 +1469,6 @@ interface GPUStencilFaceState {
 interface GPUStorageTextureBindingLayout {
   /**
    * The access mode for this binding, indicating readability and writability.
-   * Note:
-   * There is currently only one access mode, {@link GPUStorageTextureAccess#"write-only"},
-   * but this will expand in the future.
    */
   access?: GPUStorageTextureAccess;
   /**
@@ -1517,8 +1529,7 @@ interface GPUTextureDescriptor
    * Specifies what view {@link GPUTextureViewDescriptor#format} values will be allowed when calling
    * {@link GPUTexture#createView} on this texture (in addition to the texture's actual
    * {@link GPUTextureDescriptor#format}).
-   * <div class=note>
-   * Note:
+   * <div class=note heading>
    * Adding a format to this list may have a significant performance impact, so it is best
    * to avoid adding formats unnecessarily.
    * The actual performance impact is highly dependent on the target system; developers must
@@ -2145,17 +2156,6 @@ interface GPUCommandEncoder
     size?: GPUSize64
   ): undefined;
   /**
-   * Writes a timestamp value into a querySet when all previous commands have completed executing.
-   * Note: Timestamp query values are written in nanoseconds, but how the value is determined is
-   * implementation-defined and may not increase monotonically. See [[#timestamp]] for details.
-   * @param querySet - The query set that will store the timestamp values.
-   * @param queryIndex - The index of the query in the query set.
-   */
-  writeTimestamp(
-    querySet: GPUQuerySet,
-    queryIndex: GPUSize32
-  ): undefined;
-  /**
    * Resolves query results from a {@link GPUQuerySet} out into a range of a {@link GPUBuffer}.
    * 	querySet:
    * 	firstQuery:
@@ -2211,7 +2211,7 @@ interface GPUCompilationMessage {
    * Note: The {@link GPUCompilationMessage#message} should follow the best practices for language
    * and direction information. This includes making use of any future standards which may
    * emerge regarding the reporting of string language and direction metadata.
-   * <p class="note editorial">Editorial:
+   * <p class="note editorial"><span class=marker>Editorial note:</span>
    * At the time of this writing, no language/direction recommendation is available that provides
    * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
    */
@@ -2541,7 +2541,7 @@ interface GPUError {
    * Note: The {@link GPUError#message} should follow the best practices for language and
    * direction information. This includes making use of any future standards which may emerge
    * regarding the reporting of string language and direction metadata.
-   * <p class="note editorial">Editorial:
+   * <p class="note editorial"><span class=marker>Editorial note:</span>
    * At the time of this writing, no language/direction recommendation is available that provides
    * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
    */
