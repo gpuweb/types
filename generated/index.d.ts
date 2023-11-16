@@ -22,6 +22,15 @@ type GPUExtent3D =
     | GPUExtent3DDict;
 type GPUFlagsConstant =
   number;
+type GPUImageCopyExternalImageSource =
+
+    | ImageBitmap
+    | ImageData
+    | HTMLImageElement
+    | HTMLVideoElement
+    | VideoFrame
+    | HTMLCanvasElement
+    | OffscreenCanvas;
 type GPUIndex32 =
   number;
 type GPUIntegerCoordinate =
@@ -759,6 +768,134 @@ interface GPUFragmentState
    * this pipeline writes to.
    */
   targets: Array<GPUColorTargetState | null>;
+}
+
+interface GPUImageCopyBuffer
+  extends GPUImageDataLayout {
+  /**
+   * A buffer which either contains image data to be copied or will store the image data being
+   * copied, depending on the method it is being passed to.
+   */
+  buffer: GPUBuffer;
+}
+
+interface GPUImageCopyExternalImage {
+  /**
+   * The source of the image copy. The copy source data is captured at the moment that
+   * {@link GPUQueue#copyExternalImageToTexture} is issued. Source size is defined by source
+   * type, given by this table:
+   *
+   * <table class=data>
+   * <thead>
+   * <tr>
+   * <th>Source type
+   * <th>Width
+   * <th>Height
+   * </thead>
+   * <tbody>
+   * <tr>
+   * <td>{@link ImageBitmap}
+   * <td>{@link ImageBitmap#width|ImageBitmap.width}
+   * <td>{@link ImageBitmap#height|ImageBitmap.height}
+   * <tr>
+   * <td>{@link HTMLVideoElement}
+   * <td>video/intrinsic width|intrinsic width of the frame
+   * <td>video/intrinsic height|intrinsic height of the frame
+   * <tr>
+   * <td>{@link VideoFrame}
+   * <td>{@link VideoFrame#codedWidth|VideoFrame.codedWidth}
+   * <td>{@link VideoFrame#codedHeight|VideoFrame.codedHeight}
+   * <tr>
+   * <td>{@link HTMLCanvasElement}
+   * <td>{@link HTMLCanvasElement#width|HTMLCanvasElement.width}
+   * <td>{@link HTMLCanvasElement#height|HTMLCanvasElement.height}
+   * <tr>
+   * <td>{@link OffscreenCanvas}
+   * <td>{@link OffscreenCanvas#width|OffscreenCanvas.width}
+   * <td>{@link OffscreenCanvas#height|OffscreenCanvas.height}
+   * </tbody>
+   * </table>
+   */
+  source: GPUImageCopyExternalImageSource;
+  /**
+   * Defines the origin of the copy - the minimum (top-left) corner of the source sub-region to copy from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
+  origin?: GPUOrigin2D;
+  /**
+   * Describes whether the source image is vertically flipped, or not.
+   * If this option is set to `true`, the copy is flipped vertically: the bottom row of the source
+   * region is copied into the first row of the destination region, and so on.
+   * The {@link GPUImageCopyExternalImage#origin} option is still relative to the top-left corner
+   * of the source image, increasing downward.
+   */
+  flipY?: boolean;
+}
+
+interface GPUImageCopyTexture {
+  /**
+   * Texture to copy to/from.
+   */
+  texture: GPUTexture;
+  /**
+   * Mip-map level of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
+  mipLevel?: GPUIntegerCoordinate;
+  /**
+   * Defines the origin of the copy - the minimum corner of the texture sub-region to copy to/from.
+   * Together with `copySize`, defines the full copy sub-region.
+   */
+  origin?: GPUOrigin3D;
+  /**
+   * Defines which aspects of the {@link GPUImageCopyTexture#texture} to copy to/from.
+   */
+  aspect?: GPUTextureAspect;
+}
+
+interface GPUImageCopyTextureTagged
+  extends GPUImageCopyTexture {
+  /**
+   * Describes the color space and encoding used to encode data into the destination texture.
+   * This [[#color-space-conversions|may result]] in values outside of the range [0, 1]
+   * being written to the target texture, if its format can represent them.
+   * Otherwise, the results are clamped to the target texture format's range.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#colorSpace} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   */
+  colorSpace?: PredefinedColorSpace;
+  /**
+   * Describes whether the data written into the texture should have its RGB channels
+   * premultiplied by the alpha channel, or not.
+   * If this option is set to `true` and the {@link GPUImageCopyExternalImage#source} is also
+   * premultiplied, the source RGB values must be preserved even if they exceed their
+   * corresponding alpha values.
+   * Note:
+   * If {@link GPUImageCopyTextureTagged#premultipliedAlpha} matches the source image,
+   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   */
+  premultipliedAlpha?: boolean;
+}
+
+interface GPUImageDataLayout {
+  /**
+   * The offset, in bytes, from the beginning of the image data source (such as a
+   * {@link GPUImageCopyBuffer#buffer|GPUImageCopyBuffer.buffer}) to the start of the image data
+   * within that source.
+   */
+  offset?: GPUSize64;
+  /**
+   * The stride, in bytes, between the beginning of each block row and the subsequent block row.
+   * Required if there are multiple block rows (i.e. the copy height or depth is more than one block).
+   */
+  bytesPerRow?: GPUSize32;
+  /**
+   * Number of block rows per single image of the texture.
+   * {@link GPUImageDataLayout#rowsPerImage} &times;
+   * {@link GPUImageDataLayout#bytesPerRow} is the stride, in bytes, between the beginning of each image of data and the subsequent image.
+   * Required if there are multiple images (i.e. the copy depth is more than one).
+   */
+  rowsPerImage?: GPUSize32;
 }
 
 interface GPUMultisampleState {
