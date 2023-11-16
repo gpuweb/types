@@ -46,7 +46,6 @@
 <a href="GPUCommandEncoder.html#popDebugGroup" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>pop<wbr/>Debug<wbr/>Group</span></a>
 <a href="GPUCommandEncoder.html#pushDebugGroup" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>push<wbr/>Debug<wbr/>Group</span></a>
 <a href="GPUCommandEncoder.html#resolveQuerySet" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>resolve<wbr/>Query<wbr/>Set</span></a>
-<a href="GPUCommandEncoder.html#writeTimestamp" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>write<wbr/>Timestamp</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
@@ -291,27 +290,6 @@ multiple continuous texture subresources.</p>
 <h5>destination: <a href="GPUBuffer.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUBuffer</a></h5></li>
 <li>
 <h5>destinationOffset: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span></h4></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="writeTimestamp" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>write<wbr/>Timestamp</span><a href="#writeTimestamp" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
-<li class="tsd-signature tsd-anchor-link" id="writeTimestamp.writeTimestamp-1">write<wbr/>Timestamp<span class="tsd-signature-symbol">(</span>querySet<span class="tsd-signature-symbol">: </span><a href="GPUQuerySet.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUQuerySet</a>, queryIndex<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><a href="#writeTimestamp.writeTimestamp-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Writes a timestamp value into a querySet when all previous commands have completed executing.
-Note: Timestamp query values are written in nanoseconds, but how the value is determined is
-implementation-defined and may not increase monotonically. See <a href="https://www.w3.org/TR/webgpu/#timestamp">https://www.w3.org/TR/webgpu/#timestamp</a> for details.</p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>querySet: <a href="GPUQuerySet.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUQuerySet</a></h5>
-<div class="tsd-comment tsd-typography"><p>The query set that will store the timestamp values.</p>
-</div></li>
-<li>
-<h5>queryIndex: <span class="tsd-signature-type">number</span></h5>
-<div class="tsd-comment tsd-typography"><p>The index of the query in the query set.</p>
-</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span></h4></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -350,8 +328,7 @@ implementation-defined and may not increase monotonically. See <a href="https://
 <li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="GPUCommandEncoder.html#insertDebugMarker" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>insert<wbr/>Debug<wbr/>Marker</a></li>
 <li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="GPUCommandEncoder.html#popDebugGroup" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>pop<wbr/>Debug<wbr/>Group</a></li>
 <li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="GPUCommandEncoder.html#pushDebugGroup" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>push<wbr/>Debug<wbr/>Group</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="GPUCommandEncoder.html#resolveQuerySet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>resolve<wbr/>Query<wbr/>Set</a></li>
-<li class="tsd-kind-method tsd-parent-kind-interface"><a href="GPUCommandEncoder.html#writeTimestamp" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>write<wbr/>Timestamp</a></li></ul></li></ul></nav></div></div>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="GPUCommandEncoder.html#resolveQuerySet" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>resolve<wbr/>Query<wbr/>Set</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>
