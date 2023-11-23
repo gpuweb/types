@@ -1060,7 +1060,7 @@ interface GPUProgrammableStage {
    * The name of the function in {@link GPUProgrammableStage#module} that this stage will use to
    * perform its work.
    */
-  entryPoint: string;
+  entryPoint?: string;
   /**
    * Specifies the values of pipeline-overridable constants in the shader module
    * {@link GPUProgrammableStage#module}.
