@@ -17,8 +17,9 @@ See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declar
 
 ### Install
 
-- npm: `npm install --save @webgpu/types`
-- yarn: `yarn add @webgpu/types`
+- npm: `npm install --save-dev @webgpu/types`
+- yarn: `yarn add --dev @webgpu/types`
+- pnpm: `pnpm add -D @webgpu/types`
 
 If you are on TypeScript < 5.1, you will also need to install `@types/dom-webcodecs`
 as a sibling dependency. The version you need depends on the TypeScript version;
