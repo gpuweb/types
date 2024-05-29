@@ -86,11 +86,17 @@ texel.</p>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="maxAnisotropy" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>max<wbr/>Anisotropy</span><a href="#maxAnisotropy" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">max<wbr/>Anisotropy<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
-<div class="tsd-comment tsd-typography"><p>Specifies the maximum anisotropy value clamp used by the sampler.
-Note: Most implementations support <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a> values in range
-between 1 and 16, inclusive. The used value of <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a> will
-be clamped to the maximum value that the platform supports.</p>
-</div></section>
+<div class="tsd-comment tsd-typography"><p>Specifies the maximum anisotropy value clamp used by the sampler. Anisotropic filtering is
+enabled when <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a> is &gt; 1 and the implementation supports it.
+Anisotropic filtering improves the image quality of textures sampled at oblique viewing
+angles. Higher <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a> values indicate the maximum ratio of
+anisotropy supported when filtering.</p>
+<div class=note heading>
+Most implementations support <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a> values in range
+between 1 and 16, inclusive. The used value of <a href="GPUSamplerDescriptor.html#maxAnisotropy">maxAnisotropy</a>
+will be clamped to the maximum value that the platform supports.
+The precise filtering behavior is implementation-dependent.
+</div></div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="minFilter" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>min<wbr/>Filter</span><a href="#minFilter" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">min<wbr/>Filter<span class="tsd-signature-symbol">?:</span> <a href="../types/GPUFilterMode.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUFilterMode</a></div>

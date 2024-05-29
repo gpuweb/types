@@ -41,10 +41,13 @@
 <div class="tsd-comment tsd-typography"><p>Specifies the values of pipeline-overridable constants in the shader module
 <a href="GPUProgrammableStage.html#module">module</a>.
 Each such pipeline-overridable constant is uniquely identified by a single
-pipeline-overridable constant identifier string (representing the numeric ID of the
-constant, if one is specified, and otherwise the constant&#39;s identifier name).
-WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier comparison.
-The key of each key-value pair must equal the identifier string of one such constant.
+pipeline-overridable constant identifier string, representing the pipeline
+constant ID of the constant if its declaration specifies one, and otherwise the
+constant&#39;s identifier name.
+The key of each key-value pair must equal the
+pipeline-overridable constant identifier string|identifier string
+of one such constant, with the comparison performed
+according to the rules for WGSL identifier comparison.
 When the pipeline is executed, that constant will have the specified value.
 Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a double.
 They are converted [$to WGSL type$] of the pipeline-overridable constant (<code>bool</code>/<code>i32</code>/<code>u32</code>/<code>f32</code>/<code>f16</code>).
@@ -55,7 +58,11 @@ If conversion fails, a validation error is generated.</p>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>entry<wbr/>Point</span><a href="#entryPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">entry<wbr/>Point<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
 <div class="tsd-comment tsd-typography"><p>The name of the function in <a href="GPUProgrammableStage.html#module">module</a> that this stage will use to
-perform its work.</p>
+perform its work.
+NOTE: Since the <a href="GPUProgrammableStage.html#entryPoint">entryPoint</a> dictionary member is
+not required, methods which consume a <a href="GPUProgrammableStage.html">GPUProgrammableStage</a> must use the
+&quot;[$get the entry point$]&quot; algorithm to determine which entry point
+it refers to.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="GPUProgrammableStage.html">GPUProgrammableStage</a>.<a href="GPUProgrammableStage.html#entryPoint">entryPoint</a></p></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="module" class="tsd-anchor"></a>
