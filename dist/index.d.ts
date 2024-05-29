@@ -3187,7 +3187,6 @@ interface GPUBufferUsage {
 }
 
 declare var GPUBufferUsage: {
-  prototype: GPUBufferUsage;
   readonly MAP_READ: GPUFlagsConstant;
   readonly MAP_WRITE: GPUFlagsConstant;
   readonly COPY_SRC: GPUFlagsConstant;
@@ -3215,7 +3214,6 @@ interface GPUColorWrite {
 }
 
 declare var GPUColorWrite: {
-  prototype: GPUColorWrite;
   readonly RED: GPUFlagsConstant;
   readonly GREEN: GPUFlagsConstant;
   readonly BLUE: GPUFlagsConstant;
@@ -3235,8 +3233,6 @@ interface GPUMapMode {
 }
 
 declare var GPUMapMode: {
-  prototype: GPUMapMode;
-  new (): never;
   readonly READ: GPUFlagsConstant;
   readonly WRITE: GPUFlagsConstant;
 };
@@ -3254,7 +3250,6 @@ interface GPUShaderStage {
 }
 
 declare var GPUShaderStage: {
-  prototype: GPUShaderStage;
   readonly VERTEX: GPUFlagsConstant;
   readonly FRAGMENT: GPUFlagsConstant;
   readonly COMPUTE: GPUFlagsConstant;
@@ -3275,7 +3270,6 @@ interface GPUTextureUsage {
 }
 
 declare var GPUTextureUsage: {
-  prototype: GPUTextureUsage;
   readonly COPY_SRC: GPUFlagsConstant;
   readonly COPY_DST: GPUFlagsConstant;
   readonly TEXTURE_BINDING: GPUFlagsConstant;
