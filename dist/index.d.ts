@@ -1970,6 +1970,7 @@ interface GPUAdapterInfo {
 
 declare var GPUAdapterInfo: {
   prototype: GPUAdapterInfo;
+  new (): never;
 };
 
 interface GPUBindGroup
