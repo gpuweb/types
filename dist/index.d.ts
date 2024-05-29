@@ -461,7 +461,7 @@ interface GPUBindGroupLayoutDescriptor
   /**
    * A list of entries describing the shader resource bindings for a bind group.
    */
-  entries: Array<GPUBindGroupLayoutEntry>;
+  entries: Iterable<GPUBindGroupLayoutEntry>;
 }
 
 interface GPUBindGroupLayoutEntry {
@@ -1925,6 +1925,8 @@ interface GPUAdapter {
   requestDevice(
     descriptor?: GPUDeviceDescriptor
   ): Promise<GPUDevice>;
+  /** @deprecated Use `adapter.info` instead (once available in browsers). */
+  requestAdapterInfo(): Promise<GPUAdapterInfo>;
 }
 
 declare var GPUAdapter: {
