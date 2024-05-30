@@ -47,7 +47,7 @@
 <div class="tsd-comment tsd-typography"><p>If <code>true</code> creates the buffer in an already mapped state, allowing
 <a href="GPUBuffer.html#getMappedRange">getMappedRange</a> to be called immediately. It is valid to set
 <a href="GPUBufferDescriptor.html#mappedAtCreation">mappedAtCreation</a> to <code>true</code> even if <a href="GPUBufferDescriptor.html#usage">usage</a>
-does not contain <a href="GPUBufferUsage.html#MAP_READ">MAP_READ</a> or <a href="GPUBufferUsage.html#MAP_WRITE">MAP_WRITE</a>. This can be
+does not contain GPUBufferUsage#MAP_READ or GPUBufferUsage#MAP_WRITE. This can be
 used to set the buffer&#39;s initial data.
 Guarantees that even if the buffer creation eventually fails, it will still appear as if the
 mapped range can be written/read to until it is unmapped.</p>
