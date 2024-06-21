@@ -37,8 +37,10 @@
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="bytesPerRow" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>bytes<wbr/>Per<wbr/>Row</span><a href="#bytesPerRow" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature">bytes<wbr/>Per<wbr/>Row<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
-<div class="tsd-comment tsd-typography"><p>The stride, in bytes, between the beginning of each block row and the subsequent block row.
-Required if there are multiple block rows (i.e. the copy height or depth is more than one block).</p>
+<div class="tsd-comment tsd-typography"><p>The stride, in bytes, between the beginning of each texel block row and the subsequent
+texel block row.
+Required if there are multiple texel block rows (i.e. the copy height or depth is more
+than one block).</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="offset" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>offset</span><a href="#offset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -50,10 +52,11 @@ within that source.</p>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="rowsPerImage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>rows<wbr/>Per<wbr/>Image</span><a href="#rowsPerImage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">rows<wbr/>Per<wbr/>Image<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
-<div class="tsd-comment tsd-typography"><p>Number of block rows per single image of the texture.
+<div class="tsd-comment tsd-typography"><p>Number of texel block rows per single texel image of the texture.
 <a href="GPUImageDataLayout.html#rowsPerImage">rowsPerImage</a> &times;
-<a href="GPUImageDataLayout.html#bytesPerRow">bytesPerRow</a> is the stride, in bytes, between the beginning of each image of data and the subsequent image.
-Required if there are multiple images (i.e. the copy depth is more than one).</p>
+<a href="GPUImageDataLayout.html#bytesPerRow">bytesPerRow</a> is the stride, in bytes, between the beginning of each
+texel image of data and the subsequent texel image.
+Required if there are multiple texel images (i.e. the copy depth is more than one).</p>
 </div></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
