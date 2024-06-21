@@ -88,7 +88,11 @@ type GPUBlendFactor =
     | "one-minus-dst-alpha"
     | "src-alpha-saturated"
     | "constant"
-    | "one-minus-constant";
+    | "one-minus-constant"
+    | "src1"
+    | "one-minus-src1"
+    | "src1-alpha"
+    | "one-minus-src1-alpha";
 type GPUBlendOperation =
 
     | "add"
@@ -151,7 +155,9 @@ type GPUFeatureName =
     | "shader-f16"
     | "rg11b10ufloat-renderable"
     | "bgra8unorm-storage"
-    | "float32-filterable";
+    | "float32-filterable"
+    | "clip-distances"
+    | "dual-source-blending";
 type GPUFilterMode =
 
     | "nearest"
@@ -906,15 +912,18 @@ interface GPUImageDataLayout {
    */
   offset?: GPUSize64;
   /**
-   * The stride, in bytes, between the beginning of each block row and the subsequent block row.
-   * Required if there are multiple block rows (i.e. the copy height or depth is more than one block).
+   * The stride, in bytes, between the beginning of each texel block row and the subsequent
+   * texel block row.
+   * Required if there are multiple texel block rows (i.e. the copy height or depth is more
+   * than one block).
    */
   bytesPerRow?: GPUSize32;
   /**
-   * Number of block rows per single image of the texture.
+   * Number of texel block rows per single texel image of the texture.
    * {@link GPUImageDataLayout#rowsPerImage} &times;
-   * {@link GPUImageDataLayout#bytesPerRow} is the stride, in bytes, between the beginning of each image of data and the subsequent image.
-   * Required if there are multiple images (i.e. the copy depth is more than one).
+   * {@link GPUImageDataLayout#bytesPerRow} is the stride, in bytes, between the beginning of each
+   * texel image of data and the subsequent texel image.
+   * Required if there are multiple texel images (i.e. the copy depth is more than one).
    */
   rowsPerImage?: GPUSize32;
 }
@@ -2039,10 +2048,6 @@ interface GPUCommandEncoder
   beginRenderPass(
     descriptor: GPURenderPassDescriptor
   ): GPURenderPassEncoder;
-  /**
-   * Begins encoding a compute pass described by `descriptor`.
-   * 	descriptor:
-   */
   beginComputePass(
     descriptor?: GPUComputePassDescriptor
   ): GPUComputePassEncoder;
