@@ -30,6 +30,7 @@
 <a href="GPUCanvasConfiguration.html#colorSpace" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>color<wbr/>Space?</span></a>
 <a href="GPUCanvasConfiguration.html#device" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>device</span></a>
 <a href="GPUCanvasConfiguration.html#format" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>format</span></a>
+<a href="GPUCanvasConfiguration.html#toneMapping" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>tone<wbr/>Mapping?</span></a>
 <a href="GPUCanvasConfiguration.html#usage" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>usage?</span></a>
 <a href="GPUCanvasConfiguration.html#viewFormats" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>view<wbr/>Formats?</span></a>
 </div></section></div></details></section></section>
@@ -58,6 +59,12 @@ compatible with.</p>
 <div class="tsd-signature">format<span class="tsd-signature-symbol">:</span> <a href="../types/GPUTextureFormat.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUTextureFormat</a></div>
 <div class="tsd-comment tsd-typography"><p>The format that textures returned by <a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> will have.
 Must be one of the Supported context formats.</p>
+</div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="toneMapping" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>tone<wbr/>Mapping</span><a href="#toneMapping" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">tone<wbr/>Mapping<span class="tsd-signature-symbol">?:</span> <a href="GPUCanvasToneMapping.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUCanvasToneMapping</a></div>
+<div class="tsd-comment tsd-typography"><p>The tone mapping determines how the content of textures returned by
+<a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> are to be displayed.</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="usage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>usage</span><a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -103,6 +110,7 @@ when setting a custom usage if you wish to use textures returned by
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#colorSpace" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>color<wbr/>Space?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#device" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>device</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#format" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>format</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#toneMapping" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>tone<wbr/>Mapping?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#usage" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>usage?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUCanvasConfiguration.html#viewFormats" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>view<wbr/>Formats?</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
