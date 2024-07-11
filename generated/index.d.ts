@@ -114,6 +114,10 @@ type GPUCanvasAlphaMode =
 
     | "opaque"
     | "premultiplied";
+type GPUCanvasToneMappingMode =
+
+    | "standard"
+    | "extended";
 type GPUCompareFunction =
 
     | "never"
@@ -582,10 +586,19 @@ interface GPUCanvasConfiguration {
    */
   colorSpace?: PredefinedColorSpace;
   /**
+   * The tone mapping determines how the content of textures returned by
+   * {@link GPUCanvasContext#getCurrentTexture} are to be displayed.
+   */
+  toneMapping?: GPUCanvasToneMapping;
+  /**
    * Determines the effect that alpha values will have on the content of textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} when read, displayed, or used as an image source.
    */
   alphaMode?: GPUCanvasAlphaMode;
+}
+
+interface GPUCanvasToneMapping {
+  mode?: GPUCanvasToneMappingMode;
 }
 
 interface GPUColorDict {
@@ -1349,12 +1362,12 @@ interface GPUSamplerDescriptor
    */
   addressModeW?: GPUAddressMode;
   /**
-   * Specifies the sampling behavior when the sample footprint is smaller than or equal to one
+   * Specifies the sampling behavior when the sampled area is smaller than or equal to one
    * texel.
    */
   magFilter?: GPUFilterMode;
   /**
-   * Specifies the sampling behavior when the sample footprint is larger than one texel.
+   * Specifies the sampling behavior when the sampled area is larger than one texel.
    */
   minFilter?: GPUFilterMode;
   /**
