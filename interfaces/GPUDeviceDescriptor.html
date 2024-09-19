@@ -56,12 +56,12 @@ of API calls on the resulting device.</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="requiredLimits" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>required<wbr/>Limits</span><a href="#requiredLimits" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">required<wbr/>Limits<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
+<div class="tsd-signature">required<wbr/>Limits<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
 <div class="tsd-comment tsd-typography"><p>Specifies the limits that are required by the device request.
 The request will fail if the adapter cannot provide these limits.
-Each key must be the name of a member of supported limits.
-Exactly the specified limits, and no limit/better or worse,
-will be allowed in validation of API calls on the resulting device.</p>
+Each key with a non-<code>undefined</code> value must be the name of a member of supported limits.
+API calls on the resulting device perform validation according to the exact limits of the
+device (not the adapter; see <a href="https://www.w3.org/TR/webgpu/#limits">https://www.w3.org/TR/webgpu/#limits</a>).</p>
 <!-- If we ever need limit types other than GPUSize32/GPUSize64, we can change the value
 type to `double` or `any` in the future and write out the type conversion explicitly (by
 reference to WebIDL spec). Or change the entire type to `any` and add back a `dictionary

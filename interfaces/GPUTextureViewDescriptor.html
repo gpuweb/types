@@ -36,6 +36,7 @@
 <a href="GPUTextureViewDescriptor.html#format" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>format?</span></a>
 <a href="GPUTextureViewDescriptor.html#label" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>label?</span></a>
 <a href="GPUTextureViewDescriptor.html#mipLevelCount" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>mip<wbr/>Level<wbr/>Count?</span></a>
+<a href="GPUTextureViewDescriptor.html#usage" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>usage?</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
@@ -82,6 +83,16 @@ texture or one of the <a href="GPUTextureDescriptor.html#viewFormats">viewFormat
 <div class="tsd-signature">mip<wbr/>Level<wbr/>Count<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>How many mipmap levels, starting with <a href="GPUTextureViewDescriptor.html#baseMipLevel">baseMipLevel</a>, are accessible to
 the texture view.</p>
+</div></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="usage" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>usage</span><a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">usage<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
+<div class="tsd-comment tsd-typography"><p>The allowed GPUTextureUsag | sage(s) for the texture view. Must be a subset of the
+<a href="GPUTexture.html#usage">usage</a> flags of the texture. If 0, defaults to the full set of
+<a href="GPUTexture.html#usage">usage</a> flags of the texture.
+Note: If the view&#39;s <a href="GPUTextureViewDescriptor.html#format">format</a> doesn&#39;t support all of the
+texture&#39;s <a href="GPUTextureDescriptor.html#usage">usage</a>s, the default will fail,
+and the view&#39;s <a href="GPUTextureViewDescriptor.html#usage">usage</a> must be specified explicitly.</p>
 </div></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -115,7 +126,8 @@ the texture view.</p>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUTextureViewDescriptor.html#dimension" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>dimension?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUTextureViewDescriptor.html#format" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>format?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="GPUTextureViewDescriptor.html#label" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>label?</a></li>
-<li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUTextureViewDescriptor.html#mipLevelCount" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>mip<wbr/>Level<wbr/>Count?</a></li></ul></li></ul></nav></div></div>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUTextureViewDescriptor.html#mipLevelCount" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>mip<wbr/>Level<wbr/>Count?</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="GPUTextureViewDescriptor.html#usage" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>usage?</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>

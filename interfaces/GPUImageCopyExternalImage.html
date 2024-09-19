@@ -51,50 +51,9 @@ Together with <code>copySize</code>, defines the full copy sub-region.</p>
 <h3 class="tsd-anchor-link"><span>source</span><a href="#source" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">source<span class="tsd-signature-symbol">:</span> <a href="../types/GPUImageCopyExternalImageSource.html" class="tsd-signature-type" data-tsd-kind="Type alias">GPUImageCopyExternalImageSource</a></div>
 <div class="tsd-comment tsd-typography"><p>The source of the image copy. The copy source data is captured at the moment that
-<a href="GPUQueue.html#copyExternalImageToTexture">copyExternalImageToTexture</a> is issued. Source size is defined by source
-type, given by this table:</p>
-<table class=data>
-<thead>
-<tr>
-<th>Source type
-<th>Dimensions
-</thead>
-<tbody>
-<tr>
-<td>ImageBitmap
-<td>ImageBitmap#widt | mageBitmap.width,
-ImageBitmap#heigh | mageBitmap.height
-<tr>
-<td>HTMLImageElement
-<td>HTMLImageElement#naturalWidt | TMLImageElement.naturalWidth,
-HTMLImageElement#naturalHeigh | TMLImageElement.naturalHeight
-<tr>
-<td><a href="HTMLVideoElement.html">HTMLVideoElement</a>
-<td>video/intrinsic width|intrinsic width of the frame,
-video/intrinsic height|intrinsic height of the frame
-<tr>
-<td>VideoFrame
-<td>VideoFrame#codedWidt | ideoFrame.codedWidth,
-VideoFrame#codedHeigh | ideoFrame.codedHeight
-<tr>
-<td>ImageData
-<td>ImageData#widt | mageData.width,
-ImageData#heigh | mageData.height
-<tr>
-<td><a href="HTMLCanvasElement.html">HTMLCanvasElement</a> or <a href="OffscreenCanvas.html">OffscreenCanvas</a> with CanvasRenderingContext2D or <a href="GPUCanvasContext.html">GPUCanvasContext</a>
-<td>HTMLCanvasElement#widt | TMLCanvasElement.width,
-HTMLCanvasElement#heigh | TMLCanvasElement.height
-<tr>
-<td><a href="HTMLCanvasElement.html">HTMLCanvasElement</a> or <a href="OffscreenCanvas.html">OffscreenCanvas</a> with WebGLRenderingContextBase
-<td>WebGLRenderingContextBase#drawingBufferWidt | ebGLRenderingContextBase.drawingBufferWidth,
-WebGLRenderingContextBase#drawingBufferHeigh | ebGLRenderingContextBase.drawingBufferHeight
-<tr>
-<td><a href="HTMLCanvasElement.html">HTMLCanvasElement</a> or <a href="OffscreenCanvas.html">OffscreenCanvas</a> with ImageBitmapRenderingContext
-<td>ImageBitmapRenderingContext's internal output bitmap
-ImageBitmap#widt | mageBitmap.width,
-ImageBitmap#heigh | mageBitmap.height
-</tbody>
-</table></div></section></section></div>
+<a href="GPUQueue.html#copyExternalImageToTexture">copyExternalImageToTexture</a> is issued. Source size is determined as described
+by the external source dimensions table.</p>
+</div></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">

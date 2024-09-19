@@ -205,6 +205,7 @@ Upon initialization, it is set to a new promise.</p>
 The returned Promise resolves when the created pipeline
 is ready to be used without additional delay.
 If pipeline creation fails, the returned Promise rejects with an <a href="GPUPipelineError.html">GPUPipelineError</a>.
+(A <a href="GPUError.html">GPUError</a> is not dispatched to the device.)
 Note: Use of this method is preferred whenever possible, as it prevents blocking the
 queue timeline work on pipeline compilation.</p>
 </div>
@@ -285,6 +286,7 @@ queue timeline work on pipeline compilation.</p>
 The returned Promise resolves when the created pipeline
 is ready to be used without additional delay.
 If pipeline creation fails, the returned Promise rejects with an <a href="GPUPipelineError.html">GPUPipelineError</a>.
+(A <a href="GPUError.html">GPUError</a> is not dispatched to the device.)
 Note: Use of this method is preferred whenever possible, as it prevents blocking the
 queue timeline work on pipeline compilation.</p>
 </div>
