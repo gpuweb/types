@@ -152,8 +152,10 @@ type GPUFeatureName =
     | "depth-clip-control"
     | "depth32float-stencil8"
     | "texture-compression-bc"
+    | "texture-compression-bc-sliced-3d"
     | "texture-compression-etc2"
     | "texture-compression-astc"
+    | "texture-compression-astc-sliced-3d"
     | "timestamp-query"
     | "indirect-first-instance"
     | "shader-f16"
@@ -712,15 +714,15 @@ interface GPUDepthStencilState {
    */
   stencilWriteMask?: GPUStencilValue;
   /**
-   * Constant depth bias added to each fragment. See [$biased fragment depth$] for details.
+   * Constant depth bias added to each triangle fragment. See [$biased fragment depth$] for details.
    */
   depthBias?: GPUDepthBias;
   /**
-   * Depth bias that scales with the fragment’s slope. See [$biased fragment depth$] for details.
+   * Depth bias that scales with the triangle fragment’s slope. See [$biased fragment depth$] for details.
    */
   depthBiasSlopeScale?: number;
   /**
-   * The maximum depth bias of a fragment. See [$biased fragment depth$] for details.
+   * The maximum depth bias of a triangle fragment. See [$biased fragment depth$] for details.
    */
   depthBiasClamp?: number;
 }
@@ -737,9 +739,9 @@ interface GPUDeviceDescriptor
   /**
    * Specifies the limits that are required by the device request.
    * The request will fail if the adapter cannot provide these limits.
-   * Each key must be the name of a member of supported limits.
-   * Exactly the specified limits, and no limit/better or worse,
-   * will be allowed in validation of API calls on the resulting device.
+   * Each key with a non-`undefined` value must be the name of a member of supported limits.
+   * API calls on the resulting device perform validation according to the exact limits of the
+   * device (not the adapter; see [[#limits]]).
    * <!-- If we ever need limit types other than GPUSize32/GPUSize64, we can change the value
    * type to `double` or `any` in the future and write out the type conversion explicitly (by
    * reference to WebIDL spec). Or change the entire type to `any` and add back a `dictionary
@@ -747,7 +749,8 @@ interface GPUDeviceDescriptor
    */
   requiredLimits?: Record<
     string,
-    GPUSize64
+    | GPUSize64
+    | undefined
   >;
   /**
    * The descriptor for the default {@link GPUQueue}.
@@ -778,7 +781,8 @@ interface GPUExternalTextureBindingLayout {}
 interface GPUExternalTextureDescriptor
   extends GPUObjectDescriptorBase {
   /**
-   * The video source to import the external texture from.
+   * The video source to import the external texture from. Source size is determined as described
+   * by the external source dimensions table.
    */
   source:
     | HTMLVideoElement
@@ -811,50 +815,8 @@ interface GPUImageCopyBuffer
 interface GPUImageCopyExternalImage {
   /**
    * The source of the image copy. The copy source data is captured at the moment that
-   * {@link GPUQueue#copyExternalImageToTexture} is issued. Source size is defined by source
-   * type, given by this table:
-   * <table class=data>
-   * <thead>
-   * <tr>
-   * <th>Source type
-   * <th>Dimensions
-   * </thead>
-   * <tbody>
-   * <tr>
-   * <td>{@link ImageBitmap}
-   * <td>{@link ImageBitmap#width|ImageBitmap.width},
-   * {@link ImageBitmap#height|ImageBitmap.height}
-   * <tr>
-   * <td>{@link HTMLImageElement}
-   * <td>{@link HTMLImageElement#naturalWidth|HTMLImageElement.naturalWidth},
-   * {@link HTMLImageElement#naturalHeight|HTMLImageElement.naturalHeight}
-   * <tr>
-   * <td>{@link HTMLVideoElement}
-   * <td>video/intrinsic width|intrinsic width of the frame,
-   * video/intrinsic height|intrinsic height of the frame
-   * <tr>
-   * <td>{@link VideoFrame}
-   * <td>{@link VideoFrame#codedWidth|VideoFrame.codedWidth},
-   * {@link VideoFrame#codedHeight|VideoFrame.codedHeight}
-   * <tr>
-   * <td>{@link ImageData}
-   * <td>{@link ImageData#width|ImageData.width},
-   * {@link ImageData#height|ImageData.height}
-   * <tr>
-   * <td>{@link HTMLCanvasElement} or {@link OffscreenCanvas} with {@link CanvasRenderingContext2D} or {@link GPUCanvasContext}
-   * <td>{@link HTMLCanvasElement#width|HTMLCanvasElement.width},
-   * {@link HTMLCanvasElement#height|HTMLCanvasElement.height}
-   * <tr>
-   * <td>{@link HTMLCanvasElement} or {@link OffscreenCanvas} with {@link WebGLRenderingContextBase}
-   * <td>{@link WebGLRenderingContextBase#drawingBufferWidth|WebGLRenderingContextBase.drawingBufferWidth},
-   * {@link WebGLRenderingContextBase#drawingBufferHeight|WebGLRenderingContextBase.drawingBufferHeight}
-   * <tr>
-   * <td>{@link HTMLCanvasElement} or {@link OffscreenCanvas} with {@link ImageBitmapRenderingContext}
-   * <td>{@link ImageBitmapRenderingContext}'s internal output bitmap
-   * {@link ImageBitmap#width|ImageBitmap.width},
-   * {@link ImageBitmap#height|ImageBitmap.height}
-   * </tbody>
-   * </table>
+   * {@link GPUQueue#copyExternalImageToTexture} is issued. Source size is determined as described
+   * by the external source dimensions table.
    */
   source: GPUImageCopyExternalImageSource;
   /**
@@ -1141,12 +1103,14 @@ interface GPURenderBundleEncoderDescriptor
    * If `true`, indicates that the render bundle does not modify the depth component of the
    * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
    * in.
+   * See read-only depth-stencil.
    */
   depthReadOnly?: boolean;
   /**
    * If `true`, indicates that the render bundle does not modify the stencil component of the
    * {@link GPURenderPassDepthStencilAttachment} of any render pass the render bundle is executed
    * in.
+   * See read-only depth-stencil.
    */
   stencilReadOnly?: boolean;
 }
@@ -1337,6 +1301,7 @@ interface GPURenderPipelineDescriptor
 }
 
 interface GPURequestAdapterOptions {
+  featureLevel?: any;
   powerPreference?: GPUPowerPreference;
   forceFallbackAdapter?: boolean;
 }
@@ -1426,18 +1391,6 @@ interface GPUShaderModuleDescriptor
    */
   code: string;
   /**
-   * If defined, **may** be interpreted in the [[!SourceMap]] v3 format.
-   * If an implementation supports this option but is unable to process the provided value,
-   * it should show a developer-visible warning but must not produce any application-observable
-   * error.
-   * Note:
-   * Source map support is optional, but serves as a semi-standardized way to support dev-tool
-   * integration such as source-language debugging.
-   * WGSL names (identifiers) in source maps follow the rules defined in WGSL identifier
-   * comparison.
-   */
-  sourceMap?: any;
-  /**
    * A list of {@link GPUShaderModuleCompilationHint}s.
    * Any hint provided by an application **should** contain information about one entry point of
    * a pipeline that will eventually be created from the entry point.
@@ -1467,8 +1420,8 @@ interface GPUShaderModuleDescriptor
 
 interface GPUStencilFaceState {
   /**
-   * The {@link GPUCompareFunction} used when testing fragments against
-   * {@link GPURenderPassDescriptor#depthStencilAttachment} stencil values.
+   * The {@link GPUCompareFunction} used when testing the {@link RenderState#[[stencilReference]]} value
+   * against the fragment's {@link GPURenderPassDescriptor#depthStencilAttachment} stencil values.
    */
   compare?: GPUCompareFunction;
   /**
@@ -1583,6 +1536,15 @@ interface GPUTextureViewDescriptor
    * The dimension to view the texture as.
    */
   dimension?: GPUTextureViewDimension;
+  /**
+   * The allowed {@link GPUTextureUsage|usage(s)} for the texture view. Must be a subset of the
+   * {@link GPUTexture#usage} flags of the texture. If 0, defaults to the full set of
+   * {@link GPUTexture#usage} flags of the texture.
+   * Note: If the view's {@link GPUTextureViewDescriptor#format} doesn't support all of the
+   * texture's {@link GPUTextureDescriptor#usage}s, the default will fail,
+   * and the view's {@link GPUTextureViewDescriptor#usage} must be specified explicitly.
+   */
+  usage?: GPUTextureUsageFlags;
   /**
    * Which {@link GPUTextureAspect|aspect(s)} of the texture are accessible to the texture view.
    */
@@ -1778,9 +1740,6 @@ interface GPURenderCommandsMixin {
 }
 
 interface NavigatorGPU {
-  /**
-   * A global singleton providing top-level entry points like {@link GPU#requestAdapter}.
-   */
   readonly gpu: GPU;
 }
 
@@ -1825,36 +1784,14 @@ interface GPUAdapter {
    * @internal
    */
   readonly __brand: "GPUAdapter";
-  /**
-   * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
-   */
   readonly features: GPUSupportedFeatures;
-  /**
-   * The limits in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[limits]]}.
-   */
   readonly limits: GPUSupportedLimits;
-  /**
-   * Information about the physical adapter underlying this {@link GPUAdapter}.
-   * For a given {@link GPUAdapter}, the {@link GPUAdapterInfo} values exposed are constant over time.
-   * The same object is returned each time. To create that object for the first time:
-   * <div algorithm=GPUAdapter.info>
-   * <div data-timeline=content>
-   * **Called on:** {@link GPUAdapter} `this`.
-   * **Returns:** {@link GPUAdapterInfo}
-   * Content timeline steps:
-   * 1. Return a [$new adapter info$] for `this.adapter`.
-   * </div>
-   * </div>
-   */
   readonly info: GPUAdapterInfo;
-  /**
-   * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[fallback]]}.
-   */
   readonly isFallbackAdapter: boolean;
   /**
    * Requests a device from the adapter.
    * This is a one-time action: if a device is returned successfully,
-   * the adapter [$expires$].
+   * the adapter becomes {@link adapter#[[state]]#"consumed"}.
    * @param descriptor - Description of the {@link GPUDevice} to request.
    */
   requestDevice(
@@ -1873,30 +1810,9 @@ interface GPUAdapterInfo {
    * @internal
    */
   readonly __brand: "GPUAdapterInfo";
-  /**
-   * The name of the vendor of the adapter, if available. Empty string otherwise.
-   */
   readonly vendor: string;
-  /**
-   * The name of the family or class of GPUs the adapter belongs to, if available. Empty
-   * string otherwise.
-   */
   readonly architecture: string;
-  /**
-   * A vendor-specific identifier for the adapter, if available. Empty string otherwise.
-   * Note: This is a value that represents the type of adapter. For example, it may be a
-   * [PCI device ID](https://pcisig.com/). It does not uniquely identify a given piece of
-   * hardware like a serial number.
-   */
   readonly device: string;
-  /**
-   * A human readable string describing the adapter as reported by the driver, if available.
-   * Empty string otherwise.
-   * Note: Because no formatting is applied to {@link GPUAdapterInfo#description} attempting to parse
-   * this value is not recommended. Applications which change their behavior based on the
-   * {@link GPUAdapterInfo}, such as applying workarounds for known driver issues, should rely on the
-   * other fields when possible.
-   */
   readonly description: string;
 }
 
@@ -1974,7 +1890,7 @@ interface GPUBuffer
     size?: GPUSize64
   ): ArrayBuffer;
   /**
-   * Unmaps the mapped range of the {@link GPUBuffer} and makes it's contents available for use by the
+   * Unmaps the mapped range of the {@link GPUBuffer} and makes its contents available for use by the
    * GPU again.
    */
   unmap(): undefined;
@@ -1998,9 +1914,6 @@ interface GPUCanvasContext {
    * @internal
    */
   readonly __brand: "GPUCanvasContext";
-  /**
-   * The canvas this context was created from.
-   */
   readonly canvas:
     | HTMLCanvasElement
     | OffscreenCanvas;
@@ -2178,55 +2091,11 @@ interface GPUCompilationMessage {
    * @internal
    */
   readonly __brand: "GPUCompilationMessage";
-  /**
-   * The human-readable, localizable text for this compilation message.
-   * Note: The {@link GPUCompilationMessage#message} should follow the best practices for language
-   * and direction information. This includes making use of any future standards which may
-   * emerge regarding the reporting of string language and direction metadata.
-   * <p class="note editorial"><span class=marker>Editorial note:</span>
-   * At the time of this writing, no language/direction recommendation is available that provides
-   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
-   */
   readonly message: string;
-  /**
-   * The severity level of the message.
-   * If the {@link GPUCompilationMessage#type} is {@link GPUCompilationMessageType#"error"}, it
-   * corresponds to a shader-creation error.
-   */
   readonly type: GPUCompilationMessageType;
-  /**
-   * The line number in the shader {@link GPUShaderModuleDescriptor#code} the
-   * {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a lineNum of
-   * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}. Lines are
-   * delimited by line breaks.
-   * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
-   * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
-   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
-   */
   readonly lineNum: number;
-  /**
-   * The offset, in UTF-16 code units, from the beginning of line {@link GPUCompilationMessage#lineNum}
-   * of the shader {@link GPUShaderModuleDescriptor#code} to the point or beginning of the substring
-   * that the {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a
-   * {@link GPUCompilationMessage#linePos} of `1` indicates the first code unit of the line.
-   * If {@link GPUCompilationMessage#message} corresponds to a substring this points to the
-   * first UTF-16 code unit of the substring. Must be `0` if the {@link GPUCompilationMessage#message}
-   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
-   */
   readonly linePos: number;
-  /**
-   * The offset from the beginning of the shader {@link GPUShaderModuleDescriptor#code} in UTF-16
-   * code units to the point or beginning of the substring that {@link GPUCompilationMessage#message}
-   * corresponds to. Must reference the same position as {@link GPUCompilationMessage#lineNum} and
-   * {@link GPUCompilationMessage#linePos}. Must be `0` if the {@link GPUCompilationMessage#message}
-   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
-   */
   readonly offset: number;
-  /**
-   * The number of UTF-16 code units in the substring that {@link GPUCompilationMessage#message}
-   * corresponds to. If the message does not correspond with a substring then
-   * {@link GPUCompilationMessage#length} must be 0.
-   */
   readonly length: number;
 }
 
@@ -2312,19 +2181,8 @@ interface GPUDevice
    * @internal
    */
   readonly __brand: "GPUDevice";
-  /**
-   * A set containing the {@link GPUFeatureName} values of the features
-   * supported by the device (i.e. the ones with which it was created).
-   */
   readonly features: GPUSupportedFeatures;
-  /**
-   * Exposes the limits supported by the device
-   * (which are exactly the ones with which it was created).
-   */
   readonly limits: GPUSupportedLimits;
-  /**
-   * The primary {@link GPUQueue} for this device.
-   */
   readonly queue: GPUQueue;
   /**
    * Destroys the device, preventing further operations on it.
@@ -2407,6 +2265,7 @@ interface GPUDevice
    * The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
    * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
+   * (A {@link GPUError} is not dispatched to the device.)
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPUComputePipeline} to create.
@@ -2419,6 +2278,7 @@ interface GPUDevice
    * The returned {@link Promise} resolves when the created pipeline
    * is ready to be used without additional delay.
    * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
+   * (A {@link GPUError} is not dispatched to the device.)
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
    * @param descriptor - Description of the {@link GPURenderPipeline} to create.
@@ -2466,9 +2326,6 @@ interface GPUDevice
    * There is no guarantee of the ordering of promise resolution.
    */
   popErrorScope(): Promise<GPUError | null>;
-  /**
-   * An event handler IDL attribute for the {@link GPUDevice#uncapturederror} event type.
-   */
   onuncapturederror: EventHandler;
 }
 
@@ -2492,21 +2349,6 @@ declare var GPUDeviceLostInfo: {
 };
 
 interface GPUError {
-  /**
-   * A human-readable, localizable text message providing information about the error that
-   * occurred.
-   * Note: This message is generally intended for application developers to debug their
-   * applications and capture information for debug reports, not to be surfaced to end-users.
-   * Note: User agents should not include potentially machine-parsable details in this message,
-   * such as free system memory on {@link GPUErrorFilter#"out-of-memory"} or other details about the
-   * conditions under which memory was exhausted.
-   * Note: The {@link GPUError#message} should follow the best practices for language and
-   * direction information. This includes making use of any future standards which may emerge
-   * regarding the reporting of string language and direction metadata.
-   * <p class="note editorial"><span class=marker>Editorial note:</span>
-   * At the time of this writing, no language/direction recommendation is available that provides
-   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
-   */
   readonly message: string;
 }
 
@@ -2570,14 +2412,6 @@ interface GPUPipelineError
    * @internal
    */
   readonly __brand: "GPUPipelineError";
-  /**
-   * A read-only slot-backed attribute exposing the type of error encountered in pipeline creation
-   * as a <dfn enum for="">GPUPipelineErrorReason</dfn>:
-   * <ul dfn-type=enum-value dfn-for=GPUPipelineErrorReason>
-   * - <dfn>"validation"</dfn>: A [$validation error$].
-   * - <dfn>"internal"</dfn>: An [$internal error$].
-   * </ul>
-   */
   readonly reason: GPUPipelineErrorReason;
 }
 
@@ -2615,13 +2449,7 @@ interface GPUQuerySet
    * Destroys the {@link GPUQuerySet}.
    */
   destroy(): undefined;
-  /**
-   * The type of the queries managed by this {@link GPUQuerySet}.
-   */
   readonly type: GPUQueryType;
-  /**
-   * The number of queries managed by this {@link GPUQuerySet}.
-   */
   readonly count: GPUSize32Out;
 }
 
@@ -2873,7 +2701,7 @@ interface GPUShaderModule
   readonly __brand: "GPUShaderModule";
   /**
    * Returns any messages generated during the {@link GPUShaderModule}'s compilation.
-   * The locations, order, and contents of messages are implementation-defined.
+   * The locations, order, and contents of messages are implementation-defined
    * In particular, messages may not be ordered by {@link GPUCompilationMessage#lineNum}.
    */
   getCompilationInfo(): Promise<GPUCompilationInfo>;
@@ -2915,7 +2743,6 @@ interface GPUSupportedLimits {
   readonly maxBufferSize: number;
   readonly maxVertexAttributes: number;
   readonly maxVertexBufferArrayStride: number;
-  readonly maxInterStageShaderComponents: number;
   readonly maxInterStageShaderVariables: number;
   readonly maxColorAttachments: number;
   readonly maxColorAttachmentBytesPerSample: number;
@@ -2950,37 +2777,13 @@ interface GPUTexture
    * Destroys the {@link GPUTexture}.
    */
   destroy(): undefined;
-  /**
-   * The width of this {@link GPUTexture}.
-   */
   readonly width: GPUIntegerCoordinateOut;
-  /**
-   * The height of this {@link GPUTexture}.
-   */
   readonly height: GPUIntegerCoordinateOut;
-  /**
-   * The depth or layer count of this {@link GPUTexture}.
-   */
   readonly depthOrArrayLayers: GPUIntegerCoordinateOut;
-  /**
-   * The number of mip levels of this {@link GPUTexture}.
-   */
   readonly mipLevelCount: GPUIntegerCoordinateOut;
-  /**
-   * The number of sample count of this {@link GPUTexture}.
-   */
   readonly sampleCount: GPUSize32Out;
-  /**
-   * The dimension of the set of texel for each of this {@link GPUTexture}'s subresources.
-   */
   readonly dimension: GPUTextureDimension;
-  /**
-   * The format of this {@link GPUTexture}.
-   */
   readonly format: GPUTextureFormat;
-  /**
-   * The allowed usages for this {@link GPUTexture}.
-   */
   readonly usage: GPUFlagsConstant;
 }
 
@@ -3010,10 +2813,6 @@ interface GPUUncapturedErrorEvent
    * @internal
    */
   readonly __brand: "GPUUncapturedErrorEvent";
-  /**
-   * A slot-backed attribute holding an object representing the error that was uncaptured.
-   * This has the same type as errors returned by {@link GPUDevice#popErrorScope}.
-   */
   readonly error: GPUError;
 }
 
