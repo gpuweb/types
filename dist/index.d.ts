@@ -1313,7 +1313,7 @@ interface GPURenderPipelineDescriptor
 }
 
 interface GPURequestAdapterOptions {
-  featureLevel?: any;
+  featureLevel?: string;
   /**
    * Optionally provides a hint indicating what class of adapter should be selected from
    * the system's available adapters.
@@ -2070,6 +2070,10 @@ interface GPUCanvasContext {
    * Removes the context configuration. Destroys any textures produced while configured.
    */
   unconfigure(): undefined;
+  /**
+   * Returns the context configuration.
+   */
+  getConfiguration(): GPUCanvasConfiguration | null;
   /**
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
