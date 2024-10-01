@@ -653,6 +653,11 @@ interface GPUCanvasConfiguration {
   alphaMode?: GPUCanvasAlphaMode;
 }
 
+type GPUCanvasConfigurationOut =
+  Required<GPUCanvasConfiguration> & {
+    viewFormats: GPUTextureFormat[];
+  };
+
 interface GPUCanvasToneMapping {
   mode?: GPUCanvasToneMappingMode;
 }
@@ -2073,7 +2078,7 @@ interface GPUCanvasContext {
   /**
    * Returns the context configuration.
    */
-  getConfiguration(): GPUCanvasConfiguration | null;
+  getConfiguration(): GPUCanvasConfigurationOut | null;
   /**
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
