@@ -216,6 +216,7 @@ type GPUFeatureName =
     | "rg11b10ufloat-renderable"
     | "bgra8unorm-storage"
     | "float32-filterable"
+    | "float32-blendable"
     | "clip-distances"
     | "dual-source-blending";
 type GPUFilterMode =
