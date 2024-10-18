@@ -654,10 +654,20 @@ interface GPUCanvasConfiguration {
   alphaMode?: GPUCanvasAlphaMode;
 }
 
-type GPUCanvasConfigurationOut =
-  Required<GPUCanvasConfiguration> & {
-    viewFormats: GPUTextureFormat[];
-  };
+interface GPUCanvasConfigurationOut
+  extends Required<
+    Omit<
+      GPUCanvasConfiguration,
+      "toneMapping"
+    >
+  > {
+  /** {@inheritDoc GPUCanvasConfiguration.viewFormats} */
+  viewFormats: GPUTextureFormat[];
+  /**
+   * {@inheritDoc GPUCanvasConfiguration.toneMapping}
+   */
+  toneMapping?: GPUCanvasToneMapping;
+}
 
 interface GPUCanvasToneMapping {
   mode?: GPUCanvasToneMappingMode;
