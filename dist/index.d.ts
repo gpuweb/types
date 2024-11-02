@@ -664,10 +664,20 @@ interface GPUCanvasConfiguration {
   alphaMode?: GPUCanvasAlphaMode;
 }
 
-type GPUCanvasConfigurationOut =
-  Required<GPUCanvasConfiguration> & {
-    viewFormats: GPUTextureFormat[];
-  };
+interface GPUCanvasConfigurationOut
+  extends Required<
+    Omit<
+      GPUCanvasConfiguration,
+      "toneMapping"
+    >
+  > {
+  /** {@inheritDoc GPUCanvasConfiguration.viewFormats} */
+  viewFormats: GPUTextureFormat[];
+  /**
+   * {@inheritDoc GPUCanvasConfiguration.toneMapping}
+   */
+  toneMapping?: GPUCanvasToneMapping;
+}
 
 interface GPUCanvasToneMapping {
   mode?: GPUCanvasToneMappingMode;
@@ -3207,14 +3217,20 @@ declare var GPUTextureUsage: {
 };
 
 /** @deprecated Use {@link GPUTexelCopyBufferLayout} */
-type GPUImageDataLayout = GPUTexelCopyBufferLayout;
+type GPUImageDataLayout =
+  GPUTexelCopyBufferLayout;
 /** @deprecated Use {@link GPUTexelCopyBufferInfo} */
-type GPUImageCopyBuffer = GPUTexelCopyBufferInfo;
+type GPUImageCopyBuffer =
+  GPUTexelCopyBufferInfo;
 /** @deprecated Use {@link GPUTexelCopyTextureInfo} */
-type GPUImageCopyTexture = GPUTexelCopyTextureInfo;
+type GPUImageCopyTexture =
+  GPUTexelCopyTextureInfo;
 /** @deprecated Use {@link GPUCopyExternalImageDestInfo} */
-type GPUImageCopyTextureTagged = GPUCopyExternalImageDestInfo;
+type GPUImageCopyTextureTagged =
+  GPUCopyExternalImageDestInfo;
 /** @deprecated Use {@link GPUCopyExternalImageSourceInfo} */
-type GPUImageCopyExternalImage = GPUCopyExternalImageSourceInfo;
+type GPUImageCopyExternalImage =
+  GPUCopyExternalImageSourceInfo;
 /** @deprecated Use {@link GPUCopyExternalImageSource} */
-type GPUImageCopyExternalImageSource = GPUCopyExternalImageSource;
+type GPUImageCopyExternalImageSource =
+  GPUCopyExternalImageSource;
