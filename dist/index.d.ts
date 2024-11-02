@@ -3205,3 +3205,16 @@ declare var GPUTextureUsage: {
   readonly STORAGE_BINDING: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 };
+
+/** @deprecated Use {@link GPUTexelCopyBufferLayout} */
+type GPUImageDataLayout = GPUTexelCopyBufferLayout;
+/** @deprecated Use {@link GPUTexelCopyBufferInfo} */
+type GPUImageCopyBuffer = GPUTexelCopyBufferInfo;
+/** @deprecated Use {@link GPUTexelCopyTextureInfo} */
+type GPUImageCopyTexture = GPUTexelCopyTextureInfo;
+/** @deprecated Use {@link GPUCopyExternalImageDestInfo} */
+type GPUImageCopyTextureTagged = GPUCopyExternalImageDestInfo;
+/** @deprecated Use {@link GPUCopyExternalImageSourceInfo} */
+type GPUImageCopyExternalImage = GPUCopyExternalImageSourceInfo;
+/** @deprecated Use {@link GPUCopyExternalImageSource} */
+type GPUImageCopyExternalImageSource = GPUCopyExternalImageSource;
