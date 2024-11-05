@@ -1286,6 +1286,17 @@ interface GPURenderPipelineDescriptor
 }
 
 interface GPURequestAdapterOptions {
+  /**
+   * "Feature level" for the adapter request.
+   * The allowed feature level string values are:
+   * - `"core"`
+   * No effect.
+   * - `"compatibility"`
+   * No effect.
+   * Note:
+   * This value is reserved for future use as a way to opt into additional validation restrictions.
+   * Applications should not use this value at this time.
+   */
   featureLevel?: string;
   /**
    * Optionally provides a hint indicating what class of adapter should be selected from
@@ -2414,6 +2425,13 @@ interface GPUDevice
    */
   readonly limits: GPUSupportedLimits;
   /**
+   * Information about the physical adapter which created the device
+   * that this GPUDevice refers to.
+   * For a given GPUDevice, the GPUAdapterInfo values exposed are constant
+   * over time.
+   */
+  readonly adapterInfo: GPUAdapterInfo;
+  /**
    * The primary {@link GPUQueue} for this device.
    */
   readonly queue: GPUQueue;
@@ -2421,6 +2439,9 @@ interface GPUDevice
    * Destroys the device, preventing further operations on it.
    * Outstanding asynchronous operations will fail.
    * Note: It is valid to destroy a device multiple times.
+   * Note: Since no further operations can be enqueued on this device, implementations can abort
+   * outstanding asynchronous operations immediately and free resource allocations, including
+   * mapped memory that was just unmapped.
    */
   destroy(): undefined;
   /**
