@@ -1259,6 +1259,18 @@ interface GPURenderPipelineDescriptor
 }
 
 interface GPURequestAdapterOptions {
+  /**
+   * "Feature level" for the adapter request.
+   * The allowed <dfn dfn for="">feature level string</dfn> values are:
+   * <dl dfn-type=dfn dfn-for="feature level string">
+   * : <dfn noexport>"core"</dfn>
+   * No effect.
+   * : <dfn noexport>"compatibility"</dfn>
+   * No effect.
+   * Note:
+   * This value is reserved for future use as a way to opt into additional validation restrictions.
+   * Applications should not use this value at this time.
+   */
   featureLevel?: string;
   powerPreference?: GPUPowerPreference;
   forceFallbackAdapter?: boolean;
@@ -2198,11 +2210,15 @@ interface GPUDevice
   readonly __brand: "GPUDevice";
   readonly features: GPUSupportedFeatures;
   readonly limits: GPUSupportedLimits;
+  readonly adapterInfo: GPUAdapterInfo;
   readonly queue: GPUQueue;
   /**
    * Destroys the device, preventing further operations on it.
    * Outstanding asynchronous operations will fail.
    * Note: It is valid to destroy a device multiple times.
+   * Note: Since no further operations can be enqueued on this device, implementations can abort
+   * outstanding asynchronous operations immediately and free resource allocations, including
+   * mapped memory that was just unmapped.
    */
   destroy(): undefined;
   /**
