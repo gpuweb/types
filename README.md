@@ -99,6 +99,7 @@ Most or all of these should be fixed in the generator over time.
 - `Array` changed to `Iterable` for WebIDL `sequence`s in argument positions (but not in return positions).
 - `any` changed to `object` for WebIDL `object`.
 - `| SharedArrayBuffer` added for `[AllowShared] BufferSource`.
+- `| null` changed to `| null | undefined` for WebIDL nullable items (`T?`).
 
 The following differences are TODO: should be changed in the final result.
 

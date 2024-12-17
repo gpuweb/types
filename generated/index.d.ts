@@ -601,6 +601,7 @@ interface GPUCanvasConfiguration {
   /**
    * The tone mapping determines how the content of textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} are to be displayed.
+   * Note: If an implementation doesn't support HDR WebGPU canvases, it should also not expose this member, to allow for feature detection. See {@link GPUCanvasContext#getConfiguration}.
    */
   toneMapping?: GPUCanvasToneMapping;
   /**
@@ -1274,6 +1275,7 @@ interface GPURequestAdapterOptions {
   featureLevel?: string;
   powerPreference?: GPUPowerPreference;
   forceFallbackAdapter?: boolean;
+  xrCompatible?: boolean;
 }
 
 interface GPUSamplerBindingLayout {

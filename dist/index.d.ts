@@ -655,6 +655,7 @@ interface GPUCanvasConfiguration {
   /**
    * The tone mapping determines how the content of textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} are to be displayed.
+   * Note: If an implementation doesn't support HDR WebGPU canvases, it should also not expose this member, to allow for feature detection. See {@link GPUCanvasContext#getConfiguration}.
    */
   toneMapping?: GPUCanvasToneMapping;
   /**
@@ -927,7 +928,11 @@ interface GPUFragmentState
    * A list of {@link GPUColorTargetState} defining the formats and behaviors of the color targets
    * this pipeline writes to.
    */
-  targets: Iterable<GPUColorTargetState | null>;
+  targets: Iterable<
+    | GPUColorTargetState
+    | null
+    | undefined
+  >;
 }
 
 interface GPUMultisampleState {
@@ -991,7 +996,11 @@ interface GPUPipelineLayoutDescriptor
    * to a @group attribute in the {@link GPUShaderModule}, with the `N`th element corresponding
    * with `@group(N)`.
    */
-  bindGroupLayouts: Iterable<GPUBindGroupLayout | null>;
+  bindGroupLayouts: Iterable<
+    | GPUBindGroupLayout
+    | null
+    | undefined
+  >;
 }
 
 interface GPUPrimitiveState {
@@ -1202,7 +1211,11 @@ interface GPURenderPassDescriptor
    * Due to compatible usage list|usage compatibility, no color attachment
    * may alias another attachment or any resource used inside the render pass.
    */
-  colorAttachments: Iterable<GPURenderPassColorAttachment | null>;
+  colorAttachments: Iterable<
+    | GPURenderPassColorAttachment
+    | null
+    | undefined
+  >;
   /**
    * The {@link GPURenderPassDepthStencilAttachment} value that defines the depth/stencil
    * attachment that will be output to and tested against when executing this render pass.
@@ -1231,7 +1244,11 @@ interface GPURenderPassLayout
   /**
    * A list of the {@link GPUTextureFormat}s of the color attachments for this pass or bundle.
    */
-  colorFormats: Iterable<GPUTextureFormat | null>;
+  colorFormats: Iterable<
+    | GPUTextureFormat
+    | null
+    | undefined
+  >;
   /**
    * The {@link GPUTextureFormat} of the depth/stencil attachment for this pass or bundle.
    */
@@ -1329,6 +1346,7 @@ interface GPURequestAdapterOptions {
    * attribute prior to requesting a {@link GPUDevice}.
    */
   forceFallbackAdapter?: boolean;
+  xrCompatible?: boolean;
 }
 
 interface GPUSamplerBindingLayout {
@@ -1690,7 +1708,11 @@ interface GPUVertexState
    * A list of {@link GPUVertexBufferLayout}s, each defining the layout of vertex attribute data in a
    * vertex buffer used by this pipeline.
    */
-  buffers?: Iterable<GPUVertexBufferLayout | null>;
+  buffers?: Iterable<
+    | GPUVertexBufferLayout
+    | null
+    | undefined
+  >;
 }
 
 interface GPUBindingCommandsMixin {
@@ -1708,7 +1730,10 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup | null,
+    bindGroup:
+      | GPUBindGroup
+      | null
+      | undefined,
     dynamicOffsets?: Iterable<GPUBufferDynamicOffset>
   ): undefined;
   /**
@@ -1724,7 +1749,10 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup | null,
+    bindGroup:
+      | GPUBindGroup
+      | null
+      | undefined,
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
@@ -1802,7 +1830,10 @@ interface GPURenderCommandsMixin {
    */
   setVertexBuffer(
     slot: GPUIndex32,
-    buffer: GPUBuffer | null,
+    buffer:
+      | GPUBuffer
+      | null
+      | undefined,
     offset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
