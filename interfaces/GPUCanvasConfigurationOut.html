@@ -70,7 +70,8 @@ Must be one of the Supported context formats.</p>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>tone<wbr/>Mapping</span><a href="#toneMapping" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">tone<wbr/>Mapping<span class="tsd-signature-symbol">?:</span> <a href="GPUCanvasToneMapping.html" class="tsd-signature-type" data-tsd-kind="Interface">GPUCanvasToneMapping</a></div>
 <div class="tsd-comment tsd-typography"><p>The tone mapping determines how the content of textures returned by
-<a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> are to be displayed.</p>
+<a href="GPUCanvasContext.html#getCurrentTexture">getCurrentTexture</a> are to be displayed.
+Note: If an implementation doesn&#39;t support HDR WebGPU canvases, it should also not expose this member, to allow for feature detection. See <a href="GPUCanvasContext.html#getConfiguration">getConfiguration</a>.</p>
 </div></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="usage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>usage</span><a href="#usage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
