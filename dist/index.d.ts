@@ -1619,6 +1619,17 @@ interface GPUTextureDescriptor
    * </div>
    */
   viewFormats?: Iterable<GPUTextureFormat>;
+  /**
+   * **PROPOSED** addition for Compatibility Mode:
+   * <https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md#1-texture-view-dimension-may-be-specified>
+   *
+   * > [In compatibility mode,]
+   * > When specifying a texture, a textureBindingViewDimension property
+   * > determines the views which can be bound from that texture for sampling.
+   * > Binding a view of a different dimension for sampling than specified at
+   * > texture creation time will cause a validation error.
+   */
+  textureBindingViewDimension?: GPUTextureViewDimension;
 }
 
 interface GPUTextureViewDescriptor

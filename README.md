@@ -104,6 +104,7 @@ Most or all of these should be fixed in the generator over time.
 The following differences are TODO: should be changed in the final result.
 
 - Deprecated items should be removed.
+- Addition of Compatibility Mode items like `textureBindingViewDimension`.
 
 The following differences will remain.
 
