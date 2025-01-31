@@ -14,7 +14,7 @@
     "test": "for t in tests/*/ ; do (cd \"$t\" && npm i && npm test); done",
     "build-docs": "cd tsdoc-src && npm ci && npm run build",
     "generate": "node generate.mjs",
-    "format": "prettier -w dist/index.d.ts"
+    "format": "prettier -w dist/index.d.ts extra.d.ts"
   },
   "devDependencies": {
     "bikeshed-to-ts": "github:toji/bikeshed-to-ts",

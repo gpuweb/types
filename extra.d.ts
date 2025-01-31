@@ -74,7 +74,7 @@ interface GPUTextureDescriptor {
    * > Binding a view of a different dimension for sampling than specified at
    * > texture creation time will cause a validation error.
    */
-  textureBindingViewDimension?: GPUTextureViewDimension;  
+  textureBindingViewDimension?: GPUTextureViewDimension;
 }
 
 /** @internal */
@@ -130,7 +130,7 @@ interface GPUDevice {
     options?:
       | boolean
       | EventListenerOptions
-  ): void;  
+  ): void;
 }
 
 interface GPUTexelCopyBufferInfo
