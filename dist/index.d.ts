@@ -2447,7 +2447,8 @@ declare var GPUComputePipeline: {
   new (): never;
 };
 
-interface GPUDeviceEventMap {
+/** @internal */
+interface __GPUDeviceEventMap {
   uncapturederror: GPUUncapturedErrorEvent;
 }
 
@@ -2637,12 +2638,12 @@ interface GPUDevice
     | null;
 
   addEventListener<
-    K extends keyof GPUDeviceEventMap
+    K extends keyof __GPUDeviceEventMap
   >(
     type: K,
     listener: (
       this: GPUDevice,
-      ev: GPUDeviceEventMap[K]
+      ev: __GPUDeviceEventMap[K]
     ) => any,
     options?:
       | boolean
@@ -2656,12 +2657,12 @@ interface GPUDevice
       | AddEventListenerOptions
   ): void;
   removeEventListener<
-    K extends keyof GPUDeviceEventMap
+    K extends keyof __GPUDeviceEventMap
   >(
     type: K,
     listener: (
       this: GPUDevice,
-      ev: GPUDeviceEventMap[K]
+      ev: __GPUDeviceEventMap[K]
     ) => any,
     options?:
       | boolean
