@@ -59,6 +59,10 @@ function fixupGenerated(filename) {
   const constructableRE = new RegExp(`(\\ndeclare var (${constructables.join('|')}):\\s{\\n[\\s\\S]*?\\snew\\s\\([^;]*?\\));\\n};`, 'g');
   s = s.replace(constructableRE, '$1: $2;\n};');
 
+  // prepend extra
+  const extra = fs.readFileSync('extra.d.ts', { encoding: 'utf-8' });
+  s = extra + s;
+
   fs.writeFileSync(filename, s);
 }
 
