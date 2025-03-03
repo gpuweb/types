@@ -164,7 +164,8 @@ type GPUFeatureName =
     | "float32-filterable"
     | "float32-blendable"
     | "clip-distances"
-    | "dual-source-blending";
+    | "dual-source-blending"
+    | "subgroups";
 type GPUFilterMode =
 
     | "nearest"
@@ -1839,6 +1840,8 @@ interface GPUAdapterInfo {
   readonly architecture: string;
   readonly device: string;
   readonly description: string;
+  readonly subgroupMinSize: number;
+  readonly subgroupMaxSize: number;
 }
 
 declare var GPUAdapterInfo: {
