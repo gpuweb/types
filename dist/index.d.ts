@@ -3166,6 +3166,10 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
+  readonly maxStorageBuffersInVertexStage?: number;
+  readonly maxStorageBuffersInFragmentStage?: number;
+  readonly maxStorageTexturesInVertexStage?: number;
+  readonly maxStorageTexturesInFragmentStage?: number;
 }
 
 declare var GPUSupportedLimits: {
