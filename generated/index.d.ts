@@ -165,7 +165,8 @@ type GPUFeatureName =
     | "float32-blendable"
     | "clip-distances"
     | "dual-source-blending"
-    | "subgroups";
+    | "subgroups"
+    | "core-features-and-limits";
 type GPUFilterMode =
 
     | "nearest"
