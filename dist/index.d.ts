@@ -1344,7 +1344,7 @@ interface GPURequestAdapterOptions {
    * {@link GPURequestAdapterOptions#forceFallbackAdapter} is set to `false` and either no
    * other appropriate adapter is available or the user agent chooses to return a
    * fallback adapter. Developers that wish to prevent their applications from running on
-   * fallback adapters should check the {@link GPUAdapter}.{@link GPUAdapter#isFallbackAdapter}
+   * fallback adapters should check the {@link GPUAdapter#info}.{@link GPUAdapterInfo#isFallbackAdapter}
    * attribute prior to requesting a {@link GPUDevice}.
    */
   forceFallbackAdapter?: boolean;
@@ -1979,8 +1979,11 @@ interface GPUAdapter {
   readonly info: GPUAdapterInfo;
   /**
    * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[fallback]]}.
+   *
+   * @deprecated Use {@link GPUAdapterInfo#isFallbackAdapter}.
+   * (Note if it's not available, it will be `undefined` which is still falsy.)
    */
-  readonly isFallbackAdapter: boolean;
+  readonly isFallbackAdapter?: boolean;
   /**
    * Requests a device from the adapter.
    * This is a one-time action: if a device is returned successfully,
@@ -2039,6 +2042,10 @@ interface GPUAdapterInfo {
    * adapter.
    */
   readonly subgroupMaxSize: number;
+  /**
+   * Whether the adapter is a fallback adapter.
+   **/
+  readonly isFallbackAdapter?: boolean;
 }
 
 declare var GPUAdapterInfo: {
