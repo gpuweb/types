@@ -469,7 +469,8 @@ interface GPUBindGroupLayoutEntry {
   storageTexture?: GPUStorageTextureBindingLayout;
   /**
    * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUExternalTexture}.
+   * is either {@link GPUExternalTexture} or {@link GPUTextureView}.
+   * External textures use several binding slots: see Exceeds the binding slot limits.
    */
   externalTexture?: GPUExternalTextureBindingLayout;
 }
@@ -1813,7 +1814,6 @@ interface GPUAdapter {
   readonly features: GPUSupportedFeatures;
   readonly limits: GPUSupportedLimits;
   readonly info: GPUAdapterInfo;
-  readonly isFallbackAdapter: boolean;
   /**
    * Requests a device from the adapter.
    * This is a one-time action: if a device is returned successfully,
@@ -1842,6 +1842,7 @@ interface GPUAdapterInfo {
   readonly description: string;
   readonly subgroupMinSize: number;
   readonly subgroupMaxSize: number;
+  readonly isFallbackAdapter: boolean;
 }
 
 declare var GPUAdapterInfo: {
@@ -2010,6 +2011,14 @@ interface GPUCommandEncoder
     descriptor?: GPUComputePassDescriptor
   ): GPUComputePassEncoder;
   /**
+   * Shorthand, equivalent to {{GPUCommandEncoder/copyBufferToBuffer(source, sourceOffset, destination, destinationOffset, size)|copyBufferToBuffer(source, 0, destination, 0, size)}}.
+   */
+  copyBufferToBuffer(
+    source: GPUBuffer,
+    destination: GPUBuffer,
+    size?: GPUSize64
+  ): undefined;
+  /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of a
    * {@link GPUBuffer} to a sub-region of another {@link GPUBuffer}.
    * @param source - The {@link GPUBuffer} to copy from.
@@ -2023,7 +2032,7 @@ interface GPUCommandEncoder
     sourceOffset: GPUSize64,
     destination: GPUBuffer,
     destinationOffset: GPUSize64,
-    size: GPUSize64
+    size?: GPUSize64
   ): undefined;
   /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of a

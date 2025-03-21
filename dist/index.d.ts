@@ -524,7 +524,8 @@ interface GPUBindGroupLayoutEntry {
   storageTexture?: GPUStorageTextureBindingLayout;
   /**
    * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUExternalTexture}.
+   * is either {@link GPUExternalTexture} or {@link GPUTextureView}.
+   * External textures use several binding slots: see Exceeds the binding slot limits.
    */
   externalTexture?: GPUExternalTextureBindingLayout;
 }
@@ -1069,6 +1070,48 @@ interface GPUProgrammableStage {
    * Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a {@link double}.
    * They are converted [$to WGSL type$] of the pipeline-overridable constant (`bool`/`i32`/`u32`/`f32`/`f16`).
    * If conversion fails, a validation error is generated.
+   * <div class=example>
+   * Pipeline-overridable constants defined in WGSL:
+   * <pre highlight=wgsl>
+   * @id(0)      override has_point_light: bool = true;  // Algorithmic control.
+   * @id(1200)   override specular_param: f32 = 2.3;     // Numeric control.
+   * @id(1300)   override gain: f32;                     // Must be overridden.
+   * override width: f32 = 0.0;              // Specifed at the API level
+   * //   using the name "width".
+   * override depth: f32;                    // Specifed at the API level
+   * //   using the name "depth".
+   * //   Must be overridden.
+   * override height = 2 * depth;            // The default value
+   * // (if not set at the API level),
+   * // depends on another
+   * // overridable constant.
+   * </pre>
+   * Corresponding JavaScript code, providing only the overrides which are required
+   * (have no defaults):
+   * <pre highlight=js>
+   * {
+   * // ...
+   * constants: {
+   * 1300: 2.0,  // "gain"
+   * depth: -1,  // "depth"
+   * }
+   * }
+   * </pre>
+   * Corresponding JavaScript code, overriding all constants:
+   * <pre highlight=js>
+   * {
+   * // ...
+   * constants: {
+   * 0: false,   // "has_point_light"
+   * 1200: 3.0,  // "specular_param"
+   * 1300: 2.0,  // "gain"
+   * width: 20,  // "width"
+   * depth: -1,  // "depth"
+   * height: 15, // "height"
+   * }
+   * }
+   * </pre>
+   * </div>
    */
   constants?: Record<
     string,
@@ -1307,10 +1350,11 @@ interface GPURenderPipelineDescriptor
 interface GPURequestAdapterOptions {
   /**
    * "Feature level" for the adapter request.
-   * The allowed feature level string values are:
-   * - `"core"`
+   * The allowed <dfn dfn for="">feature level string</dfn> values are:
+   * <dl dfn-type=dfn dfn-for="feature level string">
+   * : <dfn noexport>"core"</dfn>
    * No effect.
-   * - `"compatibility"`
+   * : <dfn noexport>"compatibility"</dfn>
    * No effect.
    * Note:
    * This value is reserved for future use as a way to opt into additional validation restrictions.
@@ -1622,8 +1666,7 @@ interface GPUTextureDescriptor
    */
   viewFormats?: Iterable<GPUTextureFormat>;
   /**
-   * **PROPOSED** addition for Compatibility Mode:
-   * <https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md#1-texture-view-dimension-may-be-specified>
+   * **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md).
    *
    * > [In compatibility mode,]
    * > When specifying a texture, a textureBindingViewDimension property
@@ -1987,7 +2030,7 @@ interface GPUAdapter {
   /**
    * Requests a device from the adapter.
    * This is a one-time action: if a device is returned successfully,
-   * the adapter becomes {@link adapter#[[state]]} "consumed".
+   * the adapter becomes {@link adapter#[[state]]#"consumed"}.
    * @param descriptor - Description of the {@link GPUDevice} to request.
    */
   requestDevice(
@@ -2222,6 +2265,14 @@ interface GPUCommandEncoder
   beginComputePass(
     descriptor?: GPUComputePassDescriptor
   ): GPUComputePassEncoder;
+  /**
+   * Shorthand, equivalent to {{GPUCommandEncoder/copyBufferToBuffer(source, sourceOffset, destination, destinationOffset, size)|copyBufferToBuffer(source, 0, destination, 0, size)}}.
+   */
+  copyBufferToBuffer(
+    source: GPUBuffer,
+    destination: GPUBuffer,
+    size?: GPUSize64
+  ): undefined;
   /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of a
    * {@link GPUBuffer} to a sub-region of another {@link GPUBuffer}.
@@ -2898,9 +2949,7 @@ interface GPUQueue
   writeBuffer(
     buffer: GPUBuffer,
     bufferOffset: GPUSize64,
-    data:
-      | BufferSource
-      | SharedArrayBuffer,
+    data: AllowSharedBufferSource,
     dataOffset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -2913,9 +2962,7 @@ interface GPUQueue
    */
   writeTexture(
     destination: GPUTexelCopyTextureInfo,
-    data:
-      | BufferSource
-      | SharedArrayBuffer,
+    data: AllowSharedBufferSource,
     dataLayout: GPUTexelCopyBufferLayout,
     size: GPUExtent3DStrict
   ): undefined;
@@ -3174,9 +3221,13 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageBuffersInVertexStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageBuffersInFragmentStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageTexturesInVertexStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageTexturesInFragmentStage?: number;
 }
 

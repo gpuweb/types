@@ -9,8 +9,8 @@ async function main() {
     // export types
     .replace(/\ntype /g, '\nexport type ')
 
-    // {{GPUAddressMode|address modes}} => {@link GPUAddressMode | address modes}
-    .replace(/\{\{GPUAddressMode\|address modes\}\}/g, '{@link GPUAddressMode | address modes}')
+    // {{ref|text}} => {@link ref | text}
+    .replace(/\{\{([^}|]+)\|([^}|]+)\}\}/g, '{@link $1 | $2}')
 
     // fix links of the form {@link foo|caption} -> {@link foo | caption}
     .replace(/\{@link([^}]+)\S\|\S(.*?)\}/g, `{@link $1 | $2}`)
@@ -19,7 +19,10 @@ async function main() {
     .replace(/\{@link([^[}]+)\[\[(.*?)]]}/g, `{@link $1$2}`)
 
     // convert [[link]] to {@link link}
-    .replace(/\[\[([^\[].*?)\]\]/g, '{@link https://www.w3.org/TR/webgpu/$1}')
+    .replace(/([^#])\[\[([^\[].*?)\]\]/g, '$1{@link https://www.w3.org/TR/webgpu/$2}')
+
+    .replace(/<pre highlight=['"]?(.*)['"]?>/g, '```$1')
+    .replace(/<\/pre>/g, '```')
 
     // remove __brand
     .replace(new RegExp(`/\\*\\*

@@ -4,6 +4,6 @@
   },
   "dependencies": {
     "@webgpu/types": "file:../..",
-    "typescript": "~5.1.0"
+    "typescript": "~5.8.0"
   }
 }
