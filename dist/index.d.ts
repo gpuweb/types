@@ -1979,7 +1979,9 @@ interface GPUAdapter {
   readonly info: GPUAdapterInfo;
   /**
    * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[fallback]]}.
-   * @deprecated Use {@link GPUAdapterInfo#isFallbackAdapter}
+   *
+   * @deprecated Use {@link GPUAdapterInfo#isFallbackAdapter}.
+   * (Note if it's not available, it will be `undefined` which is still falsy.)
    */
   readonly isFallbackAdapter?: boolean;
   /**
