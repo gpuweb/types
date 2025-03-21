@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: build-and-deploy
 on:
   pull_request:
     branches:
@@ -10,19 +10,22 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🍔🍟🥤
-        uses: actions/checkout@v2.3.1
+      - uses: actions/checkout@v2.3.1
         with:
           persist-credentials: false
-
-      - name: Use Node.js 😂
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: '16.x'
+
+      - run: git submodule update --init --recommend-shallow
 
       - run: npm ci
       - run: npm test
       - run: npm run build-docs
+
+      - run: npm run generate
+      - name: Check generated file is up-to-date with gpuweb submodule (`npm run generate` to fix this)
+        run: git update-index --really-refresh && git diff-index --quiet HEAD
 
       - name: Deploy 📦
         if: ${{ success() && github.ref == 'refs/heads/main' }}

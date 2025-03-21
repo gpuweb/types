@@ -1,3 +1,6 @@
 [submodule "gpuweb"]
 	path = gpuweb
 	url = https://github.com/gpuweb/gpuweb.git
+[submodule "third_party/bikeshed-to-ts"]
+	path = third_party/bikeshed-to-ts
+	url = https://github.com/toji/bikeshed-to-ts.git
