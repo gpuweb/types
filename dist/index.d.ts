@@ -1978,6 +1978,11 @@ interface GPUAdapter {
    */
   readonly info: GPUAdapterInfo;
   /**
+   * Returns the value of {@link GPUAdapter#[[adapter]]}.{@link adapter#[[fallback]]}.
+   * @deprecated Use {@link GPUAdapterInfo#isFallbackAdapter}
+   */
+  readonly isFallbackAdapter?: boolean;
+  /**
    * Requests a device from the adapter.
    * This is a one-time action: if a device is returned successfully,
    * the adapter becomes {@link adapter#[[state]]} "consumed".
@@ -2038,7 +2043,7 @@ interface GPUAdapterInfo {
   /**
    * Whether the adapter is a fallback adapter.
    **/
-  readonly isFallbackAdapter: boolean;
+  readonly isFallbackAdapter?: boolean;
 }
 
 declare var GPUAdapterInfo: {
