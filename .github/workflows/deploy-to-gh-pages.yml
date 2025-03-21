@@ -24,6 +24,11 @@ jobs:
       - run: npm test
       - run: npm run build-docs
 
+      - run: git submodule update --init --recommend-shallow
+      - run: npm run generate
+      - name: Check generated file is up-to-date with gpuweb submodule (`npm run generate` to fix this)
+        run: git update-index --really-refresh && git diff-index --quiet HEAD
+
       - name: Deploy 📦
         if: ${{ success() && github.ref == 'refs/heads/main' }}
         uses: JamesIves/github-pages-deploy-action@3.6.2
