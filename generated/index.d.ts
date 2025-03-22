@@ -1771,11 +1771,7 @@ interface NavigatorGPU {
 }
 
 interface GPU {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPU";
   /**
    * Requests an adapter from the user agent.
@@ -1802,14 +1798,11 @@ interface GPU {
 
 declare var GPU: {
   prototype: GPU;
+  new (): never;
 };
 
 interface GPUAdapter {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUAdapter";
   readonly features: GPUSupportedFeatures;
   readonly limits: GPUSupportedLimits;
@@ -1827,14 +1820,11 @@ interface GPUAdapter {
 
 declare var GPUAdapter: {
   prototype: GPUAdapter;
+  new (): never;
 };
 
 interface GPUAdapterInfo {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUAdapterInfo";
   readonly vendor: string;
   readonly architecture: string;
@@ -1847,43 +1837,34 @@ interface GPUAdapterInfo {
 
 declare var GPUAdapterInfo: {
   prototype: GPUAdapterInfo;
+  new (): never;
 };
 
 interface GPUBindGroup
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUBindGroup";
 }
 
 declare var GPUBindGroup: {
   prototype: GPUBindGroup;
+  new (): never;
 };
 
 interface GPUBindGroupLayout
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUBindGroupLayout";
 }
 
 declare var GPUBindGroupLayout: {
   prototype: GPUBindGroupLayout;
+  new (): never;
 };
 
 interface GPUBuffer
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUBuffer";
   readonly size: GPUSize64Out;
   readonly usage: GPUFlagsConstant;
@@ -1934,14 +1915,11 @@ interface GPUBuffer
 
 declare var GPUBuffer: {
   prototype: GPUBuffer;
+  new (): never;
 };
 
 interface GPUCanvasContext {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCanvasContext";
   readonly canvas:
     | HTMLCanvasElement
@@ -1974,31 +1952,25 @@ interface GPUCanvasContext {
 
 declare var GPUCanvasContext: {
   prototype: GPUCanvasContext;
+  new (): never;
 };
 
 interface GPUCommandBuffer
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCommandBuffer";
 }
 
 declare var GPUCommandBuffer: {
   prototype: GPUCommandBuffer;
+  new (): never;
 };
 
 interface GPUCommandEncoder
   extends GPUObjectBase,
     GPUCommandsMixin,
     GPUDebugCommandsMixin {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCommandEncoder";
   /**
    * Begins encoding a render pass described by `descriptor`.
@@ -2109,28 +2081,22 @@ interface GPUCommandEncoder
 
 declare var GPUCommandEncoder: {
   prototype: GPUCommandEncoder;
+  new (): never;
 };
 
 interface GPUCompilationInfo {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCompilationInfo";
   readonly messages: ReadonlyArray<GPUCompilationMessage>;
 }
 
 declare var GPUCompilationInfo: {
   prototype: GPUCompilationInfo;
+  new (): never;
 };
 
 interface GPUCompilationMessage {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCompilationMessage";
   readonly message: string;
   readonly type: GPUCompilationMessageType;
@@ -2142,6 +2108,7 @@ interface GPUCompilationMessage {
 
 declare var GPUCompilationMessage: {
   prototype: GPUCompilationMessage;
+  new (): never;
 };
 
 interface GPUComputePassEncoder
@@ -2149,11 +2116,7 @@ interface GPUComputePassEncoder
     GPUCommandsMixin,
     GPUDebugCommandsMixin,
     GPUBindingCommandsMixin {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUComputePassEncoder";
   /**
    * Sets the current {@link GPUComputePipeline}.
@@ -2196,31 +2159,25 @@ interface GPUComputePassEncoder
 
 declare var GPUComputePassEncoder: {
   prototype: GPUComputePassEncoder;
+  new (): never;
 };
 
 interface GPUComputePipeline
   extends GPUObjectBase,
     GPUPipelineBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUComputePipeline";
 }
 
 declare var GPUComputePipeline: {
   prototype: GPUComputePipeline;
+  new (): never;
 };
 
 interface GPUDevice
   extends EventTarget,
     GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUDevice";
   readonly features: GPUSupportedFeatures;
   readonly limits: GPUSupportedLimits;
@@ -2376,14 +2333,11 @@ interface GPUDevice
 
 declare var GPUDevice: {
   prototype: GPUDevice;
+  new (): never;
 };
 
 interface GPUDeviceLostInfo {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUDeviceLostInfo";
   readonly reason: GPUDeviceLostReason;
   readonly message: string;
@@ -2391,6 +2345,7 @@ interface GPUDeviceLostInfo {
 
 declare var GPUDeviceLostInfo: {
   prototype: GPUDeviceLostInfo;
+  new (): never;
 };
 
 interface GPUError {
@@ -2399,29 +2354,23 @@ interface GPUError {
 
 declare var GPUError: {
   prototype: GPUError;
+  new (): never;
 };
 
 interface GPUExternalTexture
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUExternalTexture";
 }
 
 declare var GPUExternalTexture: {
   prototype: GPUExternalTexture;
+  new (): never;
 };
 
 interface GPUInternalError
   extends GPUError {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUInternalError";
 }
 
@@ -2429,16 +2378,12 @@ declare var GPUInternalError: {
   prototype: GPUInternalError;
   new (
     message: string
-  );
+  ): GPUInternalError;
 };
 
 interface GPUOutOfMemoryError
   extends GPUError {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUOutOfMemoryError";
 }
 
@@ -2446,16 +2391,12 @@ declare var GPUOutOfMemoryError: {
   prototype: GPUOutOfMemoryError;
   new (
     message: string
-  );
+  ): GPUOutOfMemoryError;
 };
 
 interface GPUPipelineError
   extends DOMException {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUPipelineError";
   readonly reason: GPUPipelineErrorReason;
 }
@@ -2465,30 +2406,23 @@ declare var GPUPipelineError: {
   new (
     message?: string,
     options: GPUPipelineErrorInit
-  );
+  ): GPUPipelineError;
 };
 
 interface GPUPipelineLayout
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUPipelineLayout";
 }
 
 declare var GPUPipelineLayout: {
   prototype: GPUPipelineLayout;
+  new (): never;
 };
 
 interface GPUQuerySet
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUQuerySet";
   /**
    * Destroys the {@link GPUQuerySet}.
@@ -2500,15 +2434,12 @@ interface GPUQuerySet
 
 declare var GPUQuerySet: {
   prototype: GPUQuerySet;
+  new (): never;
 };
 
 interface GPUQueue
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUQueue";
   /**
    * Schedules the execution of the command buffers by the GPU on this queue.
@@ -2572,20 +2503,18 @@ interface GPUQueue
 
 declare var GPUQueue: {
   prototype: GPUQueue;
+  new (): never;
 };
 
 interface GPURenderBundle
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPURenderBundle";
 }
 
 declare var GPURenderBundle: {
   prototype: GPURenderBundle;
+  new (): never;
 };
 
 interface GPURenderBundleEncoder
@@ -2594,11 +2523,7 @@ interface GPURenderBundleEncoder
     GPUDebugCommandsMixin,
     GPUBindingCommandsMixin,
     GPURenderCommandsMixin {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPURenderBundleEncoder";
   /**
    * Completes recording of the render bundle commands sequence.
@@ -2611,6 +2536,7 @@ interface GPURenderBundleEncoder
 
 declare var GPURenderBundleEncoder: {
   prototype: GPURenderBundleEncoder;
+  new (): never;
 };
 
 interface GPURenderPassEncoder
@@ -2619,11 +2545,7 @@ interface GPURenderPassEncoder
     GPUDebugCommandsMixin,
     GPUBindingCommandsMixin,
     GPURenderCommandsMixin {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPURenderPassEncoder";
   /**
    * Sets the viewport used during the rasterization stage to linearly map from
@@ -2705,44 +2627,35 @@ interface GPURenderPassEncoder
 
 declare var GPURenderPassEncoder: {
   prototype: GPURenderPassEncoder;
+  new (): never;
 };
 
 interface GPURenderPipeline
   extends GPUObjectBase,
     GPUPipelineBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPURenderPipeline";
 }
 
 declare var GPURenderPipeline: {
   prototype: GPURenderPipeline;
+  new (): never;
 };
 
 interface GPUSampler
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUSampler";
 }
 
 declare var GPUSampler: {
   prototype: GPUSampler;
+  new (): never;
 };
 
 interface GPUShaderModule
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUShaderModule";
   /**
    * Returns any messages generated during the {@link GPUShaderModule}'s compilation.
@@ -2754,17 +2667,14 @@ interface GPUShaderModule
 
 declare var GPUShaderModule: {
   prototype: GPUShaderModule;
+  new (): never;
 };
 
 type GPUSupportedFeatures =
   ReadonlySet<string>;
 
 interface GPUSupportedLimits {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUSupportedLimits";
   readonly maxTextureDimension1D: number;
   readonly maxTextureDimension2D: number;
@@ -2801,15 +2711,12 @@ interface GPUSupportedLimits {
 
 declare var GPUSupportedLimits: {
   prototype: GPUSupportedLimits;
+  new (): never;
 };
 
 interface GPUTexture
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUTexture";
   /**
    * Creates a {@link GPUTextureView}.
@@ -2834,29 +2741,23 @@ interface GPUTexture
 
 declare var GPUTexture: {
   prototype: GPUTexture;
+  new (): never;
 };
 
 interface GPUTextureView
   extends GPUObjectBase {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUTextureView";
 }
 
 declare var GPUTextureView: {
   prototype: GPUTextureView;
+  new (): never;
 };
 
 interface GPUUncapturedErrorEvent
   extends Event {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUUncapturedErrorEvent";
   readonly error: GPUError;
 }
@@ -2866,16 +2767,12 @@ declare var GPUUncapturedErrorEvent: {
   new (
     type: string,
     gpuUncapturedErrorEventInitDict: GPUUncapturedErrorEventInit
-  );
+  ): GPUUncapturedErrorEvent;
 };
 
 interface GPUValidationError
   extends GPUError {
-  /**
-   * Nominal type branding.
-   * https://github.com/microsoft/TypeScript/pull/33038
-   * @internal
-   */
+  /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUValidationError";
 }
 
@@ -2883,7 +2780,7 @@ declare var GPUValidationError: {
   prototype: GPUValidationError;
   new (
     message: string
-  );
+  ): GPUValidationError;
 };
 
 type WGSLLanguageFeatures =
@@ -2908,6 +2805,8 @@ interface GPUBufferUsage {
   readonly QUERY_RESOLVE: GPUFlagsConstant;
 }
 
+declare var GPUBufferUsage: GPUBufferUsage;
+
 interface GPUColorWrite {
   readonly RED: GPUFlagsConstant;
   readonly GREEN: GPUFlagsConstant;
@@ -2916,16 +2815,22 @@ interface GPUColorWrite {
   readonly ALL: GPUFlagsConstant;
 }
 
+declare var GPUColorWrite: GPUColorWrite;
+
 interface GPUMapMode {
   readonly READ: GPUFlagsConstant;
   readonly WRITE: GPUFlagsConstant;
 }
+
+declare var GPUMapMode: GPUMapMode;
 
 interface GPUShaderStage {
   readonly VERTEX: GPUFlagsConstant;
   readonly FRAGMENT: GPUFlagsConstant;
   readonly COMPUTE: GPUFlagsConstant;
 }
+
+declare var GPUShaderStage: GPUShaderStage;
 
 interface GPUTextureUsage {
   readonly COPY_SRC: GPUFlagsConstant;
@@ -2934,3 +2839,5 @@ interface GPUTextureUsage {
   readonly STORAGE_BINDING: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
 }
+
+declare var GPUTextureUsage: GPUTextureUsage;
