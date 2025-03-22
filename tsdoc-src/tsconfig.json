@@ -19,7 +19,7 @@
     ],
   },
   "include": [
-    "./webgpu.ts"
+    "../dist/index.d.ts"
   ],
   "exclude": [
     "node_modules",
