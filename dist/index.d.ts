@@ -2108,15 +2108,21 @@ interface GPUAdapterInfo {
   /**
    * If the "subgroups" feature is supported, the minimum supported subgroup size for the
    * adapter.
+   *
+   * TODO: Temporarily optional until all browsers have implemented it.
    */
-  readonly subgroupMinSize: number;
+  readonly subgroupMinSize?: number;
   /**
    * If the "subgroups" feature is supported, the maximum supported subgroup size for the
    * adapter.
+   *
+   * TODO: Temporarily optional until all browsers have implemented it.
    */
-  readonly subgroupMaxSize: number;
+  readonly subgroupMaxSize?: number;
   /**
    * Whether the adapter is a fallback adapter.
+   *
+   * TODO: Temporarily optional until all browsers have implemented it.
    **/
   readonly isFallbackAdapter?: boolean;
 }
