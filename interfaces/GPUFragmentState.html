@@ -52,7 +52,48 @@ When the pipeline is executed, that constant will have the specified value.
 Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a double.
 They are converted [$to WGSL type$] of the pipeline-overridable constant (<code>bool</code>/<code>i32</code>/<code>u32</code>/<code>f32</code>/<code>f16</code>).
 If conversion fails, a validation error is generated.</p>
-</div><aside class="tsd-sources">
+<div class=example>
+Pipeline-overridable constants defined in WGSL:
+```wgsl
+@id(0)      override has_point_light: bool = true;  // Algorithmic control.
+@id(1200)   override specular_param: f32 = 2.3;     // Numeric control.
+@id(1300)   override gain: f32;                     // Must be overridden.
+override width: f32 = 0.0;              // Specifed at the API level
+//   using the name "width".
+override depth: f32;                    // Specifed at the API level
+//   using the name "depth".
+//   Must be overridden.
+override height = 2 * depth;            // The default value
+// (if not set at the API level),
+// depends on another
+// overridable constant.
+```
+Corresponding JavaScript code, providing only the overrides which are required
+(have no defaults):
+```js
+{
+// ...
+constants: {
+1300: 2.0,  // "gain"
+depth: -1,  // "depth"
+}
+}
+```
+Corresponding JavaScript code, overriding all constants:
+```js
+{
+// ...
+constants: {
+0: false,   // "has_point_light"
+1200: 3.0,  // "specular_param"
+1300: 2.0,  // "gain"
+width: 20,  // "width"
+depth: -1,  // "depth"
+height: 15, // "height"
+}
+}
+```
+</div></div><aside class="tsd-sources">
 <p>Inherited from <a href="GPUProgrammableStage.html">GPUProgrammableStage</a>.<a href="GPUProgrammableStage.html#constants">constants</a></p></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a id="entryPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>entry<wbr/>Point</span><a href="#entryPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
