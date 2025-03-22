@@ -415,7 +415,7 @@ interface GPUBindGroupDescriptor
 interface GPUBindGroupEntry {
   /**
    * A unique identifier for a resource binding within the {@link GPUBindGroup}, corresponding to a
-   * {@link GPUBindGroupLayoutEntry#binding|GPUBindGroupLayoutEntry.binding} and a @binding
+   * {@link GPUBindGroupLayoutEntry#binding | GPUBindGroupLayoutEntry.binding} and a @binding
    * attribute in the {@link GPUShaderModule}.
    */
   binding: GPUIndex32;
@@ -437,7 +437,7 @@ interface GPUBindGroupLayoutDescriptor
 interface GPUBindGroupLayoutEntry {
   /**
    * A unique identifier for a resource binding within the {@link GPUBindGroupLayout}, corresponding
-   * to a {@link GPUBindGroupEntry#binding|GPUBindGroupEntry.binding} and a @binding
+   * to a {@link GPUBindGroupEntry#binding | GPUBindGroupEntry.binding} and a @binding
    * attribute in the {@link GPUShaderModule}.
    */
   binding: GPUIndex32;
@@ -669,7 +669,7 @@ interface GPUComputePassDescriptor
 
 interface GPUComputePassTimestampWrites {
   /**
-   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType} `"timestamp"`, that the query results will be
    * written to.
    */
   querySet: GPUQuerySet;
@@ -697,12 +697,12 @@ interface GPUCopyExternalImageDestInfo
   extends GPUTexelCopyTextureInfo {
   /**
    * Describes the color space and encoding used to encode data into the destination texture.
-   * This [[#color-space-conversions|may result]] in values outside of the range [0, 1]
+   * This {@link https://www.w3.org/TR/webgpu/#color-space-conversions | may result} in values outside of the range [0, 1]
    * being written to the target texture, if its format can represent them.
    * Otherwise, the results are clamped to the target texture format's range.
    * Note:
    * If {@link GPUCopyExternalImageDestInfo#colorSpace} matches the source image,
-   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   * conversion may not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
    */
   colorSpace?: PredefinedColorSpace;
   /**
@@ -713,7 +713,7 @@ interface GPUCopyExternalImageDestInfo
    * corresponding alpha values.
    * Note:
    * If {@link GPUCopyExternalImageDestInfo#premultipliedAlpha} matches the source image,
-   * conversion may not be necessary. See [[#color-space-conversion-elision]].
+   * conversion may not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
    */
   premultipliedAlpha?: boolean;
 }
@@ -802,7 +802,7 @@ interface GPUDeviceDescriptor
    * The request will fail if the adapter cannot provide these limits.
    * Each key with a non-`undefined` value must be the name of a member of supported limits.
    * API calls on the resulting device perform validation according to the exact limits of the
-   * device (not the adapter; see [[#limits]]).
+   * device (not the adapter; see {@link https://www.w3.org/TR/webgpu/#limits}).
    * <!-- If we ever need limit types other than GPUSize32/GPUSize64, we can change the value
    * type to `double` or `any` in the future and write out the type conversion explicitly (by
    * reference to WebIDL spec). Or change the entire type to `any` and add back a `dictionary
@@ -830,9 +830,9 @@ interface GPUExtent3DDict {
   height?: GPUIntegerCoordinate;
   /**
    * The depth of the extent or the number of array layers it contains.
-   * If used with a {@link GPUTexture} with a {@link GPUTextureDimension} of {@link GPUTextureDimension#"3d"}
+   * If used with a {@link GPUTexture} with a {@link GPUTextureDimension} of {@link GPUTextureDimension} `"3d"`
    * defines the depth of the texture. If used with a {@link GPUTexture} with a {@link GPUTextureDimension}
-   * of {@link GPUTextureDimension#"2d"} defines the number of array layers in the texture.
+   * of {@link GPUTextureDimension} `"2d"` defines the number of array layers in the texture.
    */
   depthOrArrayLayers?: GPUIntegerCoordinate;
 }
@@ -885,7 +885,7 @@ interface GPUMultisampleState {
 
 interface GPUObjectDescriptorBase {
   /**
-   * The initial value of {@link GPUObjectBase#label|GPUObjectBase.label}.
+   * The initial value of {@link GPUObjectBase#label | GPUObjectBase.label}.
    */
   label?: string;
 }
@@ -904,9 +904,9 @@ interface GPUOrigin3DDict {
 interface GPUPipelineDescriptorBase
   extends GPUObjectDescriptorBase {
   /**
-   * The {@link GPUPipelineLayout} for this pipeline, or {@link GPUAutoLayoutMode#"auto"} to generate
+   * The {@link GPUPipelineLayout} for this pipeline, or {@link GPUAutoLayoutMode} `"auto"` to generate
    * the pipeline layout automatically.
-   * Note: If {@link GPUAutoLayoutMode#"auto"} is used the pipeline cannot share {@link GPUBindGroup}s
+   * Note: If {@link GPUAutoLayoutMode} `"auto"` is used the pipeline cannot share {@link GPUBindGroup}s
    * with any other pipelines.
    */
   layout:
@@ -935,9 +935,9 @@ interface GPUPrimitiveState {
   topology?: GPUPrimitiveTopology;
   /**
    * For pipelines with strip topologies
-   * ({@link GPUPrimitiveTopology#"line-strip"} or {@link GPUPrimitiveTopology#"triangle-strip"}),
+   * ({@link GPUPrimitiveTopology} `"line-strip"` or {@link GPUPrimitiveTopology} `"triangle-strip"`),
    * this determines the index buffer format and primitive restart value
-   * ({@link GPUIndexFormat#"uint16"}/`0xFFFF` or {@link GPUIndexFormat#"uint32"}/`0xFFFFFFFF`).
+   * ({@link GPUIndexFormat} `"uint16"`/`0xFFFF` or {@link GPUIndexFormat} `"uint32"`/`0xFFFFFFFF`).
    * It is not allowed on pipelines with non-strip topologies.
    * Note: Some implementations require knowledge of the primitive restart value to compile
    * pipeline state objects.
@@ -945,7 +945,7 @@ interface GPUPrimitiveState {
    * ({@link GPURenderCommandsMixin#drawIndexed()} or {@link GPURenderCommandsMixin#drawIndexedIndirect}),
    * this must be set, and it must match the index buffer format used with the draw call
    * (set in {@link GPURenderCommandsMixin#setIndexBuffer}).
-   * See [[#primitive-assembly]] for additional details.
+   * See {@link https://www.w3.org/TR/webgpu/#primitive-assembly} for additional details.
    */
   stripIndexFormat?: GPUIndexFormat;
   /**
@@ -958,7 +958,7 @@ interface GPUPrimitiveState {
   cullMode?: GPUCullMode;
   /**
    * If true, indicates that depth clipping is disabled.
-   * Requires the {@link GPUFeatureName#"depth-clip-control"} feature to be enabled.
+   * Requires the {@link GPUFeatureName} `"depth-clip-control"` feature to be enabled.
    */
   unclippedDepth?: boolean;
 }
@@ -989,12 +989,12 @@ interface GPUProgrammableStage {
    * of one such constant, with the comparison performed
    * according to the rules for WGSL identifier comparison.
    * When the pipeline is executed, that constant will have the specified value.
-   * Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a {@link double}.
+   * Values are specified as <dfn typedef for="">GPUPipelineConstantValue</dfn>, which is a `double`.
    * They are converted [$to WGSL type$] of the pipeline-overridable constant (`bool`/`i32`/`u32`/`f32`/`f16`).
    * If conversion fails, a validation error is generated.
    * <div class=example>
    * Pipeline-overridable constants defined in WGSL:
-   * <pre highlight=wgsl>
+   * ```wgsl
    * @id(0)      override has_point_light: bool = true;  // Algorithmic control.
    * @id(1200)   override specular_param: f32 = 2.3;     // Numeric control.
    * @id(1300)   override gain: f32;                     // Must be overridden.
@@ -1007,10 +1007,10 @@ interface GPUProgrammableStage {
    * // (if not set at the API level),
    * // depends on another
    * // overridable constant.
-   * </pre>
+   * ```
    * Corresponding JavaScript code, providing only the overrides which are required
    * (have no defaults):
-   * <pre highlight=js>
+   * ```js
    * {
    * // ...
    * constants: {
@@ -1018,9 +1018,9 @@ interface GPUProgrammableStage {
    * depth: -1,  // "depth"
    * }
    * }
-   * </pre>
+   * ```
    * Corresponding JavaScript code, overriding all constants:
-   * <pre highlight=js>
+   * ```js
    * {
    * // ...
    * constants: {
@@ -1032,7 +1032,7 @@ interface GPUProgrammableStage {
    * height: 15, // "height"
    * }
    * }
-   * </pre>
+   * ```
    * </div>
    */
   constants?: Record<
@@ -1083,7 +1083,7 @@ interface GPURenderPassColorAttachment {
    */
   view: GPUTextureView;
   /**
-   * Indicates the depth slice index of {@link GPUTextureViewDimension#"3d"} {@link GPURenderPassColorAttachment#view}
+   * Indicates the depth slice index of {@link GPUTextureViewDimension} `"3d"` {@link GPURenderPassColorAttachment#view}
    * that will be output to for this color attachment.
    */
   depthSlice?: GPUIntegerCoordinate;
@@ -1096,7 +1096,7 @@ interface GPURenderPassColorAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
    * render pass. If not map/exist|provided, defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
-   * if {@link GPURenderPassColorAttachment#loadOp} is not {@link GPULoadOp#"clear"}.
+   * if {@link GPURenderPassColorAttachment#loadOp} is not {@link GPULoadOp} `"clear"`.
    * The components of {@link GPURenderPassColorAttachment#clearValue} are all double values.
    * They are converted [$to a texel value of texture format$] matching the render attachment.
    * If conversion fails, a validation error is generated.
@@ -1105,7 +1105,7 @@ interface GPURenderPassColorAttachment {
   /**
    * Indicates the load operation to perform on {@link GPURenderPassColorAttachment#view} prior to
    * executing the render pass.
-   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp} `"clear"` for details.
    */
   loadOp: GPULoadOp;
   /**
@@ -1124,14 +1124,14 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s depth component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#depthLoadOp}
-   * is not {@link GPULoadOp#"clear"}. Must be between 0.0 and 1.0, inclusive.
+   * is not {@link GPULoadOp} `"clear"`. Must be between 0.0 and 1.0, inclusive.
    * <!-- POSTV1(unrestricted-depth): unless unrestricted depth is enabled -->
    */
   depthClearValue?: number;
   /**
    * Indicates the load operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
    * depth component prior to executing the render pass.
-   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp} `"clear"` for details.
    */
   depthLoadOp?: GPULoadOp;
   /**
@@ -1147,7 +1147,7 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s stencil component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#stencilLoadOp}
-   * is not {@link GPULoadOp#"clear"}.
+   * is not {@link GPULoadOp} `"clear"`.
    * The value will be converted to the type of the stencil aspect of `view` by taking the same
    * number of LSBs as the number of bits in the stencil aspect of one texel block|texel of `view`.
    */
@@ -1155,7 +1155,7 @@ interface GPURenderPassDepthStencilAttachment {
   /**
    * Indicates the load operation to perform on {@link GPURenderPassDepthStencilAttachment#view}'s
    * stencil component prior to executing the render pass.
-   * Note: It is recommended to prefer clearing; see {@link GPULoadOp#"clear"} for details.
+   * Note: It is recommended to prefer clearing; see {@link GPULoadOp} `"clear"` for details.
    */
   stencilLoadOp?: GPULoadOp;
   /**
@@ -1220,7 +1220,7 @@ interface GPURenderPassLayout
 
 interface GPURenderPassTimestampWrites {
   /**
-   * The {@link GPUQuerySet}, of type {@link GPUQueryType#"timestamp"}, that the query results will be
+   * The {@link GPUQuerySet}, of type {@link GPUQueryType} `"timestamp"`, that the query results will be
    * written to.
    */
   querySet: GPUQuerySet;
@@ -1256,7 +1256,7 @@ interface GPURenderPipelineDescriptor
   multisample?: GPUMultisampleState;
   /**
    * Describes the fragment shader entry point of the pipeline and its output colors. If
-   * not map/exist|provided, the [[#no-color-output]] mode is enabled.
+   * not map/exist|provided, the {@link https://www.w3.org/TR/webgpu/#no-color-output} mode is enabled.
    */
   fragment?: GPUFragmentState;
 }
@@ -1296,7 +1296,7 @@ interface GPUSamplerDescriptor
    */
   addressModeV?: GPUAddressMode;
   /**
-   * Specifies the {{GPUAddressMode|address modes}} for the texture width, height, and depth
+   * Specifies the {@link GPUAddressMode | address modes} for the texture width, height, and depth
    * coordinates, respectively.
    */
   addressModeW?: GPUAddressMode;
@@ -1349,7 +1349,7 @@ interface GPUShaderModuleCompilationHint {
   /**
    * A {@link GPUPipelineLayout} that the {@link GPUShaderModule} may be used with in a future
    * {@link GPUDevice#createComputePipeline()} or {@link GPUDevice#createRenderPipeline} call.
-   * If set to {@link GPUAutoLayoutMode#"auto"} the layout will be the [$default pipeline layout$]
+   * If set to {@link GPUAutoLayoutMode} `"auto"` the layout will be the [$default pipeline layout$]
    * for the entry point associated with this hint will be used.
    */
   layout?:
@@ -1381,7 +1381,7 @@ interface GPUShaderModuleDescriptor
    * {@link GPUDevice#createShaderModule} rather than multiple times in the multiple calls to
    * {@link GPUDevice#createComputePipeline()} or {@link GPUDevice#createRenderPipeline}.
    * Hints are only applied to the entry points they explicitly name.
-   * Unlike {@link GPUProgrammableStage#entryPoint|GPUProgrammableStage.entryPoint},
+   * Unlike {@link GPUProgrammableStage#entryPoint | GPUProgrammableStage.entryPoint},
    * there is no default, even if only one entry point is present in the module.
    * </div>
    * Note:
@@ -1394,7 +1394,7 @@ interface GPUShaderModuleDescriptor
 
 interface GPUStencilFaceState {
   /**
-   * The {@link GPUCompareFunction} used when testing the {@link RenderState#[[stencilReference]]} value
+   * The {@link GPUCompareFunction} used when testing the RenderState.`[[stencilReference]]` value
    * against the fragment's {@link GPURenderPassDescriptor#depthStencilAttachment} stencil values.
    */
   compare?: GPUCompareFunction;
@@ -1443,7 +1443,7 @@ interface GPUTexelCopyBufferInfo
 interface GPUTexelCopyBufferLayout {
   /**
    * The offset, in bytes, from the beginning of the texel data source (such as a
-   * {@link GPUTexelCopyBufferInfo#buffer|GPUTexelCopyBufferInfo.buffer}) to the start of the texel data
+   * {@link GPUTexelCopyBufferInfo#buffer | GPUTexelCopyBufferInfo.buffer}) to the start of the texel data
    * within that source.
    */
   offset?: GPUSize64;
@@ -1538,8 +1538,8 @@ interface GPUTextureDescriptor
    * test various systems to find out the impact on their particular application.
    * For example, on some systems any texture with a {@link GPUTextureDescriptor#format} or
    * {@link GPUTextureDescriptor#viewFormats} entry including
-   * {@link GPUTextureFormat#"rgba8unorm-srgb"} will perform less optimally than a
-   * {@link GPUTextureFormat#"rgba8unorm"} texture which does not.
+   * {@link GPUTextureFormat} `"rgba8unorm-srgb"` will perform less optimally than a
+   * {@link GPUTextureFormat} `"rgba8unorm"` texture which does not.
    * Similar caveats exist for other formats and pairs of formats on other systems.
    * </div>
    * Formats in this list must be texture view format compatible with the texture format.
@@ -1564,7 +1564,7 @@ interface GPUTextureViewDescriptor
    */
   dimension?: GPUTextureViewDimension;
   /**
-   * The allowed {@link GPUTextureUsage|usage(s)} for the texture view. Must be a subset of the
+   * The allowed {@link GPUTextureUsage | usage(s)} for the texture view. Must be a subset of the
    * {@link GPUTexture#usage} flags of the texture. If 0, defaults to the full set of
    * {@link GPUTexture#usage} flags of the texture.
    * Note: If the view's {@link GPUTextureViewDescriptor#format} doesn't support all of the
@@ -1573,7 +1573,7 @@ interface GPUTextureViewDescriptor
    */
   usage?: GPUTextureUsageFlags;
   /**
-   * Which {@link GPUTextureAspect|aspect(s)} of the texture are accessible to the texture view.
+   * Which {@link GPUTextureAspect | aspect(s)} of the texture are accessible to the texture view.
    */
   aspect?: GPUTextureAspect;
   /**
@@ -1613,7 +1613,7 @@ interface GPUVertexAttribute {
   /**
    * The numeric location associated with this attribute, which will correspond with a
    * <a href="https://gpuweb.github.io/gpuweb/wgsl/#input-output-locations">"@location" attribute</a>
-   * declared in the {@link GPURenderPipelineDescriptor#vertex}.{@link GPUProgrammableStage#module|module}.
+   * declared in the {@link GPURenderPipelineDescriptor#vertex}.{@link GPUProgrammableStage#module | module}.
    */
   shaderLocation: GPUIndex32;
 }
@@ -1691,7 +1691,7 @@ interface GPUPipelineBase {
   /**
    * Gets a {@link GPUBindGroupLayout} that is compatible with the {@link GPUPipelineBase}'s
    * {@link GPUBindGroupLayout} at `index`.
-   * @param index - Index into the pipeline layout's {@link GPUPipelineLayout#[[bindGroupLayouts]]}
+   * @param index - Index into the pipeline layout's {@link GPUPipelineLayout}.`[[bindGroupLayouts]]`
    * 	sequence.
    */
   getBindGroupLayout(
@@ -1737,7 +1737,7 @@ interface GPURenderCommandsMixin {
   ): undefined;
   /**
    * Draws primitives.
-   * See [[#rendering-operations]] for the detailed specification.
+   * See {@link https://www.w3.org/TR/webgpu/#rendering-operations} for the detailed specification.
    * @param vertexCount - The number of vertices to draw.
    * @param instanceCount - The number of instances to draw.
    * @param firstVertex - Offset into the vertex buffers, in vertices, to begin drawing from.
@@ -1788,8 +1788,8 @@ interface GPU {
   ): Promise<GPUAdapter | null>;
   /**
    * Returns an optimal {@link GPUTextureFormat} for displaying 8-bit depth, standard dynamic range
-   * content on this system. Must only return {@link GPUTextureFormat#"rgba8unorm"} or
-   * {@link GPUTextureFormat#"bgra8unorm"}.
+   * content on this system. Must only return {@link GPUTextureFormat} `"rgba8unorm"` or
+   * {@link GPUTextureFormat} `"bgra8unorm"`.
    * The returned value can be passed as the {@link GPUCanvasConfiguration#format} to
    * {@link GPUCanvasContext#configure} calls on a {@link GPUCanvasContext} to ensure the associated
    * canvas is able to display its contents efficiently.
@@ -1889,14 +1889,14 @@ interface GPUBuffer
   readonly usage: GPUFlagsConstant;
   readonly mapState: GPUBufferMapState;
   /**
-   * Maps the given range of the {@link GPUBuffer} and resolves the returned {@link Promise} when the
+   * Maps the given range of the {@link GPUBuffer} and resolves the returned Promise when the
    * {@link GPUBuffer}'s content is ready to be accessed with {@link GPUBuffer#getMappedRange}.
-   * The resolution of the returned {@link Promise} **only** indicates that the buffer has been mapped.
+   * The resolution of the returned Promise **only** indicates that the buffer has been mapped.
    * It does not guarantee the completion of any other operations visible to the content timeline,
-   * and in particular does not imply that any other {@link Promise} returned from
+   * and in particular does not imply that any other Promise returned from
    * {@link GPUQueue#onSubmittedWorkDone()} or {@link GPUBuffer#mapAsync} on other {@link GPUBuffer}s
    * have resolved.
-   * The resolution of the {@link Promise} returned from {@link GPUQueue#onSubmittedWorkDone}
+   * The resolution of the Promise returned from {@link GPUQueue#onSubmittedWorkDone}
    * **does** imply the completion of
    * {@link GPUBuffer#mapAsync} calls made prior to that call,
    * on {@link GPUBuffer}s last used exclusively on that queue.
@@ -1910,9 +1910,9 @@ interface GPUBuffer
     size?: GPUSize64
   ): Promise<undefined>;
   /**
-   * Returns an {@link ArrayBuffer} with the contents of the {@link GPUBuffer} in the given mapped range.
+   * Returns an ArrayBuffer with the contents of the {@link GPUBuffer} in the given mapped range.
    * @param offset - Offset in bytes into the buffer to return buffer contents from.
-   * @param size - Size in bytes of the {@link ArrayBuffer} to return.
+   * @param size - Size in bytes of the ArrayBuffer to return.
    */
   getMappedRange(
     offset?: GPUSize64,
@@ -2011,7 +2011,7 @@ interface GPUCommandEncoder
     descriptor?: GPUComputePassDescriptor
   ): GPUComputePassEncoder;
   /**
-   * Shorthand, equivalent to {{GPUCommandEncoder/copyBufferToBuffer(source, sourceOffset, destination, destinationOffset, size)|copyBufferToBuffer(source, 0, destination, 0, size)}}.
+   * Shorthand, equivalent to {@link GPUCommandEncoder#copyBufferToBuffer}.
    */
   copyBufferToBuffer(
     source: GPUBuffer,
@@ -2164,7 +2164,7 @@ interface GPUComputePassEncoder
   ): undefined;
   /**
    * Dispatch work to be performed with the current {@link GPUComputePipeline}.
-   * See [[#computing-operations]] for the detailed specification.
+   * See {@link https://www.w3.org/TR/webgpu/#computing-operations} for the detailed specification.
    * @param workgroupCountX - X dimension of the grid of workgroups to dispatch.
    * @param workgroupCountY - Y dimension of the grid of workgroups to dispatch.
    * @param workgroupCountZ - Z dimension of the grid of workgroups to dispatch.
@@ -2177,7 +2177,7 @@ interface GPUComputePassEncoder
   /**
    * Dispatch work to be performed with the current {@link GPUComputePipeline} using parameters read
    * from a {@link GPUBuffer}.
-   * See [[#computing-operations]] for the detailed specification.
+   * See {@link https://www.w3.org/TR/webgpu/#computing-operations} for the detailed specification.
    * packed block of **three 32-bit unsigned integer values (12 bytes total)**,
    * given in the same order as the arguments for {@link GPUComputePassEncoder#dispatchWorkgroups}.
    * For example:
@@ -2307,9 +2307,9 @@ interface GPUDevice
   ): GPURenderPipeline;
   /**
    * Creates a {@link GPUComputePipeline} using async pipeline creation.
-   * The returned {@link Promise} resolves when the created pipeline
+   * The returned Promise resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
+   * If pipeline creation fails, the returned Promise rejects with an {@link GPUPipelineError}.
    * (A {@link GPUError} is not dispatched to the device.)
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
@@ -2320,9 +2320,9 @@ interface GPUDevice
   ): Promise<GPUComputePipeline>;
   /**
    * Creates a {@link GPURenderPipeline} using async pipeline creation.
-   * The returned {@link Promise} resolves when the created pipeline
+   * The returned Promise resolves when the created pipeline
    * is ready to be used without additional delay.
-   * If pipeline creation fails, the returned {@link Promise} rejects with an {@link GPUPipelineError}.
+   * If pipeline creation fails, the returned Promise rejects with an {@link GPUPipelineError}.
    * (A {@link GPUError} is not dispatched to the device.)
    * Note: Use of this method is preferred whenever possible, as it prevents blocking the
    * queue timeline work on pipeline compilation.
@@ -2359,14 +2359,14 @@ interface GPUDevice
    */
   readonly lost: Promise<GPUDeviceLostInfo>;
   /**
-   * Pushes a new GPU error scope onto the {@link GPUDevice#[[errorScopeStack]]} for `this`.
+   * Pushes a new GPU error scope onto the {@link GPUDevice}.`[[errorScopeStack]]` for `this`.
    * @param filter - Which class of errors this error scope observes.
    */
   pushErrorScope(
     filter: GPUErrorFilter
   ): undefined;
   /**
-   * Pops a GPU error scope off the {@link GPUDevice#[[errorScopeStack]]} for `this`
+   * Pops a GPU error scope off the {@link GPUDevice}.`[[errorScopeStack]]` for `this`
    * and resolves to **any** {@link GPUError} observed by the error scope, or `null` if none.
    * There is no guarantee of the ordering of promise resolution.
    */
@@ -2552,7 +2552,7 @@ interface GPUQueue
   /**
    * Issues a copy operation of the contents of a platform image/canvas
    * into the destination texture.
-   * This operation performs [[#color-space-conversions|color encoding]] into the destination
+   * This operation performs {@link https://www.w3.org/TR/webgpu/#color-space-conversions | color encoding} into the destination
    * encoding according to the parameters of {@link GPUCopyExternalImageDestInfo}.
    * Copying into a `-srgb` texture results in the same texture bytes, not the same decoded
    * values, as copying into the corresponding non-`-srgb` format.
@@ -2659,16 +2659,16 @@ interface GPURenderPassEncoder
     height: GPUIntegerCoordinate
   ): undefined;
   /**
-   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor#"constant"}
-   * and {@link GPUBlendFactor#"one-minus-constant"} {@link GPUBlendFactor}s.
+   * Sets the constant blend color and alpha values used with {@link GPUBlendFactor} `"constant"`
+   * and {@link GPUBlendFactor} `"one-minus-constant"` {@link GPUBlendFactor}s.
    * @param color - The color to use when blending.
    */
   setBlendConstant(
     color: GPUColor
   ): undefined;
   /**
-   * Sets the {@link RenderState#[[stencilReference]]} value used during stencil tests with
-   * the {@link GPUStencilOperation#"replace"} {@link GPUStencilOperation}.
+   * Sets the RenderState.`[[stencilReference]]` value used during stencil tests with
+   * the {@link GPUStencilOperation} `"replace"` {@link GPUStencilOperation}.
    * @param reference - The new stencil reference value.
    */
   setStencilReference(
@@ -2691,7 +2691,7 @@ interface GPURenderPassEncoder
    * pass's pipeline, bind group, and vertex/index buffer state is cleared
    * (to the initial, empty values).
    * Note: The state is cleared, not restored to the previous state.
-   * This occurs even if zero {@link GPURenderBundle|GPURenderBundles} are executed.
+   * This occurs even if zero {@link GPURenderBundle | GPURenderBundles} are executed.
    * @param bundles - List of render bundles to execute.
    */
   executeBundles(

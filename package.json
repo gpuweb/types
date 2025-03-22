@@ -13,7 +13,7 @@
   "scripts": {
     "test": "for t in tests/*/ ; do (cd \"$t\" && npm i && npm test); done",
     "build-docs": "cd tsdoc-src && npm ci && npm run build",
-    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && prettier -w generated/index.d.ts",
+    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && node fix-generated-comments.mjs && prettier -w generated/index.d.ts",
     "format": "prettier -w dist/index.d.ts"
   },
   "devDependencies": {

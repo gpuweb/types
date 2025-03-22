@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "node generate-webgpu-ts.mjs && typedoc --treatWarningsAsErrors ./webgpu.ts"
+    "build": "typedoc --treatWarningsAsErrors ../dist/index.d.ts"
   },
   "devDependencies": {
     "@types/dom-webcodecs": "0.1.3",
