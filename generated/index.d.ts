@@ -10,7 +10,7 @@ type GPUBufferUsageFlags =
   number;
 type GPUColor =
 
-    | Array<number>
+    | Iterable<number>
     | GPUColorDict;
 type GPUColorWriteFlags =
   number;
@@ -27,7 +27,7 @@ type GPUDepthBias =
   number;
 type GPUExtent3D =
 
-    | Array<GPUIntegerCoordinate>
+    | Iterable<GPUIntegerCoordinate>
     | GPUExtent3DDict;
 type GPUFlagsConstant =
   number;
@@ -41,11 +41,11 @@ type GPUMapModeFlags =
   number;
 type GPUOrigin2D =
 
-    | Array<GPUIntegerCoordinate>
+    | Iterable<GPUIntegerCoordinate>
     | GPUOrigin2DDict;
 type GPUOrigin3D =
 
-    | Array<GPUIntegerCoordinate>
+    | Iterable<GPUIntegerCoordinate>
     | GPUOrigin3DDict;
 type GPUPipelineConstantValue =
   number;
@@ -409,7 +409,7 @@ interface GPUBindGroupDescriptor
    * A list of entries describing the resources to expose to the shader for each binding
    * described by the {@link GPUBindGroupDescriptor#layout}.
    */
-  entries: Array<GPUBindGroupEntry>;
+  entries: Iterable<GPUBindGroupEntry>;
 }
 
 interface GPUBindGroupEntry {
@@ -431,7 +431,7 @@ interface GPUBindGroupLayoutDescriptor
   /**
    * A list of entries describing the shader resource bindings for a bind group.
    */
-  entries: Array<GPUBindGroupLayoutEntry>;
+  entries: Iterable<GPUBindGroupLayoutEntry>;
 }
 
 interface GPUBindGroupLayoutEntry {
@@ -594,7 +594,7 @@ interface GPUCanvasConfiguration {
    * The formats that views created from textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} may use.
    */
-  viewFormats?: Array<GPUTextureFormat>;
+  viewFormats?: Iterable<GPUTextureFormat>;
   /**
    * The color space that values written into textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} should be displayed with.
@@ -796,7 +796,7 @@ interface GPUDeviceDescriptor
    * Exactly the specified set of features, and no more or less, will be allowed in validation
    * of API calls on the resulting device.
    */
-  requiredFeatures?: Array<GPUFeatureName>;
+  requiredFeatures?: Iterable<GPUFeatureName>;
   /**
    * Specifies the limits that are required by the device request.
    * The request will fail if the adapter cannot provide these limits.
@@ -861,7 +861,11 @@ interface GPUFragmentState
    * A list of {@link GPUColorTargetState} defining the formats and behaviors of the color targets
    * this pipeline writes to.
    */
-  targets: Array<GPUColorTargetState | null>;
+  targets: Iterable<
+    | GPUColorTargetState
+    | null
+    | undefined
+  >;
 }
 
 interface GPUMultisampleState {
@@ -925,7 +929,11 @@ interface GPUPipelineLayoutDescriptor
    * to a @group attribute in the {@link GPUShaderModule}, with the `N`th element corresponding
    * with `@group(N)`.
    */
-  bindGroupLayouts: Array<GPUBindGroupLayout | null>;
+  bindGroupLayouts: Iterable<
+    | GPUBindGroupLayout
+    | null
+    | undefined
+  >;
 }
 
 interface GPUPrimitiveState {
@@ -1178,7 +1186,11 @@ interface GPURenderPassDescriptor
    * Due to compatible usage list|usage compatibility, no color attachment
    * may alias another attachment or any resource used inside the render pass.
    */
-  colorAttachments: Array<GPURenderPassColorAttachment | null>;
+  colorAttachments: Iterable<
+    | GPURenderPassColorAttachment
+    | null
+    | undefined
+  >;
   /**
    * The {@link GPURenderPassDepthStencilAttachment} value that defines the depth/stencil
    * attachment that will be output to and tested against when executing this render pass.
@@ -1207,7 +1219,11 @@ interface GPURenderPassLayout
   /**
    * A list of the {@link GPUTextureFormat}s of the color attachments for this pass or bundle.
    */
-  colorFormats: Array<GPUTextureFormat | null>;
+  colorFormats: Iterable<
+    | GPUTextureFormat
+    | null
+    | undefined
+  >;
   /**
    * The {@link GPUTextureFormat} of the depth/stencil attachment for this pass or bundle.
    */
@@ -1389,7 +1405,7 @@ interface GPUShaderModuleDescriptor
    * errors (like unknown entry point names or incompatible pipeline layouts) to developers,
    * for example in the browser developer console.
    */
-  compilationHints?: Array<GPUShaderModuleCompilationHint>;
+  compilationHints?: Iterable<GPUShaderModuleCompilationHint>;
 }
 
 interface GPUStencilFaceState {
@@ -1549,7 +1565,7 @@ interface GPUTextureDescriptor
    * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
    * </div>
    */
-  viewFormats?: Array<GPUTextureFormat>;
+  viewFormats?: Iterable<GPUTextureFormat>;
 }
 
 interface GPUTextureViewDescriptor
@@ -1630,7 +1646,7 @@ interface GPUVertexBufferLayout {
   /**
    * An array defining the layout of the vertex attributes within each element.
    */
-  attributes: Array<GPUVertexAttribute>;
+  attributes: Iterable<GPUVertexAttribute>;
 }
 
 interface GPUVertexState
@@ -1639,7 +1655,11 @@ interface GPUVertexState
    * A list of {@link GPUVertexBufferLayout}s, each defining the layout of vertex attribute data in a
    * vertex buffer used by this pipeline.
    */
-  buffers?: Array<GPUVertexBufferLayout | null>;
+  buffers?: Iterable<
+    | GPUVertexBufferLayout
+    | null
+    | undefined
+  >;
 }
 
 interface GPUBindingCommandsMixin {
@@ -1648,12 +1668,18 @@ interface GPUBindingCommandsMixin {
    */
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup | null,
-    dynamicOffsets?: Array<GPUBufferDynamicOffset>
+    bindGroup:
+      | GPUBindGroup
+      | null
+      | undefined,
+    dynamicOffsets?: Iterable<GPUBufferDynamicOffset>
   ): undefined;
   setBindGroup(
     index: GPUIndex32,
-    bindGroup: GPUBindGroup | null,
+    bindGroup:
+      | GPUBindGroup
+      | null
+      | undefined,
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
@@ -1731,7 +1757,10 @@ interface GPURenderCommandsMixin {
    */
   setVertexBuffer(
     slot: GPUIndex32,
-    buffer: GPUBuffer | null,
+    buffer:
+      | GPUBuffer
+      | null
+      | undefined,
     offset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -2404,7 +2433,9 @@ interface GPUPipelineError
 declare var GPUPipelineError: {
   prototype: GPUPipelineError;
   new (
-    message?: string,
+    message:
+      | string
+      | undefined,
     options: GPUPipelineErrorInit
   ): GPUPipelineError;
 };
@@ -2447,7 +2478,7 @@ interface GPUQueue
    * 	`commandBuffers`:
    */
   submit(
-    commandBuffers: Array<GPUCommandBuffer>
+    commandBuffers: Iterable<GPUCommandBuffer>
   ): undefined;
   onSubmittedWorkDone(): Promise<undefined>;
   /**
@@ -2617,7 +2648,7 @@ interface GPURenderPassEncoder
    * @param bundles - List of render bundles to execute.
    */
   executeBundles(
-    bundles: Array<GPURenderBundle>
+    bundles: Iterable<GPURenderBundle>
   ): undefined;
   /**
    * Completes recording of the render pass commands sequence.
