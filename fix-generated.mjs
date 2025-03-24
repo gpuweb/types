@@ -3,6 +3,9 @@ import fs from 'fs';
 async function main() {
   let ts = fs.readFileSync('generated/index.d.ts', { encoding: 'utf-8' });
   ts = ts
+    // Replace broken AllowSharedBufferSource with GPUAllowSharedBufferSource
+    .replace(/AllowSharedBufferSource/g, 'GPUAllowSharedBufferSource')
+
     // convert [[#anchor]] to {@link spec_url}
     // convert [[#anchor|text]] to {@link spec_url|text}
     .replace(/([^#])\[\[([^\[].*?)\]\]/g, '$1{@link https://www.w3.org/TR/webgpu/$2}')

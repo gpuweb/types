@@ -6,13 +6,24 @@
 // Manually-written
 // *********************************************************************************************
 
+// AllowSharedBufferSource wasn't introduced until TypeScript 5.2.
+// But it also didn't include SharedArrayBuffer in the union.
+// This broke in ES2024 when ArrayBuffer gained some properties that SharedArrayBuffer didn't.
+// So, we use our own definition for AllowSharedBufferSource.
+
+type GPUAllowSharedBufferSource =
+
+    | BufferSource
+    | SharedArrayBuffer;
+
+// Stronger typing for getContext()
+
 interface HTMLCanvasElement {
   getContext(
     contextId:
       | "webgpu"
   ): GPUCanvasContext | null;
 }
-
 interface OffscreenCanvas {
   getContext(
     contextId:
@@ -21,32 +32,33 @@ interface OffscreenCanvas {
 }
 
 // Defined as an empty interface here to prevent errors when using these types in a worker.
+
 interface HTMLVideoElement {}
+
+// Strict types defined to help developers catch a common class of errors.
+// This interface defines depth as an undefined, which will cause a type check failure if someone
+// attempts to set depth rather than depthOrArrayLayers on a GPUExtent3D (an easy mistake to make.)
 
 type GPUOrigin2DStrict =
 
     | Iterable<GPUIntegerCoordinate>
     | GPUOrigin2DDictStrict;
-
 interface GPUOrigin2DDictStrict
   extends GPUOrigin2DDict {
   /** @deprecated Does not exist for GPUOrigin2D. */
   z?: undefined;
 }
-
 type GPUExtent3DStrict =
 
     | Iterable<GPUIntegerCoordinate>
     | GPUExtent3DDictStrict;
-
-// GPUExtent3DDictStrict is defined to help developers catch a common class of errors.
-// This interface defines depth as an undefined, which will cause a type check failure if someone
-// attempts to set depth rather than depthOrArrayLayers on a GPUExtent3D (an easy mistake to make.)
 interface GPUExtent3DDictStrict
   extends GPUExtent3DDict {
   /** @deprecated The correct name is `depthOrArrayLayers`. */
   depth?: undefined;
 }
+
+// Stronger typing for event listeners.
 
 /** @internal */
 interface __GPUDeviceEventMap {
@@ -2865,7 +2877,7 @@ interface GPUQueue
   writeBuffer(
     buffer: GPUBuffer,
     bufferOffset: GPUSize64,
-    data: AllowSharedBufferSource,
+    data: GPUAllowSharedBufferSource,
     dataOffset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -2878,7 +2890,7 @@ interface GPUQueue
    */
   writeTexture(
     destination: GPUTexelCopyTextureInfo,
-    data: AllowSharedBufferSource,
+    data: GPUAllowSharedBufferSource,
     dataLayout: GPUTexelCopyBufferLayout,
     size: GPUExtent3DStrict
   ): undefined;

@@ -2494,7 +2494,7 @@ interface GPUQueue
   writeBuffer(
     buffer: GPUBuffer,
     bufferOffset: GPUSize64,
-    data: AllowSharedBufferSource,
+    data: GPUAllowSharedBufferSource,
     dataOffset?: GPUSize64,
     size?: GPUSize64
   ): undefined;
@@ -2507,7 +2507,7 @@ interface GPUQueue
    */
   writeTexture(
     destination: GPUTexelCopyTextureInfo,
-    data: AllowSharedBufferSource,
+    data: GPUAllowSharedBufferSource,
     dataLayout: GPUTexelCopyBufferLayout,
     size: GPUExtent3D
   ): undefined;
