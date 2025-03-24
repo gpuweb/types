@@ -1,9 +1,28 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "ESNext"],
-    "module": "ESNext",
     "noEmit": true,
+
+    "module": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+
+    // From https://github.com/tsconfig/bases/blob/main/bases/strictest.json
     "strict": true,
-    "target": "ESNext"
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "types": ["@webgpu/types"]
   }
 }
