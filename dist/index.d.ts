@@ -2304,14 +2304,14 @@ interface GPUCommandEncoder
    * @param sourceOffset - Offset in bytes into `source` to begin copying from.
    * @param destination - The {@link GPUBuffer} to copy to.
    * @param destinationOffset - Offset in bytes into `destination` to place the copied data.
-   * @param size - Bytes to copy.
+   * @param size - Bytes to copy. Defaults to the size of the buffer `source` minus `sourceOffset`.
    */
   copyBufferToBuffer(
     source: GPUBuffer,
     sourceOffset: GPUSize64,
     destination: GPUBuffer,
     destinationOffset: GPUSize64,
-    size: GPUSize64
+    size?: GPUSize64
   ): undefined;
   /**
    * Encode a command into the {@link GPUCommandEncoder} that copies data from a sub-region of a
