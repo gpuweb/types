@@ -2,6 +2,7 @@ type GPUBindingResource =
 
     | GPUSampler
     | GPUTextureView
+    | GPUBuffer
     | GPUBufferBinding
     | GPUExternalTexture;
 type GPUBufferDynamicOffset =
@@ -149,6 +150,7 @@ type GPUErrorFilter =
     | "internal";
 type GPUFeatureName =
 
+    | "core-features-and-limits"
     | "depth-clip-control"
     | "depth32float-stencil8"
     | "texture-compression-bc"
@@ -165,7 +167,8 @@ type GPUFeatureName =
     | "float32-blendable"
     | "clip-distances"
     | "dual-source-blending"
-    | "subgroups";
+    | "subgroups"
+    | "texture-formats-tier1";
 type GPUFilterMode =
 
     | "nearest"
@@ -245,6 +248,8 @@ type GPUTextureFormat =
     | "r8snorm"
     | "r8uint"
     | "r8sint"
+    | "r16unorm"
+    | "r16snorm"
     | "r16uint"
     | "r16sint"
     | "r16float"
@@ -255,6 +260,8 @@ type GPUTextureFormat =
     | "r32uint"
     | "r32sint"
     | "r32float"
+    | "rg16unorm"
+    | "rg16snorm"
     | "rg16uint"
     | "rg16sint"
     | "rg16float"
@@ -272,6 +279,8 @@ type GPUTextureFormat =
     | "rg32uint"
     | "rg32sint"
     | "rg32float"
+    | "rgba16unorm"
+    | "rgba16snorm"
     | "rgba16uint"
     | "rgba16sint"
     | "rgba16float"
@@ -421,7 +430,7 @@ interface GPUBindGroupEntry {
   binding: GPUIndex32;
   /**
    * The resource to bind, which may be a {@link GPUSampler}, {@link GPUTextureView},
-   * {@link GPUExternalTexture}, or {@link GPUBufferBinding}.
+   * {@link GPUBuffer}, {@link GPUBufferBinding}, or {@link GPUExternalTexture}.
    */
   resource: GPUBindingResource;
 }
