@@ -281,7 +281,8 @@ type GPUFeatureName =
     | "clip-distances"
     | "dual-source-blending"
     | "subgroups"
-    | "texture-formats-tier1";
+    | "texture-formats-tier1"
+    | "texture-formats-tier2";
 type GPUFilterMode =
 
     | "nearest"
