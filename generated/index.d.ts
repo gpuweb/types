@@ -1,6 +1,7 @@
 type GPUBindingResource =
 
     | GPUSampler
+    | GPUTexture
     | GPUTextureView
     | GPUBuffer
     | GPUBufferBinding
@@ -430,7 +431,7 @@ interface GPUBindGroupEntry {
    */
   binding: GPUIndex32;
   /**
-   * The resource to bind, which may be a {@link GPUSampler}, {@link GPUTextureView},
+   * The resource to bind, which may be a {@link GPUSampler}, {@link GPUTexture}, {@link GPUTextureView},
    * {@link GPUBuffer}, {@link GPUBufferBinding}, or {@link GPUExternalTexture}.
    */
   resource: GPUBindingResource;
@@ -458,29 +459,22 @@ interface GPUBindGroupLayoutEntry {
    */
   visibility: GPUShaderStageFlags;
   /**
-   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUBufferBinding}.
    */
   buffer?: GPUBufferBindingLayout;
   /**
-   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUSampler}.
    */
   sampler?: GPUSamplerBindingLayout;
   /**
-   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUTextureView}.
    */
   texture?: GPUTextureBindingLayout;
   /**
-   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is {@link GPUTextureView}.
    */
   storageTexture?: GPUStorageTextureBindingLayout;
   /**
-   * When map/exist|provided, indicates the binding resource type for this {@link GPUBindGroupLayoutEntry}
-   * is either {@link GPUExternalTexture} or {@link GPUTextureView}.
-   * External textures use several binding slots: see Exceeds the binding slot limits.
+   * Exactly one of these members must be set, indicating the binding type.
+   * The contents of the member specify options specific to that type.
+   * The corresponding resource in {@link GPUDevice#createBindGroup} requires
+   * the corresponding binding resource type for this binding.
    */
   externalTexture?: GPUExternalTextureBindingLayout;
 }
@@ -1096,21 +1090,25 @@ interface GPURenderBundleEncoderDescriptor
 
 interface GPURenderPassColorAttachment {
   /**
-   * A {@link GPUTextureView} describing the texture subresource that will be output to for this
-   * color attachment.
+   * Describes the texture subresource that will be output to for this color attachment.
+   * The subresource is determined by calling [$get as texture view$]({@link GPURenderPassColorAttachment#view}).
    */
-  view: GPUTextureView;
+  view:
+    | GPUTexture
+    | GPUTextureView;
   /**
    * Indicates the depth slice index of {@link GPUTextureViewDimension} `"3d"` {@link GPURenderPassColorAttachment#view}
    * that will be output to for this color attachment.
    */
   depthSlice?: GPUIntegerCoordinate;
   /**
-   * A {@link GPUTextureView} describing the texture subresource that will receive the resolved
-   * output for this color attachment if {@link GPURenderPassColorAttachment#view} is
-   * multisampled.
+   * Describes the texture subresource that will receive the resolved output for this color
+   * attachment if {@link GPURenderPassColorAttachment#view} is multisampled.
+   * The subresource is determined by calling [$get as texture view$]({@link GPURenderPassColorAttachment#resolveTarget}).
    */
-  resolveTarget?: GPUTextureView;
+  resolveTarget?:
+    | GPUTexture
+    | GPUTextureView;
   /**
    * Indicates the value to clear {@link GPURenderPassColorAttachment#view} to prior to executing the
    * render pass. If not map/exist|provided, defaults to `{r: 0, g: 0, b: 0, a: 0}`. Ignored
@@ -1135,10 +1133,13 @@ interface GPURenderPassColorAttachment {
 
 interface GPURenderPassDepthStencilAttachment {
   /**
-   * A {@link GPUTextureView} describing the texture subresource that will be output to
-   * and read from for this depth/stencil attachment.
+   * Describes the texture subresource that will be output to and read from for this
+   * depth/stencil attachment.
+   * The subresource is determined by calling [$get as texture view$]({@link GPURenderPassDepthStencilAttachment#view}).
    */
-  view: GPUTextureView;
+  view:
+    | GPUTexture
+    | GPUTextureView;
   /**
    * Indicates the value to clear {@link GPURenderPassDepthStencilAttachment#view}'s depth component
    * to prior to executing the render pass. Ignored if {@link GPURenderPassDepthStencilAttachment#depthLoadOp}
