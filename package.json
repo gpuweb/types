@@ -13,7 +13,7 @@
   "scripts": {
     "test": "for t in tests/*/ ; do echo \"\\n======== $t ========\" ; (cd \"$t\" && npm i && npm test); done",
     "build-docs": "cd tsdoc-src && npm ci && npm run build",
-    "generate": "bikeshed-to-ts --in ./gpuweb/spec/index.bs --out ./generated/index.d.ts --forceGlobal --nominal && node fix-generated.mjs && prettier -w generated/index.d.ts",
+    "generate": "node generate.mjs",
     "format": "prettier -w dist/index.d.ts"
   },
   "devDependencies": {
