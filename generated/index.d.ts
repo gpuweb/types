@@ -1449,7 +1449,36 @@ interface GPURequestAdapterOptions {
    * Applications should not use this value at this time.
    */
   featureLevel?: string;
+  /**
+   * Optionally provides a hint indicating what class of adapter should be selected from
+   * the system's available adapters.
+   * The value of this hint may influence which adapter is chosen, but it must not
+   * influence whether an adapter is returned or not.
+   * Note:
+   * The primary utility of this hint is to influence which GPU is used in a multi-GPU system.
+   * For instance, some laptops have a low-power integrated GPU and a high-performance
+   * discrete GPU. This hint may also affect the power configuration of the selected GPU to
+   * match the requested power preference.
+   * Note:
+   * Depending on the exact hardware configuration, such as battery status and attached displays
+   * or removable GPUs, the user agent may select different adapters given the same power
+   * preference.
+   * Typically, given the same hardware configuration and state and
+   * `powerPreference`, the user agent is likely to select the same adapter.
+   */
   powerPreference?: GPUPowerPreference;
+  /**
+   * When set to `true` indicates that only a fallback adapter may be returned. If the user
+   * agent does not support a fallback adapter, will cause {@link GPU#requestAdapter} to
+   * resolve to `null`.
+   * Note:
+   * {@link GPU#requestAdapter} may still return a fallback adapter if
+   * {@link GPURequestAdapterOptions#forceFallbackAdapter} is set to `false` and either no
+   * other appropriate adapter is available or the user agent chooses to return a
+   * fallback adapter. Developers that wish to prevent their applications from running on
+   * fallback adapters should check the {@link GPUAdapter#info}.{@link GPUAdapterInfo#isFallbackAdapter}
+   * attribute prior to requesting a {@link GPUDevice}.
+   */
   forceFallbackAdapter?: boolean;
   xrCompatible?: boolean;
 }
@@ -1724,6 +1753,16 @@ interface GPUTextureDescriptor
    * </div>
    */
   viewFormats?: Iterable<GPUTextureFormat>;
+  /**
+   * **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md).
+   *
+   * > [In compatibility mode,]
+   * > When specifying a texture, a textureBindingViewDimension property
+   * > determines the views which can be bound from that texture for sampling.
+   * > Binding a view of a different dimension for sampling than specified at
+   * > texture creation time will cause a validation error.
+   */
+  textureBindingViewDimension?: GPUTextureViewDimension;
 }
 
 interface GPUTextureViewDescriptor
@@ -1823,6 +1862,10 @@ interface GPUVertexState
 interface GPUBindingCommandsMixin {
   /**
    * Sets the current {@link GPUBindGroup} for the given index.
+   * @param index - The index to set the bind group at.
+   * @param bindGroup - Bind group to use for subsequent render or compute commands.
+   * @param dynamicOffsets - Array containing buffer offsets in bytes for each entry in
+   * 	`bindGroup` marked as {@link GPUBindGroupLayoutEntry#buffer}.{@link GPUBufferBindingLayout#hasDynamicOffset}.-->
    */
   setBindGroup(
     index: GPUIndex32,
@@ -1832,6 +1875,17 @@ interface GPUBindingCommandsMixin {
       | undefined,
     dynamicOffsets?: Iterable<GPUBufferDynamicOffset>
   ): undefined;
+  /**
+   * Sets the current {@link GPUBindGroup} for the given index, specifying dynamic offsets as a subset
+   * of a Uint32Array.
+   * @param index - The index to set the bind group at.
+   * @param bindGroup - Bind group to use for subsequent render or compute commands.
+   * @param dynamicOffsetsData - Array containing buffer offsets in bytes for each entry in
+   * 	`bindGroup` marked as {@link GPUBindGroupLayoutEntry#buffer}.{@link GPUBufferBindingLayout#hasDynamicOffset}.
+   * @param dynamicOffsetsDataStart - Offset in elements into `dynamicOffsetsData` where the
+   * 	buffer offset data begins.
+   * @param dynamicOffsetsDataLength - Number of buffer offsets to read from `dynamicOffsetsData`.
+   */
   setBindGroup(
     index: GPUIndex32,
     bindGroup:
@@ -1936,6 +1990,15 @@ interface GPURenderCommandsMixin {
     firstVertex?: GPUSize32,
     firstInstance?: GPUSize32
   ): undefined;
+  /**
+   * Draws indexed primitives.
+   * See {@link https://www.w3.org/TR/webgpu/#rendering-operations} for the detailed specification.
+   * @param indexCount - The number of indices to draw.
+   * @param instanceCount - The number of instances to draw.
+   * @param firstIndex - Offset into the index buffer, in indices, begin drawing from.
+   * @param baseVertex - Added to each index value before indexing into the vertex buffers.
+   * @param firstInstance - First instance to draw.
+   */
   drawIndexed(
     indexCount: GPUSize32,
     instanceCount?: GPUSize32,
@@ -1943,10 +2006,26 @@ interface GPURenderCommandsMixin {
     baseVertex?: GPUSignedOffset32,
     firstInstance?: GPUSize32
   ): undefined;
+  /**
+   * Draws primitives using parameters read from a {@link GPUBuffer}.
+   * See {@link https://www.w3.org/TR/webgpu/#rendering-operations} for the detailed specification.
+   * packed block of **four 32-bit unsigned integer values (16 bytes total)**, given in the same
+   * order as the arguments for {@link GPURenderCommandsMixin#draw}. For example:
+   * @param indirectBuffer - Buffer containing the indirect draw parameters.
+   * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
+   */
   drawIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
   ): undefined;
+  /**
+   * Draws indexed primitives using parameters read from a {@link GPUBuffer}.
+   * See {@link https://www.w3.org/TR/webgpu/#rendering-operations} for the detailed specification.
+   * tightly packed block of **five 32-bit unsigned integer values (20 bytes total)**, given in
+   * the same order as the arguments for {@link GPURenderCommandsMixin#drawIndexed}. For example:
+   * @param indirectBuffer - Buffer containing the indirect drawIndexed parameters.
+   * @param indirectOffset - Offset in bytes into `indirectBuffer` where the drawing data begins.
+   */
   drawIndexedIndirect(
     indirectBuffer: GPUBuffer,
     indirectOffset: GPUSize64
@@ -1954,6 +2033,9 @@ interface GPURenderCommandsMixin {
 }
 
 interface NavigatorGPU {
+  /**
+   * A global singleton providing top-level entry points like {@link GPU#requestAdapter}.
+   */
   readonly gpu: GPU;
 }
 
@@ -1991,8 +2073,27 @@ declare var GPU: {
 interface GPUAdapter {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUAdapter";
+  /**
+   * The set of values in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[features]]}.
+   */
   readonly features: GPUSupportedFeatures;
+  /**
+   * The limits in `this`.{@link GPUAdapter#[[adapter]]}.{@link adapter#[[limits]]}.
+   */
   readonly limits: GPUSupportedLimits;
+  /**
+   * Information about the physical adapter underlying this {@link GPUAdapter}.
+   * For a given {@link GPUAdapter}, the {@link GPUAdapterInfo} values exposed are constant over time.
+   * The same object is returned each time. To create that object for the first time:
+   * <div algorithm=GPUAdapter.info>
+   * <div data-timeline=content>
+   * **Called on:** {@link GPUAdapter} `this`.
+   * **Returns:** {@link GPUAdapterInfo}
+   * Content timeline steps:
+   * 1. Return a [$new adapter info$] for `this.adapter`.
+   * </div>
+   * </div>
+   */
   readonly info: GPUAdapterInfo;
   /**
    * Requests a device from the adapter.
@@ -2013,12 +2114,48 @@ declare var GPUAdapter: {
 interface GPUAdapterInfo {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUAdapterInfo";
+  /**
+   * The name of the vendor of the adapter, if available. Empty string otherwise.
+   */
   readonly vendor: string;
+  /**
+   * The name of the family or class of GPUs the adapter belongs to, if available. Empty
+   * string otherwise.
+   */
   readonly architecture: string;
+  /**
+   * A vendor-specific identifier for the adapter, if available. Empty string otherwise.
+   * Note: This is a value that represents the type of adapter. For example, it may be a
+   * [PCI device ID](https://pcisig.com/). It does not uniquely identify a given piece of
+   * hardware like a serial number.
+   */
   readonly device: string;
+  /**
+   * A human readable string describing the adapter as reported by the driver, if available.
+   * Empty string otherwise.
+   * Note: Because no formatting is applied to {@link GPUAdapterInfo#description} attempting to parse
+   * this value is not recommended. Applications which change their behavior based on the
+   * {@link GPUAdapterInfo}, such as applying workarounds for known driver issues, should rely on the
+   * other fields when possible.
+   */
   readonly description: string;
-  readonly subgroupMinSize: number;
-  readonly subgroupMaxSize: number;
+  /**
+   * If the "subgroups" feature is supported, the minimum supported subgroup size for the
+   * adapter.
+   *
+   * TODO: Temporarily optional until all browsers have implemented it.
+   */
+  readonly subgroupMinSize?: number;
+  /**
+   * If the "subgroups" feature is supported, the maximum supported subgroup size for the
+   * adapter.
+   *
+   * TODO: Temporarily optional until all browsers have implemented it.
+   */
+  readonly subgroupMaxSize?: number;
+  /**
+   * Whether the adapter is a fallback adapter.
+   **/
   readonly isFallbackAdapter: boolean;
 }
 
@@ -2108,6 +2245,9 @@ declare var GPUBuffer: {
 interface GPUCanvasContext {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCanvasContext";
+  /**
+   * The canvas this context was created from.
+   */
   readonly canvas:
     | HTMLCanvasElement
     | OffscreenCanvas;
@@ -2126,7 +2266,7 @@ interface GPUCanvasContext {
   /**
    * Returns the context configuration.
    */
-  getConfiguration(): GPUCanvasConfiguration | null;
+  getConfiguration(): GPUCanvasConfigurationOut | null;
   /**
    * Get the {@link GPUTexture} that will be composited to the document by the {@link GPUCanvasContext}
    * next.
@@ -2184,7 +2324,7 @@ interface GPUCommandEncoder
    * @param sourceOffset - Offset in bytes into `source` to begin copying from.
    * @param destination - The {@link GPUBuffer} to copy to.
    * @param destinationOffset - Offset in bytes into `destination` to place the copied data.
-   * @param size - Bytes to copy.
+   * @param size - Bytes to copy. Defaults to the size of the buffer `source` minus `sourceOffset`.
    */
   copyBufferToBuffer(
     source: GPUBuffer,
@@ -2285,11 +2425,55 @@ declare var GPUCompilationInfo: {
 interface GPUCompilationMessage {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUCompilationMessage";
+  /**
+   * The human-readable, localizable text for this compilation message.
+   * Note: The {@link GPUCompilationMessage#message} should follow the best practices for language
+   * and direction information. This includes making use of any future standards which may
+   * emerge regarding the reporting of string language and direction metadata.
+   * <p class="note editorial"><span class=marker>Editorial note:</span>
+   * At the time of this writing, no language/direction recommendation is available that provides
+   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
+   */
   readonly message: string;
+  /**
+   * The severity level of the message.
+   * If the {@link GPUCompilationMessage#type} is {@link GPUCompilationMessageType} `"error"`, it
+   * corresponds to a shader-creation error.
+   */
   readonly type: GPUCompilationMessageType;
+  /**
+   * The line number in the shader {@link GPUShaderModuleDescriptor#code} the
+   * {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a lineNum of
+   * `1` indicates the first line of the shader {@link GPUShaderModuleDescriptor#code}. Lines are
+   * delimited by line breaks.
+   * If the {@link GPUCompilationMessage#message} corresponds to a substring this points to
+   * the line on which the substring begins. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   */
   readonly lineNum: number;
+  /**
+   * The offset, in UTF-16 code units, from the beginning of line {@link GPUCompilationMessage#lineNum}
+   * of the shader {@link GPUShaderModuleDescriptor#code} to the point or beginning of the substring
+   * that the {@link GPUCompilationMessage#message} corresponds to. Value is one-based, such that a
+   * {@link GPUCompilationMessage#linePos} of `1` indicates the first code unit of the line.
+   * If {@link GPUCompilationMessage#message} corresponds to a substring this points to the
+   * first UTF-16 code unit of the substring. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   */
   readonly linePos: number;
+  /**
+   * The offset from the beginning of the shader {@link GPUShaderModuleDescriptor#code} in UTF-16
+   * code units to the point or beginning of the substring that {@link GPUCompilationMessage#message}
+   * corresponds to. Must reference the same position as {@link GPUCompilationMessage#lineNum} and
+   * {@link GPUCompilationMessage#linePos}. Must be `0` if the {@link GPUCompilationMessage#message}
+   * does not correspond to any specific point in the shader {@link GPUShaderModuleDescriptor#code}.
+   */
   readonly offset: number;
+  /**
+   * The number of UTF-16 code units in the substring that {@link GPUCompilationMessage#message}
+   * corresponds to. If the message does not correspond with a substring then
+   * {@link GPUCompilationMessage#length} must be 0.
+   */
   readonly length: number;
 }
 
@@ -2366,9 +2550,26 @@ interface GPUDevice
     GPUObjectBase {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUDevice";
+  /**
+   * A set containing the {@link GPUFeatureName} values of the features
+   * supported by the device (i.e. the ones with which it was created).
+   */
   readonly features: GPUSupportedFeatures;
+  /**
+   * Exposes the limits supported by the device
+   * (which are exactly the ones with which it was created).
+   */
   readonly limits: GPUSupportedLimits;
+  /**
+   * Information about the physical adapter which created the device
+   * that this GPUDevice refers to.
+   * For a given GPUDevice, the GPUAdapterInfo values exposed are constant
+   * over time.
+   */
   readonly adapterInfo: GPUAdapterInfo;
+  /**
+   * The primary {@link GPUQueue} for this device.
+   */
   readonly queue: GPUQueue;
   /**
    * Destroys the device, preventing further operations on it.
@@ -2515,7 +2716,15 @@ interface GPUDevice
    * There is no guarantee of the ordering of promise resolution.
    */
   popErrorScope(): Promise<GPUError | null>;
-  onuncapturederror: EventHandler;
+  /**
+   * An event handler IDL attribute for the `uncapturederror` event type.
+   */
+  onuncapturederror:
+    | ((
+        this: GPUDevice,
+        ev: GPUUncapturedErrorEvent
+      ) => any)
+    | null;
 }
 
 declare var GPUDevice: {
@@ -2536,6 +2745,21 @@ declare var GPUDeviceLostInfo: {
 };
 
 interface GPUError {
+  /**
+   * A human-readable, localizable text message providing information about the error that
+   * occurred.
+   * Note: This message is generally intended for application developers to debug their
+   * applications and capture information for debug reports, not to be surfaced to end-users.
+   * Note: User agents should not include potentially machine-parsable details in this message,
+   * such as free system memory on {@link GPUErrorFilter} `"out-of-memory"` or other details about the
+   * conditions under which memory was exhausted.
+   * Note: The {@link GPUError#message} should follow the best practices for language and
+   * direction information. This includes making use of any future standards which may emerge
+   * regarding the reporting of string language and direction metadata.
+   * <p class="note editorial"><span class=marker>Editorial note:</span>
+   * At the time of this writing, no language/direction recommendation is available that provides
+   * compatibility and consistency with legacy APIs, but when there is, adopt it formally.
+   */
   readonly message: string;
 }
 
@@ -2585,6 +2809,14 @@ interface GPUPipelineError
   extends DOMException {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUPipelineError";
+  /**
+   * A read-only slot-backed attribute exposing the type of error encountered in pipeline creation
+   * as a <dfn enum for="">GPUPipelineErrorReason</dfn>:
+   * <ul dfn-type=enum-value dfn-for=GPUPipelineErrorReason>
+   * - <dfn>"validation"</dfn>: A [$validation error$].
+   * - <dfn>"internal"</dfn>: An [$internal error$].
+   * </ul>
+   */
   readonly reason: GPUPipelineErrorReason;
 }
 
@@ -2617,7 +2849,13 @@ interface GPUQuerySet
    * Destroys the {@link GPUQuerySet}.
    */
   destroy(): undefined;
+  /**
+   * The type of the queries managed by this {@link GPUQuerySet}.
+   */
   readonly type: GPUQueryType;
+  /**
+   * The number of queries managed by this {@link GPUQuerySet}.
+   */
   readonly count: GPUSize32Out;
 }
 
@@ -2638,6 +2876,13 @@ interface GPUQueue
   submit(
     commandBuffers: Iterable<GPUCommandBuffer>
   ): undefined;
+  /**
+   * Returns a Promise that resolves once this queue finishes processing all the work submitted
+   * up to this moment.
+   * Resolution of this Promise implies the completion of
+   * {@link GPUBuffer#mapAsync} calls made prior to that call,
+   * on {@link GPUBuffer}s last used exclusively on that queue.
+   */
   onSubmittedWorkDone(): Promise<undefined>;
   /**
    * Issues a write operation of the provided data into a {@link GPUBuffer}.
@@ -2896,11 +3141,18 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
+  readonly maxStorageBuffersInVertexStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
+  readonly maxStorageBuffersInFragmentStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
+  readonly maxStorageTexturesInVertexStage?: number;
+  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
+  readonly maxStorageTexturesInFragmentStage?: number;
 }
 
 declare var GPUSupportedLimits: {
   prototype: GPUSupportedLimits;
-  new (): never;
 };
 
 interface GPUTexture
@@ -2918,13 +3170,37 @@ interface GPUTexture
    * Destroys the {@link GPUTexture}.
    */
   destroy(): undefined;
+  /**
+   * The width of this {@link GPUTexture}.
+   */
   readonly width: GPUIntegerCoordinateOut;
+  /**
+   * The height of this {@link GPUTexture}.
+   */
   readonly height: GPUIntegerCoordinateOut;
+  /**
+   * The depth or layer count of this {@link GPUTexture}.
+   */
   readonly depthOrArrayLayers: GPUIntegerCoordinateOut;
+  /**
+   * The number of mip levels of this {@link GPUTexture}.
+   */
   readonly mipLevelCount: GPUIntegerCoordinateOut;
+  /**
+   * The number of sample count of this {@link GPUTexture}.
+   */
   readonly sampleCount: GPUSize32Out;
+  /**
+   * The dimension of the set of texel for each of this {@link GPUTexture}'s subresources.
+   */
   readonly dimension: GPUTextureDimension;
+  /**
+   * The format of this {@link GPUTexture}.
+   */
   readonly format: GPUTextureFormat;
+  /**
+   * The allowed usages for this {@link GPUTexture}.
+   */
   readonly usage: GPUFlagsConstant;
 }
 
@@ -2948,6 +3224,10 @@ interface GPUUncapturedErrorEvent
   extends Event {
   /** @internal Workaround for [nominal typing](https://github.com/microsoft/TypeScript/pull/33038). */
   readonly __brand: "GPUUncapturedErrorEvent";
+  /**
+   * A slot-backed attribute holding an object representing the error that was uncaptured.
+   * This has the same type as errors returned by {@link GPUDevice#popErrorScope}.
+   */
   readonly error: GPUError;
 }
 

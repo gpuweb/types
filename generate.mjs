@@ -4,7 +4,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 function execute(cmd, args, options) {
-  const { error, status } = spawnSync(cmd, args, {...options || {}, shell: true, stdio: 'inherit'});
+  console.log(cmd, ...args);
+  options = { ...options || {}, shell: true, stdio: 'inherit' };
+  if (options.input) {
+    options.stdio = ['pipe', 'inherit', 'inherit'];
+  }
+  const { error, status } = spawnSync(cmd, args, options);
   if (error) {
     throw new(Error);
   }
@@ -13,8 +18,24 @@ function execute(cmd, args, options) {
   }
 }
 
+function executeWithCapture(cmd, args, options) {
+  console.log(cmd, ...args);
+  const { error, status, stdout } = spawnSync(cmd, args, {...options || {}, shell: true, encoding: 'utf-8' });
+  if (error) {
+    throw new(Error);
+  }
+  if (status !== 0) {
+    throw new Error(`${cmd} exited with status code: ${status}`);
+  }
+  return stdout;
+}
+
 function readFileAsUTF8(filename) {
   return fs.readFileSync(filename, { encoding: 'utf-8' });
+}
+
+function generateDiff(fromFilename, toFilename, commit) {
+  return executeWithCapture('git',  ['diff', `${commit}:${fromFilename}`, `${commit}:${toFilename}`]);
 }
 
 function fixupGenerated(srcFilename, dstFilename) {
@@ -85,14 +106,32 @@ ${readFileAsUTF8(srcFilename)}
   console.log(`wrote ${dstFilename}`);
 }
 
+const fromFilename = 'generated/index-temp.d.ts';
+const toFilename = 'dist/index.d.ts';
+
+// This file should always exist but it won't the first time we run this
+const diff = fs.existsSync(fromFilename)
+  ? generateDiff(fromFilename, toFilename, 'HEAD')
+  : undefined;
+
 execute(
   './node_modules/.bin/bikeshed-to-ts',
   [
     '--in', './gpuweb/spec/index.bs',
-    '--out', './generated/index.d.ts',
+    '--out', fromFilename,
     '--forceGlobal',
     '--nominal',
   ]
 );
-fixupGenerated('./generated/index.d.ts', './generated/index.d.ts');
-execute('./node_modules/.bin/prettier', ['-w', 'generated/index.d.ts']);
+fixupGenerated(fromFilename, fromFilename);
+execute('./node_modules/.bin/prettier', ['-w', fromFilename]);
+const generatedFilename = 'generated/index.d.ts';
+fs.copyFileSync(fromFilename, generatedFilename);
+
+if (diff) {
+  const inPlaceDiff = diff
+    .replaceAll(fromFilename, generatedFilename)
+    .replaceAll(toFilename, generatedFilename);
+  
+  execute('git', ['apply', '-'], { input: inPlaceDiff });
+}
