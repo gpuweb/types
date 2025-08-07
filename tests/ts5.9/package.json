@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "test": "tsc --version && tsc"
+  },
+  "dependencies": {
+    "@webgpu/types": "file:../..",
+    "typescript": "~5.9.0"
+  }
+}
