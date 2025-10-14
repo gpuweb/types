@@ -318,7 +318,8 @@ type GPUFeatureName =
     | "subgroups"
     | "texture-formats-tier1"
     | "texture-formats-tier2"
-    | "primitive-index";
+    | "primitive-index"
+    | "texture-component-swizzle";
 type GPUFilterMode =
 
     | "nearest"
@@ -1808,6 +1809,21 @@ interface GPUTextureViewDescriptor
    * to the texture view.
    */
   arrayLayerCount?: GPUIntegerCoordinate;
+  /**
+   * A string of length four, with each character mapping to the texture view's red/green/blue/alpha
+   * channels, respectively.
+   * When accessed by a shader, the red/green/blue/alpha channels are replaced by the value
+   * corresponding to the component specified in `swizzle[0]`, `swizzle[1]`, `swizzle[2]`, and
+   * `swizzle[3]`, respectively:
+   * - `"r"`: Take its value from the red channel of the texture.
+   * - `"g"`: Take its value from the green channel of the texture.
+   * - `"b"`: Take its value from the blue channel of the texture.
+   * - `"a"`: Take its value from the alpha channel of the texture.
+   * - `"0"`: Force its value to 0.
+   * - `"1"`: Force its value to 1.
+   * Requires the {@link GPUFeatureName} `"texture-component-swizzle"` feature to be enabled.
+   */
+  swizzle?: string;
 }
 
 interface GPUUncapturedErrorEventInit
