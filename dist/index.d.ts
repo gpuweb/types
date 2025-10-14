@@ -756,7 +756,18 @@ interface GPUCanvasConfiguration {
   /**
    * The tone mapping determines how the content of textures returned by
    * {@link GPUCanvasContext#getCurrentTexture} are to be displayed.
-   * Note: If an implementation doesn't support HDR WebGPU canvases, it should also not expose this member, to allow for feature detection. See {@link GPUCanvasContext#getConfiguration}.
+   * <div class=note heading>
+   * This is a required feature, but user agents might not yet implement it,
+   * effectively supporting only the default {@link GPUCanvasToneMapping}.
+   * In such implementations, this member **should not** exist in its implementation of
+   * {@link GPUCanvasConfiguration}, to make feature detection possible using
+   * {@link GPUCanvasContext#getConfiguration}.
+   * This is especially important in implementations which otherwise have HDR capabilities
+   * (where a <l>'@media/dynamic-range'</l> of <l>''@media/dynamic-range/high''</l> would be
+   * exposed).
+   * If an implementation exposes this member and a `high` dynamic range, it **should** render the
+   * canvas as an HDR element, not clamp values to the SDR range of the HDR display.
+   * </div>
    */
   toneMapping?: GPUCanvasToneMapping;
   /**
@@ -855,7 +866,7 @@ interface GPUCopyExternalImageDestInfo
    * Otherwise, the results are clamped to the target texture format's range.
    * Note:
    * If {@link GPUCopyExternalImageDestInfo#colorSpace} matches the source image,
-   * conversion may not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
+   * conversion might not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
    */
   colorSpace?: PredefinedColorSpace;
   /**
@@ -866,7 +877,7 @@ interface GPUCopyExternalImageDestInfo
    * corresponding alpha values.
    * Note:
    * If {@link GPUCopyExternalImageDestInfo#premultipliedAlpha} matches the source image,
-   * conversion may not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
+   * conversion might not be necessary. See {@link https://www.w3.org/TR/webgpu/#color-space-conversion-elision}.
    */
   premultipliedAlpha?: boolean;
 }
@@ -2271,6 +2282,7 @@ interface GPUCanvasContext {
   /**
    * Configures the context for this canvas.
    * This clears the drawing buffer to transparent black (in [$Replace the drawing buffer$]).
+   * See {@link GPUCanvasContext#getConfiguration} for information on feature detection.
    * @param configuration - Desired configuration for the context.
    */
   configure(
@@ -2281,7 +2293,11 @@ interface GPUCanvasContext {
    */
   unconfigure(): undefined;
   /**
-   * Returns the context configuration.
+   * Returns the context configuration, or `null` if the context is not configured.
+   * Note:
+   * This method exists primarily for feature detection of members (and sub-members) of
+   * {@link GPUCanvasConfiguration}; see those members for details.
+   * For supported members, it returns the originally-supplied values.
    */
   getConfiguration(): GPUCanvasConfigurationOut | null;
   /**
@@ -3110,8 +3126,8 @@ interface GPUShaderModule
   readonly __brand: "GPUShaderModule";
   /**
    * Returns any messages generated during the {@link GPUShaderModule}'s compilation.
-   * The locations, order, and contents of messages are implementation-defined
-   * In particular, messages may not be ordered by {@link GPUCompilationMessage#lineNum}.
+   * The locations, order, and contents of messages are implementation-defined.
+   * In particular, messages aren't necessarily ordered by {@link GPUCompilationMessage#lineNum}.
    */
   getCompilationInfo(): Promise<GPUCompilationInfo>;
 }
@@ -3170,6 +3186,7 @@ interface GPUSupportedLimits {
 
 declare var GPUSupportedLimits: {
   prototype: GPUSupportedLimits;
+  new (): never;
 };
 
 interface GPUTexture
