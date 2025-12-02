@@ -1098,6 +1098,11 @@ interface GPUPipelineLayoutDescriptor
     | null
     | undefined
   >;
+
+  /**
+   * The size in bytes of the immediate data range.
+   */
+  immediateSize?: GPUSize32;
 }
 
 interface GPUPrimitiveState {
@@ -1923,6 +1928,21 @@ interface GPUBindingCommandsMixin {
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
+  ): undefined;
+  /**
+   * Sets immediate data for subsequent render or compute commands
+   * @param rangeOffset - Offset in bytes into the immediate data range to begin writing at.
+   * @param data - Data to write into the immediate data range.
+   * @param dataOffset - Offset into `data` to begin writing from. Given in elements if
+   *  `data` is a `TypedArray` and bytes otherwise. Defaults to 0.
+   * @param size - Size of content to write from `data` to `buffer`. Given in elements if
+   * 	`data` is a `TypedArray` and bytes otherwise.
+   */
+  setImmediates(
+    rangeOffset: GPUSize32,
+    data: GPUAllowSharedBufferSource,
+    dataOffset?: GPUSize64,
+    size?: GPUSize64
   ): undefined;
 }
 
@@ -3174,6 +3194,8 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
+  /** **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423). */
+  readonly maxImmediateSize: number;
   /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageBuffersInVertexStage?: number;
   /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
