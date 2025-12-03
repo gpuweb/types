@@ -1098,9 +1098,10 @@ interface GPUPipelineLayoutDescriptor
     | null
     | undefined
   >;
-
   /**
    * The size in bytes of the immediate data range.
+   *
+   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
    */
   immediateSize?: GPUSize32;
 }
@@ -1956,8 +1957,10 @@ interface GPUBindingCommandsMixin {
    *  `data` is a `TypedArray` and bytes otherwise. Defaults to 0.
    * @param size - Size of content to write from `data` to `buffer`. Given in elements if
    * 	`data` is a `TypedArray` and bytes otherwise.
+   *
+   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
    */
-  setImmediates(
+  setImmediates?(
     rangeOffset: GPUSize32,
     data: GPUAllowSharedBufferSource,
     dataOffset?: GPUSize64,
@@ -2210,14 +2213,14 @@ interface GPUAdapterInfo {
    * If the "subgroups" feature is supported, the minimum supported subgroup size for the
    * adapter.
    *
-   * TODO: Temporarily optional until all browsers have implemented it.
+   * @todo Temporarily optional until all browsers have implemented it.
    */
   readonly subgroupMinSize?: number;
   /**
    * If the "subgroups" feature is supported, the maximum supported subgroup size for the
    * adapter.
    *
-   * TODO: Temporarily optional until all browsers have implemented it.
+   * @todo Temporarily optional until all browsers have implemented it.
    */
   readonly subgroupMaxSize?: number;
   /**
@@ -3214,7 +3217,7 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
   /** **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423). */
-  readonly maxImmediateSize: number;
+  readonly maxImmediateSize?: number;
   /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
   readonly maxStorageBuffersInVertexStage?: number;
   /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
