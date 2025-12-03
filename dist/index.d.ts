@@ -1102,6 +1102,7 @@ interface GPUPipelineLayoutDescriptor
    * The size in bytes of the immediate data range.
    *
    * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
    */
   immediateSize?: GPUSize32;
 }
@@ -1959,6 +1960,7 @@ interface GPUBindingCommandsMixin {
    * 	`data` is a `TypedArray` and bytes otherwise.
    *
    * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
    */
   setImmediates?(
     rangeOffset: GPUSize32,
@@ -2214,6 +2216,7 @@ interface GPUAdapterInfo {
    * adapter.
    *
    * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
    */
   readonly subgroupMinSize?: number;
   /**
@@ -2221,6 +2224,7 @@ interface GPUAdapterInfo {
    * adapter.
    *
    * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
    */
   readonly subgroupMaxSize?: number;
   /**
@@ -3197,14 +3201,26 @@ interface GPUSupportedLimits {
   readonly maxSampledTexturesPerShaderStage: number;
   readonly maxSamplersPerShaderStage: number;
   readonly maxStorageBuffersPerShaderStage: number;
-  /** @todo Temporarily optional until all browsers have implemented it. */
+  /**
+   * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   */
   readonly maxStorageBuffersInVertexStage?: number;
-  /** @todo Temporarily optional until all browsers have implemented it. */
+  /**
+   * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   */
   readonly maxStorageBuffersInFragmentStage?: number;
   readonly maxStorageTexturesPerShaderStage: number;
-  /** @todo Temporarily optional until all browsers have implemented it. */
+  /**
+   * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   */
   readonly maxStorageTexturesInVertexStage?: number;
-  /** @todo Temporarily optional until all browsers have implemented it. */
+  /**
+   * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   */
   readonly maxStorageTexturesInFragmentStage?: number;
   readonly maxUniformBuffersPerShaderStage: number;
   readonly maxUniformBufferBindingSize: number;
@@ -3224,7 +3240,10 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
-  /** **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423). */
+  /**
+   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   */
   readonly maxImmediateSize?: number;
 }
 
@@ -3288,6 +3307,7 @@ interface GPUTexture
    * no such restriction.
    *
    * @todo Temporarily optional until all browsers have implemented it.
+   * Check support before using. (Use the non-null assertion operator `!` where needed.)
    */
   readonly textureBindingViewDimension?:
     | GPUTextureViewDimension
