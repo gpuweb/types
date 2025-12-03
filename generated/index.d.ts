@@ -675,7 +675,7 @@ interface GPUBufferBinding {
 
 interface GPUBufferBindingLayout {
   /**
-   * Indicates the type required for buffers bound to this bindings.
+   * Indicates the type required for buffers bound to this binding.
    */
   type?: GPUBufferBindingType;
   /**
@@ -1450,16 +1450,35 @@ interface GPURenderPipelineDescriptor
 
 interface GPURequestAdapterOptions {
   /**
-   * "Feature level" for the adapter request.
+   * Requests an adapter that supports at least a particular set of capabilities.
+   * This influences the {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} of devices created
+   * from this adapter. The capabilities for each level are defined below, and the exact
+   * steps are defined in {@link GPU#requestAdapter} and "a new device".
+   * If the implementation or system does not support all of the capabilities in the
+   * requested feature level, {@link GPU#requestAdapter} will return `null`.
+   * Note:
+   * Applications should typically make a single {@link GPU#requestAdapter} call with the lowest
+   * feature level they support, then inspect the adapter for additional capabilities they can
+   * use optionally, and request those in {@link GPUAdapter#requestDevice}.
    * The allowed <dfn dfn for="">feature level string</dfn> values are:
    * <dl dfn-type=dfn dfn-for="feature level string">
    * : <dfn noexport>"core"</dfn>
-   * No effect.
-   * : <dfn noexport>"compatibility"</dfn>
-   * No effect.
+   * The following set of capabilities:
+   * - The limit/Default limits.
+   * - {@link GPUFeatureName} `"core-features-and-limits"`.
    * Note:
-   * This value is reserved for future use as a way to opt into additional validation restrictions.
-   * Applications should not use this value at this time.
+   * Adapters with this {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} may
+   * conventionally be referred to as "Core-defaulting".
+   * : <dfn noexport>"compatibility"</dfn>
+   * The following set of capabilities:
+   * - The limit/Compatibility Mode Default limits.
+   * - No features. (It excludes the {@link GPUFeatureName} `"core-features-and-limits"` feature.)
+   * If the implementation cannot enforce the stricter "Compatibility Mode"
+   * validation rules, {@link GPU#requestAdapter} will ignore this request and
+   * treat it as a request for feature level string/"core".
+   * Note:
+   * Adapters with this {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} may
+   * conventionally be referred to as "Compatibility-defaulting".
    */
   featureLevel?: string;
   powerPreference?: GPUPowerPreference;
@@ -1469,7 +1488,7 @@ interface GPURequestAdapterOptions {
 
 interface GPUSamplerBindingLayout {
   /**
-   * Indicates the required type of a sampler bound to this bindings.
+   * Indicates the required type of a sampler bound to this binding.
    */
   type?: GPUSamplerBindingType;
 }
@@ -1731,12 +1750,22 @@ interface GPUTextureDescriptor
    * </div>
    * Formats in this list must be texture view format compatible with the texture format.
    * <div algorithm data-timeline=const>
-   * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for="">texture view format compatible</dfn> if:
+   * Two {@link GPUTextureFormat}s `format` and `viewFormat` are <dfn dfn for="">texture view format compatible</dfn> on a given `device` if:
    * - `format` equals `viewFormat`, or
-   * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix).
+   * - `format` and `viewFormat` differ only in whether they are `srgb` formats (have the `-srgb` suffix) and `device.features` list/contains {@link GPUFeatureName} `"core-features-and-limits"`.
    * </div>
    */
   viewFormats?: Iterable<GPUTextureFormat>;
+  /**
+   * <div class=compatmode>
+   * On devices without {@link GPUFeatureName} `"core-features-and-limits"`,
+   * views created from this texture must have this as their {@link GPUTextureViewDescriptor#dimension}.
+   * If not specified, a default is chosen.
+   * </div>
+   * On devices with {@link GPUFeatureName} `"core-features-and-limits"`,
+   * this is ignored, and there is no such restriction.
+   */
+  textureBindingViewDimension?: GPUTextureViewDimension;
 }
 
 interface GPUTextureViewDescriptor
@@ -2910,7 +2939,11 @@ interface GPUSupportedLimits {
   readonly maxSampledTexturesPerShaderStage: number;
   readonly maxSamplersPerShaderStage: number;
   readonly maxStorageBuffersPerShaderStage: number;
+  readonly maxStorageBuffersInVertexStage: number;
+  readonly maxStorageBuffersInFragmentStage: number;
   readonly maxStorageTexturesPerShaderStage: number;
+  readonly maxStorageTexturesInVertexStage: number;
+  readonly maxStorageTexturesInFragmentStage: number;
   readonly maxUniformBuffersPerShaderStage: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
@@ -2959,6 +2992,9 @@ interface GPUTexture
   readonly dimension: GPUTextureDimension;
   readonly format: GPUTextureFormat;
   readonly usage: GPUFlagsConstant;
+  readonly textureBindingViewDimension:
+    | GPUTextureViewDimension
+    | undefined;
 }
 
 declare var GPUTexture: {
