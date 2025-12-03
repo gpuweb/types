@@ -3197,7 +3197,15 @@ interface GPUSupportedLimits {
   readonly maxSampledTexturesPerShaderStage: number;
   readonly maxSamplersPerShaderStage: number;
   readonly maxStorageBuffersPerShaderStage: number;
+  /** @todo Temporarily optional until all browsers have implemented it. */
+  readonly maxStorageBuffersInVertexStage?: number;
+  /** @todo Temporarily optional until all browsers have implemented it. */
+  readonly maxStorageBuffersInFragmentStage?: number;
   readonly maxStorageTexturesPerShaderStage: number;
+  /** @todo Temporarily optional until all browsers have implemented it. */
+  readonly maxStorageTexturesInVertexStage?: number;
+  /** @todo Temporarily optional until all browsers have implemented it. */
+  readonly maxStorageTexturesInFragmentStage?: number;
   readonly maxUniformBuffersPerShaderStage: number;
   readonly maxUniformBufferBindingSize: number;
   readonly maxStorageBufferBindingSize: number;
@@ -3218,14 +3226,6 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupsPerDimension: number;
   /** **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423). */
   readonly maxImmediateSize?: number;
-  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
-  readonly maxStorageBuffersInVertexStage?: number;
-  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
-  readonly maxStorageBuffersInFragmentStage?: number;
-  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
-  readonly maxStorageTexturesInVertexStage?: number;
-  /** **PROPOSED** in [Compatibility Mode](https://github.com/gpuweb/gpuweb/blob/main/proposals/compatibility-mode.md). */
-  readonly maxStorageTexturesInFragmentStage?: number;
 }
 
 declare var GPUSupportedLimits: {
@@ -3280,6 +3280,18 @@ interface GPUTexture
    * The allowed usages for this {@link GPUTexture}.
    */
   readonly usage: GPUFlagsConstant;
+  /**
+   * On devices without "core-features-and-limits", views created from this
+   * texture must have this as their dimension.
+   *
+   * On devices with "core-features-and-limits", this is undefined, and there is
+   * no such restriction.
+   *
+   * @todo Temporarily optional until all browsers have implemented it.
+   */
+  readonly textureBindingViewDimension?:
+    | GPUTextureViewDimension
+    | undefined;
 }
 
 declare var GPUTexture: {
