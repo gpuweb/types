@@ -1456,7 +1456,7 @@ interface GPURenderPipelineDescriptor
 interface GPURequestAdapterOptions {
   /**
    * Requests an adapter that supports at least a particular set of capabilities.
-   * This influences the {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} of devices created
+   * This influences the {@link adapter#[[default feature level]]} of devices created
    * from this adapter. The capabilities for each level are defined below, and the exact
    * steps are defined in {@link GPU#requestAdapter} and "a new device".
    * If the implementation or system does not support all of the capabilities in the
@@ -1472,7 +1472,7 @@ interface GPURequestAdapterOptions {
    * - The limit/Default limits.
    * - {@link GPUFeatureName} `"core-features-and-limits"`.
    * Note:
-   * Adapters with this {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} may
+   * Adapters with this {@link adapter#[[default feature level]]} may
    * conventionally be referred to as "Core-defaulting".
    * : <dfn noexport>"compatibility"</dfn>
    * The following set of capabilities:
@@ -1482,7 +1482,7 @@ interface GPURequestAdapterOptions {
    * validation rules, {@link GPU#requestAdapter} will ignore this request and
    * treat it as a request for feature level string/"core".
    * Note:
-   * Adapters with this {@link adapter/{@link https://www.w3.org/TR/webgpu/default feature level}} may
+   * Adapters with this {@link adapter#[[default feature level]]} may
    * conventionally be referred to as "Compatibility-defaulting".
    */
   featureLevel?: string;
