@@ -3307,7 +3307,10 @@ interface GPUTexture
    * no such restriction.
    *
    * @todo Temporarily optional until all browsers have implemented it.
-   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   * It is safe to access on any browser, as it will just (correctly) return
+   * `undefined` if not implemented. Note, depending on the device, `undefined`
+   * is a valid value even in browsers that implement this attribute. (So be
+   * careful if using the non-null assertion operator `!` on this.)
    */
   readonly textureBindingViewDimension?:
     | GPUTextureViewDimension
