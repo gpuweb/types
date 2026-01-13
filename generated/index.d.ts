@@ -3096,6 +3096,7 @@ interface GPUTextureUsage {
   readonly TEXTURE_BINDING: GPUFlagsConstant;
   readonly STORAGE_BINDING: GPUFlagsConstant;
   readonly RENDER_ATTACHMENT: GPUFlagsConstant;
+  readonly TRANSIENT_ATTACHMENT: GPUFlagsConstant;
 }
 
 declare var GPUTextureUsage: GPUTextureUsage;
