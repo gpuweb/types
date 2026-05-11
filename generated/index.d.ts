@@ -1098,6 +1098,10 @@ interface GPUPipelineLayoutDescriptor
     | null
     | undefined
   >;
+  /**
+   * The size, in bytes, of the immediate data range used by the pipeline.
+   */
+  immediateSize?: GPUSize32;
 }
 
 interface GPUPrimitiveState {
@@ -1898,6 +1902,21 @@ interface GPUBindingCommandsMixin {
     dynamicOffsetsData: Uint32Array,
     dynamicOffsetsDataStart: GPUSize64,
     dynamicOffsetsDataLength: GPUSize32
+  ): undefined;
+  /**
+   * Sets immediate data for subsequent render or compute commands.
+   * @param rangeOffset - Offset in bytes into the immediate data range to begin writing at.
+   * @param data - Data to write into the immediate data range.
+   * @param dataOffset - Offset into `data` to begin writing from. Given in elements if
+   * 	`data` is a {@link TypedArray} and bytes otherwise.
+   * @param dataSize - Size of content to write from `data`. Given in elements if
+   * 	`data` is a {@link TypedArray} and bytes otherwise.
+   */
+  setImmediates(
+    rangeOffset: GPUSize32,
+    data: GPUAllowSharedBufferSource,
+    dataOffset?: GPUSize64,
+    dataSize?: GPUSize64
   ): undefined;
 }
 
@@ -2860,8 +2879,8 @@ interface GPURenderPassEncoder
    * Executes the commands previously recorded into the given {@link GPURenderBundle}s as part of
    * this render pass.
    * When a {@link GPURenderBundle} is executed, it does not inherit the render pass's pipeline, bind
-   * groups, or vertex and index buffers. After a {@link GPURenderBundle} has executed, the render
-   * pass's pipeline, bind group, and vertex/index buffer state is cleared
+   * groups, immediate data, or vertex and index buffers. After a {@link GPURenderBundle} has executed, the render
+   * pass's pipeline, bind group, immediate data, and vertex/index buffer state is cleared
    * (to the initial, empty values).
    * Note: The state is cleared, not restored to the previous state.
    * This occurs even if zero {@link GPURenderBundle | GPURenderBundles} are executed.
@@ -2933,6 +2952,7 @@ interface GPUSupportedLimits {
   readonly maxTextureArrayLayers: number;
   readonly maxBindGroups: number;
   readonly maxBindGroupsPlusVertexBuffers: number;
+  readonly maxImmediateSize: number;
   readonly maxBindingsPerBindGroup: number;
   readonly maxDynamicUniformBuffersPerPipelineLayout: number;
   readonly maxDynamicStorageBuffersPerPipelineLayout: number;
