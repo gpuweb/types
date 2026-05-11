@@ -1099,10 +1099,7 @@ interface GPUPipelineLayoutDescriptor
     | undefined
   >;
   /**
-   * The size in bytes of the immediate data range.
-   *
-   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
-   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   * The size, in bytes, of the immediate data range used by the pipeline.
    */
   immediateSize?: GPUSize32;
 }
@@ -1951,22 +1948,19 @@ interface GPUBindingCommandsMixin {
     dynamicOffsetsDataLength: GPUSize32
   ): undefined;
   /**
-   * Sets immediate data for subsequent render or compute commands
+   * Sets immediate data for subsequent render or compute commands.
    * @param rangeOffset - Offset in bytes into the immediate data range to begin writing at.
    * @param data - Data to write into the immediate data range.
    * @param dataOffset - Offset into `data` to begin writing from. Given in elements if
-   *  `data` is a `TypedArray` and bytes otherwise. Defaults to 0.
-   * @param size - Size of content to write from `data` to `buffer`. Given in elements if
-   * 	`data` is a `TypedArray` and bytes otherwise.
-   *
-   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
-   * Check support before using. (Use the non-null assertion operator `!` where needed.)
+   * 	`data` is a {@link TypedArray} and bytes otherwise.
+   * @param dataSize - Size of content to write from `data`. Given in elements if
+   * 	`data` is a {@link TypedArray} and bytes otherwise.
    */
-  setImmediates?(
+  setImmediates(
     rangeOffset: GPUSize32,
     data: GPUAllowSharedBufferSource,
     dataOffset?: GPUSize64,
-    size?: GPUSize64
+    dataSize?: GPUSize64
   ): undefined;
 }
 
@@ -3240,11 +3234,7 @@ interface GPUSupportedLimits {
   readonly maxComputeWorkgroupSizeY: number;
   readonly maxComputeWorkgroupSizeZ: number;
   readonly maxComputeWorkgroupsPerDimension: number;
-  /**
-   * **PROPOSED** in [Immediates](https://github.com/gpuweb/gpuweb/pull/5423).
-   * Check support before using. (Use the non-null assertion operator `!` where needed.)
-   */
-  readonly maxImmediateSize?: number;
+  readonly maxImmediateSize: number;
 }
 
 declare var GPUSupportedLimits: {
