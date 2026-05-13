@@ -319,7 +319,8 @@ type GPUFeatureName =
     | "texture-formats-tier1"
     | "texture-formats-tier2"
     | "primitive-index"
-    | "texture-component-swizzle";
+    | "texture-component-swizzle"
+    | "subgroup-size-control";
 type GPUFilterMode =
 
     | "nearest"
