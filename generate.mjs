@@ -86,7 +86,7 @@ ${readFileAsUTF8(srcFilename)}
 }
 
 execute(
-  './node_modules/.bin/bikeshed-to-ts',
+  'bikeshed-to-ts',
   [
     '--in', './gpuweb/spec/index.bs',
     '--out', './generated/index.d.ts',
@@ -95,4 +95,4 @@ execute(
   ]
 );
 fixupGenerated('./generated/index.d.ts', './generated/index.d.ts');
-execute('./node_modules/.bin/prettier', ['-w', 'generated/index.d.ts']);
+execute('prettier', ['-w', 'generated/index.d.ts']);
