@@ -13,6 +13,36 @@ This repo also generates typedoc docs here: https://gpuweb.github.io/types
 See the [TypeScript handbook](http://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html).
 
 
+## Integration into `"dom"` type definitions.
+
+WebGPU types have been integrated into the [`"dom"`](https://www.typescriptlang.org/docs/handbook/compiler-options.html#compiler-options) starting with TypeScript 6. It appears that
+v6.0.4 and above will include a full set of WebGPU types and thus should not need the supplemental types from this repo.
+
+Unfortunately some versions of TypeScript include a `"dom"` library which only contained a partial set of WebGPU types, preventing WebGPU code from building cleanly. This is confirmed
+the case in TypeScript v6.0.3 and lower and TypeScript v7.0.2 and lower. To build WebGPU with the affected versions install the [`@types/web`](https://www.npmjs.com/package/@types/web)
+to be package v0.0.352 or greater, and use it instead of the built-in `"dom"` library:
+
+Install:
+```
+npm install @types/web
+```
+
+Usage in `tsconfig.json`:
+```js
+{
+  // ...
+  "compilerOptions": {
+    // ...
+    "lib": ["esnext"], // Do not include "dom"!
+    "types": ["@types/web"],
+  }
+}
+```
+
+For TypeScript v5 and below, this library is still necessary to provide WebGPU types.
+
+
+
 ## How can I use them?
 
 ### Install
