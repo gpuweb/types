@@ -554,6 +554,7 @@ type GPUVertexFormat =
     | "sint32x3"
     | "sint32x4"
     | "unorm10-10-10-2"
+    | "snorm10-10-10-2"
     | "unorm8x4-bgra";
 type GPUVertexStepMode =
 
