@@ -298,6 +298,7 @@ type GPUErrorFilter =
     | "internal";
 type GPUFeatureName =
 
+    | "atomic-vec2u-min-max"
     | "core-features-and-limits"
     | "depth-clip-control"
     | "depth32float-stencil8"
@@ -320,7 +321,8 @@ type GPUFeatureName =
     | "texture-formats-tier2"
     | "primitive-index"
     | "texture-component-swizzle"
-    | "subgroup-size-control";
+    | "subgroup-size-control"
+    | "texture-compression-unaligned";
 type GPUFilterMode =
 
     | "nearest"
@@ -554,8 +556,8 @@ type GPUVertexFormat =
     | "sint32x3"
     | "sint32x4"
     | "unorm10-10-10-2"
-    | "snorm10-10-10-2"
-    | "unorm8x4-bgra";
+    | "unorm8x4-bgra"
+    | "snorm10-10-10-2";
 type GPUVertexStepMode =
 
     | "vertex"
