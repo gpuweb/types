@@ -142,7 +142,7 @@ The following differences will remain.
 
 ### Publish a new npm package version
 
-New patch releases are published to NPM and tagged in Git automatically by [GitHub Actions](.github/workflows/build-deploy-publish.yml) on every push to `main`.
+New patch releases are published to NPM and tagged in Git automatically by [GitHub Actions](.github/workflows/build-deploy-publish.yml) on pushes to `main` when `dist/index.d.ts` has changed since the last release.
 
 `package.json` intentionally omits a `version` field in Git; the workflow fetches the latest published version from NPM, increments the patch version in CI, publishes the package, and pushes the new Git tag.
 

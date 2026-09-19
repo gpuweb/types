@@ -44,6 +44,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           LATEST_VERSION=$(npm view @webgpu/types version)
+          git fetch --depth=1 origin tag "v${LATEST_VERSION}"
+          if git diff --quiet "v${LATEST_VERSION}" -- dist/index.d.ts; then
+            echo "dist/index.d.ts has not changed since v${LATEST_VERSION}; skipping publish."
+            exit 0
+          fi
+
           npm pkg set version="${LATEST_VERSION}"
           NEW_VERSION=$(npm version patch --no-git-tag-version)
           echo "Publishing new version: ${NEW_VERSION}"
