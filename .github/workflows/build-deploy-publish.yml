@@ -1,0 +1,55 @@
+name: build-deploy-publish
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - run: git submodule update --init --recommend-shallow
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build-docs
+
+      - run: npm run generate
+      - name: Check generated file is up-to-date with gpuweb submodule (`npm run generate` to fix this)
+        run: git update-index --really-refresh && git diff-index --quiet HEAD
+
+      - name: Deploy documentation to GitHub Pages
+        if: ${{ success() && github.ref == 'refs/heads/main' }}
+        uses: JamesIves/github-pages-deploy-action@3.6.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: tsdoc-src/out
+
+      - name: Publish package to NPM
+        if: ${{ success() && github.ref == 'refs/heads/main' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST_VERSION=$(npm view @webgpu/types version)
+          npm pkg set version="${LATEST_VERSION}"
+          NEW_VERSION=$(npm version patch --no-git-tag-version)
+          echo "Publishing new version: ${NEW_VERSION}"
+
+          npm publish
+
+          git tag "${NEW_VERSION}"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${NEW_VERSION}"
+
