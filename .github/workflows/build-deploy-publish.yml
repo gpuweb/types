@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: write
       id-token: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,23 +40,49 @@ jobs:
           FOLDER: tsdoc-src/out
 
       - name: Publish package to NPM
-        if: ${{ success() && github.ref == 'refs/heads/main' }}
+        id: publish
+        if: ${{ success() && github.repository == 'gpuweb/types' && github.ref == 'refs/heads/main' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST_VERSION=$(npm view @webgpu/types version)
-          git fetch --depth=1 origin tag "v${LATEST_VERSION}"
-          if git diff --quiet "v${LATEST_VERSION}" -- dist/index.d.ts; then
-            echo "dist/index.d.ts has not changed since v${LATEST_VERSION}; skipping publish."
+          git fetch --depth=1 --tags origin
+          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -n 1)
+          echo "latest_tag=${LATEST_TAG}" >> "$GITHUB_OUTPUT"
+          if git diff --quiet "${LATEST_TAG}" -- dist/index.d.ts; then
+            echo "dist/index.d.ts has not changed since ${LATEST_TAG}; skipping publish."
             exit 0
           fi
 
-          npm pkg set version="${LATEST_VERSION}"
+          npm pkg set version="${LATEST_TAG#v}"
           NEW_VERSION=$(npm version patch --no-git-tag-version)
           echo "Publishing new version: ${NEW_VERSION}"
 
           npm publish
+          echo "new_version=${NEW_VERSION#v}" >> "$GITHUB_OUTPUT"
 
           git tag "${NEW_VERSION}"
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "${NEW_VERSION}"
+
+      - name: Comment on merged PR
+        if: ${{ (success() || failure()) && github.repository == 'gpuweb/types' && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JOB_STATUS: ${{ job.status }}
+          LATEST_TAG: ${{ steps.publish.outputs.latest_tag }}
+          NEW_VERSION: ${{ steps.publish.outputs.new_version }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          PR_NUMBER=$(gh api "/repos/${GITHUB_REPOSITORY}/commits/${GITHUB_SHA}/pulls" --jq '.[0].number // empty')
+          if [ -z "${PR_NUMBER}" ]; then
+            echo "No associated PR found for commit ${GITHUB_SHA}; skipping PR comment."
+            exit 0
+          fi
+
+          if [ "${JOB_STATUS}" != "success" ]; then
+            gh pr comment "${PR_NUMBER}" --body "⚠️ Post-merge \`build-deploy-publish\` workflow failed on \`main\`: [workflow run](${RUN_URL})"
+          elif [ -n "${NEW_VERSION}" ]; then
+            gh pr comment "${PR_NUMBER}" --body "📦 Published [\`@webgpu/types@${NEW_VERSION}\`](https://www.npmjs.com/package/@webgpu/types/v/${NEW_VERSION}) ([workflow run](${RUN_URL}))."
+          else
+            gh pr comment "${PR_NUMBER}" --body "ℹ️ \`dist/index.d.ts\` has not changed since \`${LATEST_TAG}\`; skipped NPM publish ([workflow run](${RUN_URL}))."
+          fi
 

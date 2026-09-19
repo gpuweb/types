@@ -144,5 +144,5 @@ The following differences will remain.
 
 New patch releases are published to NPM and tagged in Git automatically by [GitHub Actions](.github/workflows/build-deploy-publish.yml) on pushes to `main` when `dist/index.d.ts` has changed since the last release.
 
-`package.json` intentionally omits a `version` field in Git; the workflow fetches the latest published version from NPM, increments the patch version in CI, publishes the package, and pushes the new Git tag.
+`package.json` intentionally omits a `version` field in Git; the workflow finds the latest version tag in Git, increments the patch version, publishes the package, and pushes the new Git tag.
 
