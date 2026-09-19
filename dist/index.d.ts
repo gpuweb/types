@@ -298,7 +298,6 @@ type GPUErrorFilter =
     | "internal";
 type GPUFeatureName =
 
-    | "atomic-vec2u-min-max"
     | "core-features-and-limits"
     | "depth-clip-control"
     | "depth32float-stencil8"
@@ -322,7 +321,8 @@ type GPUFeatureName =
     | "primitive-index"
     | "texture-component-swizzle"
     | "subgroup-size-control"
-    | "texture-compression-unaligned";
+    | "texture-compression-unaligned"
+    | "atomic-vec2u-min-max";
 type GPUFilterMode =
 
     | "nearest"
